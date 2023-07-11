@@ -1,0 +1,9 @@
+{
+	"name": "entities/registry",
+	"platforms": ["web", "android", "ios"],
+
+	"ts": {
+		"path": "ts",
+		"files": ["*"]
+	}
+}
