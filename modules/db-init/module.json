@@ -1,6 +1,7 @@
 {
-	"name": "entities/models",
+	"name": "initialize",
 	"platforms": ["web", "android", "ios"],
+
 	"ts": {
 		"path": "ts",
 		"files": ["*"]

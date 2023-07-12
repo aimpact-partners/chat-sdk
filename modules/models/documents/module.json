@@ -1,7 +1,6 @@
 {
-	"name": "entities/registry",
+	"name": "documents",
 	"platforms": ["web", "android", "ios"],
-
 	"ts": {
 		"path": "ts",
 		"files": ["*"]

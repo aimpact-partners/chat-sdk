@@ -1,0 +1,7 @@
+{
+	"name": "core",
+	"platforms": ["web", "android", "ios"],
+	"ts": {
+		"files": "*"
+	}
+}
