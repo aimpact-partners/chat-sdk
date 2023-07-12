@@ -1,3 +1,7 @@
 node_modules
+.beyond
 .vscode
 .idea
+.env
+runners/.env
+package-lock.json
