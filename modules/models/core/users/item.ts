@@ -1,6 +1,6 @@
 // AudioItem
 import { Item } from '@beyond-js/reactive/entities';
-import { UserProvider } from '@aimpact/chat-api/backend-provider';
+import { UserProvider } from '@aimpact/chat-api/provider';
 
 interface IUser {
 	id: string;
@@ -12,7 +12,7 @@ interface IUser {
 
 export /*bundle*/ class User extends Item<IUser> {
 	protected properties = ['displayName', 'id', 'email', 'photoURL', 'phoneNumber'];
-declare provider;
+	declare provider;
 	#logged;
 	get logged() {
 		return this.#logged;

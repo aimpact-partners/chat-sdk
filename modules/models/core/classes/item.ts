@@ -1,5 +1,5 @@
 import { Item } from '@beyond-js/reactive/entities';
-import { ClassesProvider } from '@aimpact/chat-api/backend-provider';
+import { ClassesProvider } from '@aimpact/chat-api/provider';
 interface IClass {
 	title: string;
 	objectives: string;

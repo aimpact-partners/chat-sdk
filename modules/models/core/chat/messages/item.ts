@@ -1,6 +1,6 @@
 // ChatItem
 import { Item } from '@beyond-js/reactive/entities';
-import { MessageProvider } from '@aimpact/chat-api/backend-provider';
+import { MessageProvider } from '@aimpact/chat-api/provider';
 
 interface IMessage {
 	chatId: string;

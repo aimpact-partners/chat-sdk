@@ -1,6 +1,6 @@
 // ChatItem
 import { Item } from '@beyond-js/reactive/entities';
-import { ChatProvider } from '@aimpact/chat-api/backend-provider';
+import { ChatProvider } from '@aimpact/chat-api/provider';
 import { Message } from './messages/item';
 interface IChat {
 	name: string;

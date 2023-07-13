@@ -1,5 +1,5 @@
 import { Collection } from '@beyond-js/reactive/entities';
-import { KnowledgeBoxProvider } from '@aimpact/chat-api/backend-provider';
+import { KnowledgeBoxProvider } from '@aimpact/chat-api/provider';
 import { KnowledgeBox } from './item';
 
 export /*bundle*/ class KnowledgeBoxes extends Collection {
