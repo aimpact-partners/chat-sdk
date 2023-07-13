@@ -12,7 +12,7 @@ interface IUser {
 
 export /*bundle*/ class User extends Item<IUser> {
 	protected properties = ['displayName', 'id', 'email', 'photoURL', 'phoneNumber'];
-
+declare provider;
 	#logged;
 	get logged() {
 		return this.#logged;
