@@ -1,7 +1,7 @@
 // AudioItem
 import { Item } from '@beyond-js/reactive/entities';
 import { UserProvider } from '@aimpact/chat-api/provider';
-
+import { PendingPromise } from '@beyond-js/kernel/core';
 interface IUser {
 	id: string;
 	displayName: string;
@@ -22,26 +22,34 @@ export /*bundle*/ class User extends Item<IUser> {
 	declare photoURL;
 	declare phoneNumber;
 	declare token;
+	declare getProperties;
+	#promiseInit: PendingPromise;
 	get logged() {
 		return this.#logged;
 	}
+
 	constructor(specs) {
 		super({ id: specs.id, db: 'chat-api', storeName: 'User', provider: UserProvider });
-		//this.init(specs);
+		this.init(specs);
 	}
 
-	async init(specs) {
+	init = async specs => {
+		if (this.#promiseInit) return this.#promiseInit;
+		this.#promiseInit = new PendingPromise();
+
 		await this.isReady;
 		await this.set(specs);
-		console.log(100, this.token);
-	}
-	/* 
+
+		this.#promiseInit.resolve();
+	};
+
 	async login(data) {
 		await this.isReady;
 		if (this.#logged) return;
 		await this.set(data.user);
+
 		await this.provider.updateUser({ ...this.getProperties(), id: this.id });
 		this.#logged = true;
 		return true;
-	} */
+	}
 }
