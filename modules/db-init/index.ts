@@ -11,7 +11,7 @@ async function initialize() {
 			KnowledgeBoxes: 'id, userId',
 			SharedKnowledgeBases: 'id, knowledgeBaseId, sharedWithUserId',
 			Documents: 'id, knowledgeBaseId',
-			Classes: 'id, title',
+			Lessons: 'id, title',
 			Topics: 'id, classId, title',
 		});
 
