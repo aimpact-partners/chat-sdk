@@ -11,7 +11,8 @@ async function initialize() {
 			KnowledgeBoxes: 'id, userId',
 			SharedKnowledgeBases: 'id, knowledgeBaseId, sharedWithUserId',
 			Documents: 'id, knowledgeBaseId',
-			Lessons: 'id, title, description',
+			Lessons: 'id, title',
+			Topics: 'id, classId, title',
 		});
 
 		// For example, if you have user data to add you can use:
