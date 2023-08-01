@@ -1,0 +1,5 @@
+{
+	"name": "firebase/app",
+	"bundle": "ts",
+	"files": "*"
+}
