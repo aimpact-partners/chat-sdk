@@ -18,6 +18,7 @@ interface IMessage {
 export /*bundle*/ class Message extends Item<IMessage> {
 	protected properties = ['id', 'chatId', 'userId', 'role', 'content', 'usage', 'timestamp'];
 	declare autoplay: boolean;
+	declare isReady;
 	declare id: string;
 	declare triggerEvent: () => void;
 	declare publish: (any) => Promise<any>;

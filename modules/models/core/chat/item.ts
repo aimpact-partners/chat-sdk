@@ -8,6 +8,7 @@ interface IChat {
 	category: string;
 	system: string;
 	parent: string;
+	id: string;
 	knowledgeBoxId: string;
 	usage: {
 		completionTokens: number;
@@ -17,6 +18,7 @@ interface IChat {
 }
 
 export /*bundle*/ class Chat extends Item<IChat> {
+	declare id: string;
 	protected properties = [
 		'id',
 		'autoplay',
@@ -76,7 +78,16 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		await item.isReady;
 		item.setOffline(true);
 
-		const specs = {
+		type ISpecs = {
+			id: string;
+			chatId: string;
+			type: string;
+			audio: Buffer;
+			role: string;
+			timestamp: number;
+			content?: string;
+		};
+		const specs: ISpecs = {
 			id: 'temporal',
 			chatId: this.id,
 			type: 'audio',
