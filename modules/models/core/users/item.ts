@@ -11,10 +11,9 @@ interface IUser {
 }
 
 export /*bundle*/ class User extends Item<IUser> {
-	protected properties = ['displayName', 'id', 'email', 'photoURL', 'phoneNumber', 'token'];
-	declare provider;
+	protected properties = ['displayName', 'id', 'email', 'photoURL', 'phoneNumber', 'token', 'firebaseToken'];
+
 	#logged;
-	declare isReady;
 	declare set;
 	declare displayName;
 	declare id;
@@ -23,7 +22,7 @@ export /*bundle*/ class User extends Item<IUser> {
 	declare phoneNumber;
 	declare token;
 	declare getProperties;
-	#promiseInit: PendingPromise;
+	#promiseInit: PendingPromise<boolean>;
 	get logged() {
 		return this.#logged;
 	}
@@ -48,7 +47,7 @@ export /*bundle*/ class User extends Item<IUser> {
 		if (this.#logged) return;
 		await this.set(data.user);
 
-		await this.provider.updateUser({ ...this.getProperties(), id: this.id });
+		await this.provider.login({ ...this.getProperties(), id: this.id });
 		this.#logged = true;
 		return true;
 	}
