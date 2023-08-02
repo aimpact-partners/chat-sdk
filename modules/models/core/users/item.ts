@@ -45,9 +45,15 @@ export /*bundle*/ class User extends Item<IUser> {
 	async login(data) {
 		await this.isReady;
 		if (this.#logged) return;
-		await this.set(data.user);
 
-		await this.provider.login({ ...this.getProperties(), id: this.id });
+		const specs = { ...this.getProperties(), id: this.id };
+
+		const response = await this.provider.login(specs);
+		if (!response.status) {
+			throw new Error(response.error);
+		}
+		await this.set(response.data.user);
+		this.localUpdate(response.data.user);
 		this.#logged = true;
 		return true;
 	}
