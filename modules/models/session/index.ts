@@ -42,6 +42,7 @@ class SessionManager extends ReactiveModel<ISession> {
 	constructor() {
 		super();
 		this.#promise = new PendingPromise();
+		console.log('SessionManager', onAuthStateChanged);
 		onAuthStateChanged(auth, this.setUser);
 	}
 
@@ -52,7 +53,6 @@ class SessionManager extends ReactiveModel<ISession> {
 		}
 		if (data) {
 			if (this.#user && this.#user.id === data.uid) {
-				console.log(69, 'user already installed');
 				return;
 			}
 

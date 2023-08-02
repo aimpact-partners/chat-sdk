@@ -38,7 +38,8 @@
 		"@beyond-js/backend": "^0.1.8",
 		"@beyond-js/kernel": "~0.1.8",
 		"@beyond-js/react-18-widgets": "~0.0.1",
-		"socket.io-client": "^4.5.4"
+		"socket.io-client": "^4.5.4",
+		"firebase": "^8.6.8"
 	},
 	"devDependencies": {
 		"@beyond-js/local": "~0.1.3",
