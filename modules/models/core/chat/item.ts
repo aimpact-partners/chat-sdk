@@ -2,19 +2,21 @@
 import { Item } from '@beyond-js/reactive/entities';
 import { ChatProvider } from '@aimpact/chat-api/provider';
 import { Message } from './messages/item';
+
 interface IChat {
+	id: string;
 	name: string;
 	userId: string;
 	category: string;
 	system: string;
 	parent: string;
-	id: string;
 	knowledgeBoxId: string;
 	usage: {
 		completionTokens: number;
 		promptTokens: number;
 		totalTokens: number;
 	};
+	metadata: {};
 }
 
 export /*bundle*/ class Chat extends Item<IChat> {
@@ -29,6 +31,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		'category',
 		'usage',
 		'knowledgeBoxId',
+		'metadata',
 	];
 
 	declare fetching: boolean;
@@ -44,10 +47,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	}
 
 	loadAll = async specs => {
-		//@ts-ignore
 		const response = await this.load(specs);
-
-		let messages = new Map();
+		const messages = new Map();
 		if (response.data.messages?.length) {
 			response.data.messages.forEach(message => messages.set(message.id, message));
 		}
@@ -140,7 +141,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		}
 	}
 
-	getMessage(id) {
+	getMessage(id: string) {
 		return this.#messages.get(id);
 	}
 }
