@@ -41,7 +41,7 @@ export class Auth {
 			user.set(specs);
 
 			const couldLog = await user.login(response);
-			console.log(22, couldLog);
+
 			if (!couldLog) {
 				console.error('Could not login', couldLog);
 			}

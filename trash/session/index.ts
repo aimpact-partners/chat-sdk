@@ -101,7 +101,7 @@ class SessionManager extends ReactiveModel<ISession> {
 				'auth/account-exists-with-different-credential': 'ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL',
 				'auth/popup-closed-by-user': 'POPUP_CLOSED_BY_USER',
 			};
-			console.log(2, error);
+
 			return { status: false, error: errors[error.code] || 'CANNOT' };
 		}
 	};

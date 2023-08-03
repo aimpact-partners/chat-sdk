@@ -55,7 +55,7 @@ class SessionManager extends ReactiveModel<ISession> {
 		const firebaseToken = await data.getIdToken();
 		const user = new User({ id: data.uid });
 		await user.isReady;
-		console.log(3, data, user.token);
+
 		/* TODO Review */
 		await user.set(data);
 		this.#user = user;
