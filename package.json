@@ -40,6 +40,11 @@
 		"@beyond-js/react-18-widgets": "~0.0.1",
 		"@beyond-js/reactive": "^1.1.2",
 		"firebase": "^10.1.0",
+		"prismjs": "^1.27.0",
+		"highlight.js": "^11.8.0",
+		"marked": "^5.1.0",
+		"marked-highlight": "^2.0.1",
+		"marked-mangle": "^1.1.0",
 		"socket.io-client": "^4.5.4"
 	},
 	"devDependencies": {
