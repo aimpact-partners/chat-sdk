@@ -14,7 +14,6 @@ interface IPlayableProps {
 export /* bundle */ function Playable({ id, content, autoplay, player, onClickWord }: IPlayableProps) {
 	const mark = useMarked();
 	const { ref, text, removeHighlight } = useBoundary(id, player, autoplay, content);
-
 	/**
 	 * Split the text into blocks of code and text.
 	 */
@@ -66,5 +65,6 @@ export /* bundle */ function Playable({ id, content, autoplay, player, onClickWo
 			/>
 		);
 	});
+
 	return <div ref={ref}>{output}</div>;
 }
