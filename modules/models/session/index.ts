@@ -83,7 +83,7 @@ class SessionManager extends ReactiveModel<ISession> {
 
 			return response;
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 			return { status: false, error: 'CANNOT' };
 		}
 	}

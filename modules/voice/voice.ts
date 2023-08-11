@@ -89,9 +89,8 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 
 	play(text?: undefined | string, id?: undefined | string) {
 		if (text) this.#text = text;
-		console.log('si....', id);
+
 		this.#id = id;
-		console.log(45, id);
 		globalThis.cordova ? this._mobile() : this._web();
 	}
 

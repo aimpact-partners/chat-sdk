@@ -7,7 +7,6 @@ export /*bundle */ function PlayerButton(props) {
 	const onPlay = async ({ listen }) => {
 		setAction('play');
 		player.positionToCut = 0;
-		console.log('we play', id);
 		await player.play(content, id);
 	};
 	const onPause = async ({ listen }) => {

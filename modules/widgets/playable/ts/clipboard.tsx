@@ -41,7 +41,7 @@ export function Clipboard({ text, message }) {
 				globalThis.setTimeout(() => span.classList.remove('show', 'hide'), 300);
 			}, 500);
 		} catch (e) {
-			console.log('some error', e);
+			console.error('some error', e);
 		}
 	};
 

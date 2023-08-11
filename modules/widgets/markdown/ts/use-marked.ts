@@ -12,7 +12,6 @@ export /* bundle */ function useMarked() {
 			langPrefix: 'hljs language-',
 			highlight(code, lang) {
 				const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-				console.log(55, language);
 				return hljs.highlight(code, { language }).value;
 			},
 		})

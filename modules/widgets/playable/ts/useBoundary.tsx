@@ -11,7 +11,6 @@ export function useBoundary(id, player, autoplay, content) {
 	useBinder(
 		[player],
 		() => {
-			console.log('boundary', id, player.textId);
 			if (id !== player.textId) return;
 			const currentIndex = player.currentWord;
 			const block = ref.current.querySelector('.message-text__container')?.dataset.block;
