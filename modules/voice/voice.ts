@@ -44,7 +44,7 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 		this.reactiveProps(['lang', 'positionToCut']);
 		this.positionToCut = 0;
 		this.lang = 'es';
-		this.rate = 1.5;
+		this.rate = 1.25;
 	}
 
 	_web() {
