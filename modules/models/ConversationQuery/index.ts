@@ -15,7 +15,7 @@ export /*bundle*/ class ConversationQuery extends Events {
 		return this.#processed;
 	}
 
-	#answer: string;
+	#answer: string = '';
 	get answer() {
 		return this.#answer;
 	}
