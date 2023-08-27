@@ -22,9 +22,9 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	declare id: string;
 	declare triggerEvent: () => void;
 	declare publish: (any) => Promise<any>;
+
 	constructor({ id = undefined } = {}) {
 		super({ id, db: 'chat-api', storeName: 'Messages', provider: MessageProvider });
-		//@ts-ignore
 		this.reactiveProps(['autoplay']);
 	}
 }

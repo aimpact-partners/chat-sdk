@@ -12,12 +12,4 @@ export class Messages extends Collection {
 	constructor() {
 		super({ provider: MessageProvider, storeName: 'Messages', db: 'chat-api' });
 	}
-
-	add(text) {
-		//@ts-ignore
-		const message = new Message();
-		// message.setOffline(true);
-
-		// this.items.push(message);
-	}
 }
