@@ -34,10 +34,10 @@ export /*bundle*/ class User extends Item<IUser> {
 	}
 	constructor(specs) {
 		super({ id: specs.id, db: 'chat-api', storeName: 'User', provider: UserProvider });
-		this.init(specs);
+		this.initialize(specs);
 	}
 
-	init = async specs => {
+	initialize = async specs => {
 		if (this.#promiseInit) return this.#promiseInit;
 		this.#promiseInit = new PendingPromise();
 
