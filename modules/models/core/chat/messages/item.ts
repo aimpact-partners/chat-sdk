@@ -1,6 +1,9 @@
 // ChatItem
 import { Item } from '@beyond-js/reactive/entities';
 import { MessageProvider } from '@aimpact/chat-api/provider';
+import { Api } from '@aimpact/chat-sdk/api';
+import config from '@aimpact/chat-sdk/config';
+import { sessionWrapper } from '@aimpact/chat-sdk/session';
 
 interface IMessage {
 	chatId: string;
@@ -18,13 +21,45 @@ interface IMessage {
 export /*bundle*/ class Message extends Item<IMessage> {
 	protected properties = ['id', 'chatId', 'userId', 'role', 'content', 'usage', 'timestamp'];
 	declare autoplay: boolean;
-	declare isReady;
+
 	declare id: string;
 	declare triggerEvent: () => void;
-	declare publish: (any) => Promise<any>;
+	#api: Api;
+	#response: string = '';
+	get response() {
+		return this.#response;
+	}
 	constructor({ id = undefined } = {}) {
 		super({ id, db: 'chat-api', storeName: 'Messages', provider: MessageProvider });
-		//@ts-ignore
+		const api = new Api(config.params.apis.chat);
+		this.#api = api;
+		this.#api.on('stream.response', () => {
+			this.#response = this.#api.streamResponse;
+			this.trigger('content.updated');
+		});
 		this.reactiveProps(['autoplay']);
+	}
+
+	//@ts-ignore
+	async publish(specs): Promise<any> {
+		try {
+			this.setOffline(true);
+
+			this.#api
+				.bearer(sessionWrapper.user.firebaseToken)
+				.stream(`/conversations/${specs.chatId}/messages`, { message: specs.content })
+				.then(response => {
+					console.log('publish end...');
+				});
+
+			super.publish();
+		} catch (e) {
+			console.trace(e);
+		}
+	}
+
+	async publishSystem() {
+		this.setOffline(true);
+		super.publish();
 	}
 }

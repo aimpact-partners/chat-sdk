@@ -30,6 +30,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		'parent',
 		'category',
 		'usage',
+		'children',
 		'knowledgeBoxId',
 		'metadata',
 	];
@@ -103,12 +104,16 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		this.#messages.set('temporal', specs);
 		this.triggerEvent();
 	}
+
 	async sendMessage(content: string) {
 		try {
 			this.fetching = true;
 			const item = new Message();
-			await item.isReady;
-			item.setOffline(true);
+			let response = new Message();
+
+			await Promise.all([item.isReady, response.isReady]);
+
+			// item.setOffline(true);
 
 			this.#messages.set(item.id, {
 				id: item.id,
@@ -117,23 +122,34 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				role: 'user',
 				timestamp: Date.now(),
 			});
-			this.triggerEvent();
-
-			await item.publish({ chatId: this.id, content, role: 'user', timestamp: Date.now() });
-
-			this.triggerEvent();
-
-			const data = { ...item.getProperties() };
-
-			const response = await this.provider.sendMessage({ chatId: this.id, ...data });
-			if (!response.status) {
-				throw new Error(response.error);
-			}
-			this.#messages.set(response.data.response.id, response.data.response);
-			this.#messages.set(response.data.message.id, response.data.message);
+			this.#messages.set(response.id, {
+				id: response.id,
+				chatId: this.id,
+				content: '',
+				role: 'system',
+			});
 
 			this.triggerEvent();
-			return { response: response.data.response, message: response.data.message };
+
+			const onListen = () => {
+				response.content = item.response;
+				//updating plaincontent message
+				this.#messages.get(response.id).content = response.content;
+			};
+			item.on('content.updated', onListen);
+			item.publish({ chatId: this.id, content, role: 'user', timestamp: Date.now() }).then(response => {
+				console.log(600, 'terminamos');
+			});
+
+			response.setOffline(true);
+			response.role = 'system';
+			response.publishSystem();
+			this.triggerEvent();
+
+			return { message: item, response };
+
+			this.triggerEvent();
+			// return { response: response.data.response, message: response.data.message };
 		} catch (e) {
 			console.error(e);
 		} finally {

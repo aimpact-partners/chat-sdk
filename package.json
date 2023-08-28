@@ -22,6 +22,26 @@
 			"@aimpact/documents-api"
 		]
 	},
+	"params": {
+		"local": {
+			"baseUrl": "http://localhost:4530",
+			"apis": {
+				"chat": "https://chat-api-http-rb5caohzgq-uc.a.run.app"
+			}
+		},
+		"development": {
+			"baseUrl": "http://localhost:4530",
+			"apis": {
+				"chat": "https://chat-api-http-rb5caohzgq-uc.a.run.app"
+			}
+		},
+		"testing": {
+			"baseUrl": "https://ailearn-test.netlify.app",
+			"apis": {
+				"chat": "https://chat-api-http-rb5caohzgq-uc.a.run.app"
+			}
+		}
+	},
 	"deployment": {
 		"distributions": [
 			{

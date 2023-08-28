@@ -17,13 +17,17 @@ export /* bundle */ function Playable({ id, content, autoplay, player, onClickWo
 	/**
 	 * Split the text into blocks of code and text.
 	 */
-	const blocks = text
-		.split(/(```[\s\S]*?```)/)
+
+	const blocks = content
+		.split(/(```[\s\S]*?``` | `[\s\S]*?`)/)
 		.filter(block => block.trim() !== '')
-		.map(block => ({
-			content: block,
-			isCode: block.startsWith('```'),
-		}));
+		.map(block => {
+			const content = block.trim();
+			return {
+				content,
+				isCode: content.startsWith('```') || content.startsWith('`'),
+			};
+		});
 
 	React.useEffect(() => {
 		const playableContent = blocks.filter(item => !item.isCode);
@@ -51,10 +55,11 @@ export /* bundle */ function Playable({ id, content, autoplay, player, onClickWo
 	const output = blocks.map((block, i) => {
 		const createSpan = (word, index) => `<span data-index="${index}${i}" class="word">${word}</span>`;
 		if (block.isCode) {
-			return <Code key={`code-${i}`}>{block.content.replaceAll('```', '')}</Code>;
+			return <Code key={`code-${i}`}>{block.content.replaceAll('`', '')}</Code>;
 		}
-		const content = mark(block.content.replaceAll('\n', '').split(' ').map(createSpan).join(' '));
 
+		const content = mark(block.content.split(' ').map(createSpan).join(' '));
+		//content = mark(block.content);
 		return (
 			<div
 				key={`content-${i}`}

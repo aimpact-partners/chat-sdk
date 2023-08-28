@@ -1,5 +1,5 @@
 import { auth, googleProvider, facebookProvider } from './firebase/config';
-import { User } from '@aimpact/chat-sdk/core';
+import { User } from '@aimpact/chat-sdk/users';
 import {
 	signOut,
 	onAuthStateChanged,

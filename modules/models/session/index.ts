@@ -1,5 +1,5 @@
 import { auth, googleProvider } from './firebase/config';
-import { User } from '@aimpact/chat-sdk/core';
+import { User } from '@aimpact/chat-sdk/users';
 import { onAuthStateChanged, UserCredential } from 'firebase/auth';
 import { ReactiveModel } from '@beyond-js/reactive/model';
 
@@ -85,6 +85,20 @@ class SessionManager extends ReactiveModel<ISession> {
 		} catch (e) {
 			console.error(e);
 			return { status: false, error: 'CANNOT' };
+		}
+	}
+
+	async logout() {
+		try {
+			console.log(0.2);
+			await this.#auth.signOut();
+			console.log(0.4);
+			this.#user = undefined;
+			this.triggerEvent('change');
+			return true;
+		} catch (e) {
+			console.error(e);
+			return false;
 		}
 	}
 }

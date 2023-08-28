@@ -1,8 +1,7 @@
-import { User } from '@aimpact/chat-sdk/core';
+import { User } from '@aimpact/chat-sdk/users';
 import { auth, googleProvider } from './firebase/config';
 import { TokenManager } from './token';
-import { routing } from '@beyond-js/kernel/routing';
-import { ReactiveModel } from '@beyond-js/reactive/model';
+
 import {
 	signOut,
 	signInWithPopup,

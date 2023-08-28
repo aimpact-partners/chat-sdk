@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { auth } from './firebase/config';
-import type { User } from '@aimpact/chat-sdk/core';
+import type { User } from '@aimpact/chat-sdk/users';
 
 export class TokenManager {
 	static async getToken(user: User): Promise<string> {
