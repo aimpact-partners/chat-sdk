@@ -50,13 +50,13 @@ export /*bundle*/ class User extends Item<IUser> {
 	setFirebaseUser = async user => {
 		this.#firebaseUser = user;
 	};
-	async login(data) {
+	async login(firebaseToken) {
 		await this.isReady;
 		if (this.#logged) return;
 
-		const specs = { ...this.getProperties(), id: this.id };
-
+		const specs = { ...this.getProperties(), id: this.id, firebaseToken };
 		const response = await this.provider.login(specs);
+
 		if (!response.status) {
 			throw new Error(response.error);
 		}

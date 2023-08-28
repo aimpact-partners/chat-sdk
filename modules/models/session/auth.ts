@@ -39,7 +39,7 @@ export class Auth {
 			const user = new User(specs);
 			user.set(specs);
 
-			const couldLog = await user.login(response);
+			const couldLog = await user.login(firebaseToken);
 
 			if (!couldLog) {
 				console.error('Could not login', couldLog);

@@ -138,7 +138,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			};
 			item.on('content.updated', onListen);
 			item.publish({ chatId: this.id, content, role: 'user', timestamp: Date.now() }).then(response => {
-				console.log(600, 'terminamos');
+				//console.log(600, 'terminamos');
 			});
 
 			response.setOffline(true);

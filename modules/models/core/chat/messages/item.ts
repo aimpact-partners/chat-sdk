@@ -45,7 +45,6 @@ export /*bundle*/ class Message extends Item<IMessage> {
 		try {
 			this.setOffline(true);
 			const token = await sessionWrapper.user.firebaseToken;
-
 			this.#api.bearer(token).stream(`/conversations/${specs.chatId}/messages`, { message: specs.content });
 
 			super.publish();
