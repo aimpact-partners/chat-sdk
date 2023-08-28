@@ -2,6 +2,7 @@
 import { Item } from '@beyond-js/reactive/entities';
 import { UserProvider } from '@aimpact/chat-api/provider';
 import { PendingPromise } from '@beyond-js/kernel/core';
+import type firebaseAuth from 'firebase/auth';
 interface IUser {
 	id: string;
 	displayName: string;
@@ -11,7 +12,7 @@ interface IUser {
 }
 
 export /*bundle*/ class User extends Item<IUser> {
-	protected properties = ['displayName', 'id', 'email', 'photoURL', 'phoneNumber', 'token', 'firebaseToken'];
+	protected properties = ['displayName', 'id', 'email', 'photoURL', 'phoneNumber', 'token'];
 
 	#logged;
 	declare set;
@@ -23,10 +24,14 @@ export /*bundle*/ class User extends Item<IUser> {
 	declare token;
 	declare getProperties;
 	#promiseInit: PendingPromise<boolean>;
+	#firebaseUser: firebaseAuth.User;
 	get logged() {
 		return this.#logged;
 	}
 
+	get firebaseToken() {
+		return this.#firebaseUser ? this.#firebaseUser.getIdToken() : null;
+	}
 	constructor(specs) {
 		super({ id: specs.id, db: 'chat-api', storeName: 'User', provider: UserProvider });
 		this.init(specs);
@@ -42,6 +47,9 @@ export /*bundle*/ class User extends Item<IUser> {
 		this.#promiseInit.resolve();
 	};
 
+	setFirebaseUser = async user => {
+		this.#firebaseUser = user;
+	};
 	async login(data) {
 		await this.isReady;
 		if (this.#logged) return;

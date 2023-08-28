@@ -54,6 +54,7 @@ class SessionManager extends ReactiveModel<ISession> {
 		if (this.#user && this.#user.id === data.uid) return;
 		const firebaseToken = await data.getIdToken();
 		const user = new User({ id: data.uid });
+		user.setFirebaseUser(data);
 		await user.isReady;
 
 		/* TODO Review */
@@ -90,9 +91,7 @@ class SessionManager extends ReactiveModel<ISession> {
 
 	async logout() {
 		try {
-			console.log(0.2);
 			await this.#auth.signOut();
-			console.log(0.4);
 			this.#user = undefined;
 			this.triggerEvent('change');
 			return true;
