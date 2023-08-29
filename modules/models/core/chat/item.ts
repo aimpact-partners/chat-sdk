@@ -133,13 +133,15 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 			const onListen = () => {
 				response.content = item.response;
-				//updating plaincontent message
 				this.#messages.get(response.id).content = response.content;
 			};
+			const onEnd = () => {
+				this.trigger('response.finished');
+				item.off('content.updated', onListen);
+			};
 			item.on('content.updated', onListen);
-			item.publish({ chatId: this.id, content, role: 'user', timestamp: Date.now() }).then(response => {
-				//console.log(600, 'terminamos');
-			});
+			item.on('response.finished', onEnd);
+			item.publish({ chatId: this.id, content, role: 'user', timestamp: Date.now() });
 
 			response.setOffline(true);
 			response.role = 'system';

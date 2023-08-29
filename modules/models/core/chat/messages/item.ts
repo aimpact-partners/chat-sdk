@@ -33,19 +33,34 @@ export /*bundle*/ class Message extends Item<IMessage> {
 		super({ id, db: 'chat-api', storeName: 'Messages', provider: MessageProvider });
 		const api = new Api(config.params.apis.chat);
 		this.#api = api;
-		this.#api.on('stream.response', () => {
-			this.#response = this.#api.streamResponse;
-			this.trigger('content.updated');
-		});
+
 		this.reactiveProps(['autoplay']);
+		this.#listen();
 	}
 
+	#onListen = () => {
+		this.#response = this.#api.streamResponse;
+		this.trigger('content.updated');
+	};
+	#listen = () => {
+		this.#api.on('stream.response', this.#onListen);
+	};
+
+	#offEvents = () => {
+		console.log('eliminar listeners');
+	};
 	//@ts-ignore
 	async publish(specs): Promise<any> {
 		try {
 			this.setOffline(true);
 			const token = await sessionWrapper.user.firebaseToken;
-			this.#api.bearer(token).stream(`/conversations/${specs.chatId}/messages`, { message: specs.content });
+			this.#api
+				.bearer(token)
+				.stream(`/conversations/${specs.chatId}/messages`, { message: specs.content })
+				.then(response => {
+					this.trigger('response.finished');
+					this.#offEvents();
+				});
 
 			super.publish();
 		} catch (e) {
