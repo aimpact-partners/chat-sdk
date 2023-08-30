@@ -47,7 +47,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	};
 
 	#offEvents = () => {
-		console.log('eliminar listeners');
+		this.#api.off('stream.response', this.#onListen);
 	};
 	//@ts-ignore
 	async publish(specs): Promise<any> {

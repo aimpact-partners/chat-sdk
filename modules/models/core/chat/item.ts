@@ -34,7 +34,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		'knowledgeBoxId',
 		'metadata',
 	];
-
+	localdb = false;
 	declare fetching: boolean;
 	declare triggerEvent: () => void;
 	declare provider: any;
@@ -110,11 +110,9 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			this.fetching = true;
 			const item = new Message();
 			let response = new Message();
-
+			performance.mark('previous.create.messages');
 			await Promise.all([item.isReady, response.isReady]);
-
-			// item.setOffline(true);
-
+			performance.mark('after.create.messages');
 			this.#messages.set(item.id, {
 				id: item.id,
 				chatId: this.id,
@@ -129,8 +127,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				role: 'system',
 			});
 
-			this.triggerEvent();
-
 			const onListen = () => {
 				response.content = item.response;
 				this.#messages.get(response.id).content = response.content;
@@ -141,7 +137,11 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			};
 			item.on('content.updated', onListen);
 			item.on('response.finished', onEnd);
+			performance.mark('previous.publish.messages');
 			item.publish({ chatId: this.id, content, role: 'user', timestamp: Date.now() });
+			performance.mark('after.publish.messages');
+			performance.measure('create.messages', 'previous.create.messages', 'after.create.messages');
+			performance.measure('publish.messages', 'previous.publish.messages', 'after.publish.messages');
 
 			response.setOffline(true);
 			response.role = 'system';

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
-export function useBoundary(id, player, autoplay, content) {
+export function useBoundary(id, player, content) {
 	const ref = React.useRef(null);
 	const [text, setText] = React.useState<string>(content ?? '');
-	const [cutIndex, setCutIndex] = React.useState<number>(0);
+
 	const removeHighlight = () => {
 		ref.current.querySelectorAll('.highlight').forEach(element => element.classList.remove('highlight'));
 	};
@@ -11,6 +11,7 @@ export function useBoundary(id, player, autoplay, content) {
 	useBinder(
 		[player],
 		() => {
+			console.log(87, id, player.textId);
 			if (id !== player.textId) return;
 			const currentIndex = player.currentWord;
 			const block = ref.current.querySelector('.message-text__container')?.dataset.block;
@@ -25,7 +26,6 @@ export function useBoundary(id, player, autoplay, content) {
 				return;
 			}
 
-			const endOfWordIndex = text.indexOf(' ', currentIndex);
 			const segment = text.slice(0, currentIndex);
 			const position = segment.split(' ').length - 1;
 
