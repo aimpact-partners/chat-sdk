@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { IconButton } from 'pragmate-ui/icons';
 
 declare const navigator: any;

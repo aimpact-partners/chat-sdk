@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { mangle } from 'marked-mangle';
 import { marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';

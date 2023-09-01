@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import * as Prism from 'prismjs';
 import { Clipboard } from './clipboard';
 

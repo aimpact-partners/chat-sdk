@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useMarked } from './use-marked';
 
 export /*bundle */ function Markdown({ content }) {

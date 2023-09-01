@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { IconButton, Icon } from 'pragmate-ui/icons';
 export /*bundle */ function PlayerButton(props) {
 	const { player, id, content } = props;

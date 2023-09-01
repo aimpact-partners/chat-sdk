@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 export function useBoundary(id, player, content) {
 	const ref = React.useRef(null);

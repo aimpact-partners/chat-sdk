@@ -10,7 +10,7 @@ interface session {
 
 export /*bundle*/
 class JCall extends ReactiveModel<JCall> {
-	#bearer;
+
 
 	#streamResponse: string = '';
 	get streamResponse() {
@@ -27,6 +27,7 @@ class JCall extends ReactiveModel<JCall> {
 	}
 
 	#response;
+	#bearer;
 	bearer(bearer: string | undefined) {
 		if (bearer) this.#bearer = bearer;
 		return this;

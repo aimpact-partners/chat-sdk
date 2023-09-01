@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { auth } from './firebase/config';
 import type { User } from '@aimpact/chat-sdk/users';
 
