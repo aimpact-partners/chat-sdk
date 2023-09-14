@@ -7,6 +7,15 @@ import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+const firebaseConfigTesting = {
+	apiKey: 'AIzaSyDiwwiF_O_WZHyq7QrjnxqIg9EXz1vavV0',
+	authDomain: 'chat-api-test-393820.firebaseapp.com',
+	projectId: 'chat-api-test-393820',
+	storageBucket: 'chat-api-test-393820.appspot.com',
+	messagingSenderId: '1083395329827',
+	appId: '1:1083395329827:web:c6fead0e2d4124b4f90696',
+};
 const firebaseConfig = {
 	apiKey: 'AIzaSyBYiZcPNBky2QvNdVwgCgU_v2B7feLtbQU',
 	authDomain: 'aimpact-partners-dev.firebaseapp.com',
