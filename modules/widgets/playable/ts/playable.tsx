@@ -23,7 +23,7 @@ function PlayableComponent({ id, playable = true, content, player, onClickWord }
 	const blocks = React.useMemo(() => {
 		if (!playable) return [];
 		return content
-			.split(/(```[\s\S]*?``` | `[\s\S]*?`)/)
+			.split(/(```[\s\S]*?```|`[\s\S]*?`)/)
 			.filter(block => block.trim() !== '')
 			.map(block => {
 				const content = block.trim();

@@ -1,5 +1,6 @@
 import { Events } from '@beyond-js/kernel/core';
 import { ReactiveModel } from '@beyond-js/reactive/model';
+import { languages } from '@beyond-js/kernel/core';
 export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 	#speaking = false;
 	get speaking() {
@@ -24,9 +25,18 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 		return speechSynthesis.paused;
 	}
 
-	declare lang;
+	#lang;
+	get lang() {
+		return this.#lang;
+	}
+
+	set lang(value) {
+		if (value === this.#lang) return;
+		this.#lang = value;
+		this.trigger('change');
+	}
+
 	declare trigger;
-	declare rate;
 
 	#id;
 	get textId() {
@@ -38,13 +48,25 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 		return this.#instance;
 	}
 
+	#rate = 1.2;
+	get rate() {
+		return this.#rate;
+	}
+
+	set rate(value: number) {
+		if (value === this.#rate) return;
+		this.#rate = value;
+		this.trigger('change');
+	}
+
 	declare positionToCut;
-	constructor() {
+	constructor(language?) {
 		super();
+		if (!language) language = languages.current;
 		this.reactiveProps(['lang', 'positionToCut']);
 		this.positionToCut = 0;
-		this.lang = 'es';
-		this.rate = 1.25;
+		this.lang = language;
+		this.rate = 1.2;
 	}
 
 	_web() {
@@ -95,11 +117,6 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 	}
 
 	stop() {
-		if (globalThis.cordova) {
-			this.#text = '';
-			this.play();
-			return;
-		}
 		speechSynthesis.cancel();
 	}
 }
