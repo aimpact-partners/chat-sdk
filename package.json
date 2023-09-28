@@ -10,7 +10,8 @@
 		"default": "en",
 		"supported": [
 			"en",
-			"es"
+			"es",
+			"pr"
 		]
 	},
 	"modules": {

@@ -4,22 +4,10 @@ import { MessageProvider } from '@aimpact/chat-api/provider';
 import { Api } from '@aimpact/chat-sdk/api';
 import config from '@aimpact/chat-sdk/config';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
-
-interface IMessage {
-	chatId: string;
-	userId: string;
-	content: string;
-	role: string;
-	timestamp: number;
-	usage: {
-		completionTokens: number;
-		promptTokens: number;
-		totalTokens: number;
-	};
-}
+import { IMessage } from '../interfaces/message';
 
 export /*bundle*/ class Message extends Item<IMessage> {
-	protected properties = ['id', 'chatId', 'userId', 'role', 'content', 'usage', 'timestamp'];
+	protected properties = ['id', 'chatId', 'audio', 'chat', 'userId', 'role', 'content', 'usage', 'timestamp'];
 	declare autoplay: boolean;
 
 	declare id: string;
@@ -36,6 +24,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 
 		this.reactiveProps(['autoplay']);
 		this.#listen();
+		this.initialise();
 	}
 
 	#onListen = () => {
@@ -62,10 +51,15 @@ export /*bundle*/ class Message extends Item<IMessage> {
 					this.#offEvents();
 				});
 
-			super.publish();
+			super.publish(specs);
 		} catch (e) {
 			console.trace(e);
 		}
+	}
+
+	async publishAudio(specs) {
+		this.setOffline(true);
+		return super.publish(specs);
 	}
 
 	async publishSystem() {

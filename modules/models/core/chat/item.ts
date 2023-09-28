@@ -2,6 +2,8 @@
 import { Item } from '@beyond-js/reactive/entities';
 import { ChatProvider } from '@aimpact/chat-api/provider';
 import { Message } from './messages/item';
+import { IMessage } from './interfaces/message';
+import { Messages } from './messages';
 
 interface IChat {
 	id: string;
@@ -38,9 +40,9 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	declare fetching: boolean;
 	declare triggerEvent: () => void;
 	declare provider: any;
-	#messages: Map<string, any> = new Map();
+	#messages: Messages;
 	get messages() {
-		return [...this.#messages.values()];
+		return this.#messages;
 	}
 
 	constructor({ id = undefined } = {}) {
@@ -50,59 +52,68 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	loadAll = async specs => {
 		const response = await this.load(specs);
 		const messages = new Map();
+		const collection = new Messages();
+		const data = await collection.localLoad({ chatId: this.id });
+		collection.on('change', this.triggerEvent);
 		if (response.data.messages?.length) {
-			response.data.messages.forEach(message => messages.set(message.id, message));
+			await collection.setEntries(response.data.messages);
 		}
-		this.#messages = messages;
+		this.#messages = collection;
 	};
 
 	async setAudioMessage({ user, response }) {
-		const messageItem = new Message();
-		const responseItem = new Message();
-		await Promise.all([messageItem.isReady, responseItem.isReady]);
+		// const messageItem = new Message();
+		if (this.#currentAudio.id !== user.id) {
+			console.warn('son diferentes', this.#currentAudio.id, user.id);
+			return;
+		}
+		// this.#currentAudio.set(user);
+		this.#currentAudio.publish(user);
 
-		await messageItem.publish(user);
+		const responseItem = new Message();
+		await responseItem.isReady;
+
+		/**
+		 * Check with Felix if this is the correct way to do it
+		 */
+
 		await responseItem.publish(response);
 
 		const finalData = { ...user };
-		const data = this.#messages.get('temporal');
-		this.#messages.set(messageItem.id, { ...finalData, id: messageItem.id, audio: data.audio });
-		this.#messages.delete('temporal');
 
-		this.#messages.set(responseItem.id, { ...response, id: responseItem.id });
 		this.triggerEvent();
 
 		return responseItem;
 	}
 
-	async sendAudio(audio, transcription = undefined) {
-		const item = new Message();
-		await item.isReady;
-		item.setOffline(true);
+	#currentAudio: Message;
+	async sendAudio(audio, transcription = undefined): Promise<Message> {
+		try {
+			const item = new Message();
+			await item.isReady;
+			item.setOffline(true);
 
-		type ISpecs = {
-			id: string;
-			chatId: string;
-			type: string;
-			audio: Buffer;
-			role: string;
-			timestamp: number;
-			content?: string;
-		};
-		const specs: ISpecs = {
-			id: 'temporal',
-			chatId: this.id,
-			type: 'audio',
-			audio,
-			role: 'user',
-			timestamp: Date.now(),
-		};
-		if (transcription) {
-			specs.content = transcription;
+			const specs: IMessage = {
+				chat: { id: this.id },
+				chatId: this.id,
+				type: 'audio',
+				audio,
+				role: 'user',
+				timestamp: Date.now(),
+			};
+			if (transcription) {
+				specs.content = transcription;
+			}
+
+			this.#currentAudio = item;
+			item.publishAudio(specs);
+
+			this.triggerEvent();
+			console.log(98, item.id, item);
+			return item;
+		} catch (e) {
+			console.error(e);
 		}
-
-		this.#messages.set('temporal', specs);
-		this.triggerEvent();
 	}
 
 	async sendMessage(content: string) {
@@ -113,23 +124,23 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			performance.mark('previous.create.messages');
 			await Promise.all([item.isReady, response.isReady]);
 			performance.mark('after.create.messages');
-			this.#messages.set(item.id, {
-				id: item.id,
-				chatId: this.id,
-				content,
-				role: 'user',
-				timestamp: Date.now(),
-			});
-			this.#messages.set(response.id, {
-				id: response.id,
-				chatId: this.id,
-				content: '',
-				role: 'system',
-			});
+			// this.#messages.set(item.id, {
+			// 	id: item.id,
+			// 	chatId: this.id,
+			// 	content,
+			// 	role: 'user',
+			// 	timestamp: Date.now(),
+			// });
+			// this.#messages.set(response.id, {
+			// 	id: response.id,
+			// 	chatId: this.id,
+			// 	content: '',
+			// 	role: 'system',
+			// });
 
 			const onListen = () => {
 				response.content = item.response;
-				this.#messages.get(response.id).content = response.content;
+				//	this.#messages.elements(response.id).content = response.content;
 			};
 			const onEnd = () => {
 				this.trigger('response.finished');

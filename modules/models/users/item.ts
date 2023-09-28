@@ -34,16 +34,16 @@ export /*bundle*/ class User extends Item<IUser> {
 	}
 	constructor(specs) {
 		super({ id: specs.id, db: 'chat-api', storeName: 'User', provider: UserProvider });
+
 		this.initialize(specs);
 	}
 
 	initialize = async specs => {
+		super.initialise();
 		if (this.#promiseInit) return this.#promiseInit;
 		this.#promiseInit = new PendingPromise();
-
 		await this.isReady;
 		await this.set(specs);
-
 		this.#promiseInit.resolve();
 	};
 
@@ -55,13 +55,15 @@ export /*bundle*/ class User extends Item<IUser> {
 		if (this.#logged) return;
 
 		const specs = { ...this.getProperties(), id: this.id, firebaseToken };
+		console.log(88, specs);
 		const response = await this.provider.login(specs);
 
 		if (!response.status) {
 			throw new Error(response.error);
 		}
-		await this.set(response.data.user);
-		this.localUpdate(response.data.user);
+		await this.set(response.data.user, true);
+		console.log(10, response.data.user, this.getProperties());
+		// this.localUpdate(response.data.user);
 		this.#logged = true;
 		return true;
 	}

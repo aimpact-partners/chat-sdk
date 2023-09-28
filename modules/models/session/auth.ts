@@ -12,6 +12,7 @@ import {
 	confirmPasswordReset,
 	UserCredential,
 } from 'firebase/auth';
+import { PendingPromise } from '@beyond-js/kernel/core';
 
 interface IAuthResult {
 	status: boolean;
@@ -20,6 +21,8 @@ interface IAuthResult {
 }
 
 export class Auth {
+	#uid: string;
+	#pendingLogin: PendingPromise<IAuthResult>;
 	static async login(email: string, password: string): Promise<User> {
 		const userCredential = await auth().signInWithEmailAndPassword(email, password);
 		const user = new User(userCredential.user.uid, userCredential.user.displayName, userCredential.user.email);
@@ -32,19 +35,24 @@ export class Auth {
 
 	appLogin = async (response: UserCredential): Promise<IAuthResult> => {
 		if (response.user?.uid) {
+			if (this.#uid === response.user.uid) return;
+			this.#uid = response.user.uid;
+			if (this.#pendingLogin) return this.#pendingLogin;
+			this.#pendingLogin = new PendingPromise();
+
 			const { displayName, photoURL, email, phoneNumber, uid } = response.user;
 			const firebaseToken = await response.user.getIdToken();
 			const specs = { id: uid, displayName, photoURL, email, phoneNumber, firebaseToken };
-
 			const user = new User(specs);
-			user.set(specs);
+			user.set(specs, true);
 
-			const couldLog = await user.login(firebaseToken);
-
-			if (!couldLog) {
-				console.error('Could not login', couldLog);
-			}
-			return { status: true, user };
+			user.login(firebaseToken).then(couldLog => {
+				if (!couldLog) {
+					console.error('Could not login', couldLog);
+				}
+				this.#pendingLogin.resolve({ status: true, user });
+			});
+			return this.#pendingLogin;
 		}
 		return { status: false, error: 'INVALID_USER' };
 	};

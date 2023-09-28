@@ -7,6 +7,7 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 		return this.#speaking;
 	}
 
+	#id;
 	#text: string;
 	get text() {
 		return this.#text;
@@ -33,15 +34,11 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 	set lang(value) {
 		if (value === this.#lang) return;
 		this.#lang = value;
+
 		this.trigger('change');
 	}
 
 	declare trigger;
-
-	#id;
-	get textId() {
-		return this.#id;
-	}
 
 	#instance;
 	get instance() {
@@ -60,15 +57,32 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 	}
 
 	declare positionToCut;
-	constructor(language?) {
+	#languages = {
+		en: 'en-EN',
+		es: 'es-MX',
+		pr: 'pt-BR',
+	};
+	constructor({ language, rate }: { language?: string; rate?: number } = { rate: 1.25 }) {
 		super();
 		if (!language) language = languages.current;
-		this.reactiveProps(['lang', 'positionToCut']);
+		this.reactiveProps(['positionToCut', 'textId']);
 		this.positionToCut = 0;
+
 		this.lang = language;
-		this.rate = 1.2;
+		this.rate = rate;
+
+		this.initialValues({
+			lang: language,
+			rate: rate,
+		});
 	}
 
+	set({ language, rate }) {
+		if (language) {
+			this.lang = language;
+		}
+		if (rate) this.rate = rate;
+	}
 	_web() {
 		if (this.#speaking) {
 			speechSynthesis.cancel();
@@ -77,8 +91,9 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 
 		const text = this.#text;
 		const utterance = new SpeechSynthesisUtterance(text);
-		utterance.lang = this.lang;
+		utterance.lang = this.#languages[this.lang];
 		utterance.rate = this.rate;
+
 		utterance.onstart = () => {
 			this.#speaking = true;
 			this.trigger('change');

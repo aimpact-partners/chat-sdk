@@ -49,9 +49,12 @@ function PlayableComponent({ id, playable = true, content, player, onClickWord }
 
 		if (event.target.classList.contains('word')) {
 			const index = event.target.dataset.index;
+			const word = event.target.dataset.word;
+
 			const wordsArray = text.split(' ');
-			const textToPlay = wordsArray.slice(index).join(' ');
-			player.positionToCut = parseInt(index);
+			const textToPlay = wordsArray.slice(word).join(' ');
+			player.positionToCut = parseInt(word);
+			player.textId = id;
 			player.play(textToPlay);
 			if (onClickWord) onClickWord();
 			// Implement your logic for playing the text from the clicked word to the end here.
@@ -64,7 +67,8 @@ function PlayableComponent({ id, playable = true, content, player, onClickWord }
 			return <div className='message-text__container word' dangerouslySetInnerHTML={{ __html: output }} />;
 		}
 		return blocks.map((block, i) => {
-			const createSpan = (word, index) => `<span data-index="${index}${i}" class="word">${word}</span>`;
+			const createSpan = (word, index) =>
+				`<span data-word="${index}" data-index="${index}${i}" class="word">${word}</span>`;
 			if (block.isCode) {
 				return <Code key={`code-${i}`}>{block.content.replaceAll('`', '')}</Code>;
 			}

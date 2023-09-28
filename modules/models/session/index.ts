@@ -45,6 +45,7 @@ class SessionManager extends ReactiveModel<ISession> {
 		if (user) {
 			await this.setUser(user);
 		}
+
 		this.ready = true;
 		this.#promise.resolve(this.ready);
 	};
