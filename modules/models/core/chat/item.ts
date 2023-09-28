@@ -124,26 +124,23 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			performance.mark('previous.create.messages');
 			await Promise.all([item.isReady, response.isReady]);
 			performance.mark('after.create.messages');
-			// this.#messages.set(item.id, {
-			// 	id: item.id,
-			// 	chatId: this.id,
-			// 	content,
-			// 	role: 'user',
-			// 	timestamp: Date.now(),
-			// });
-			// this.#messages.set(response.id, {
-			// 	id: response.id,
-			// 	chatId: this.id,
-			// 	content: '',
-			// 	role: 'system',
-			// });
 
-			const onListen = () => {
+			const onListen = async () => {
+				if (!response) {
+					await response.isReady;
+					response.setOffline(true);
+					response.role = 'system';
+					response.publishSystem();
+				}
 				response.content = item.response;
+
+				this.triggerEvent();
 				//	this.#messages.elements(response.id).content = response.content;
 			};
 			const onEnd = () => {
 				this.trigger('response.finished');
+				console.log(100);
+				response.publish({ chatId: this.id, chat: { id: this.id } });
 				item.off('content.updated', onListen);
 			};
 			item.on('content.updated', onListen);
@@ -153,11 +150,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			performance.mark('after.publish.messages');
 			performance.measure('create.messages', 'previous.create.messages', 'after.create.messages');
 			performance.measure('publish.messages', 'previous.publish.messages', 'after.publish.messages');
-
-			response.setOffline(true);
-			response.role = 'system';
-			response.publishSystem();
-			this.triggerEvent();
 
 			return { message: item, response };
 
