@@ -3,7 +3,6 @@ import { mangle } from 'marked-mangle';
 import { marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
-import * as DOMPurify from 'dompurify';
 
 export /* bundle */ function useMarked() {
 	marked.use(mangle());

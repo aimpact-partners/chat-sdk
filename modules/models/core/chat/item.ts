@@ -4,6 +4,7 @@ import { ChatProvider } from '@aimpact/chat-api/provider';
 import { Message } from './messages/item';
 import { IMessage } from './interfaces/message';
 import { Messages } from './messages';
+import { languages } from '@beyond-js/kernel/core';
 
 interface IChat {
 	id: string;
@@ -31,6 +32,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		'system',
 		'parent',
 		'category',
+		'language',
 		'usage',
 		'children',
 		'knowledgeBoxId',
@@ -53,7 +55,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		const response = await this.load(specs);
 		const messages = new Map();
 		const collection = new Messages();
-		const data = await collection.localLoad({ chatId: this.id });
+		const data = await collection.localLoad({ chatId: this.id, sortBy: 'timestamp' });
 		collection.on('change', this.triggerEvent);
 		if (response.data.messages?.length) {
 			await collection.setEntries(response.data.messages);
@@ -62,24 +64,9 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	};
 
 	async setAudioMessage({ user, response }) {
-		// const messageItem = new Message();
-		if (this.#currentAudio.id !== user.id) {
-			console.warn('son diferentes', this.#currentAudio.id, user.id);
-			return;
-		}
-		// this.#currentAudio.set(user);
-		this.#currentAudio.publish(user);
-
 		const responseItem = new Message();
 		await responseItem.isReady;
-
-		/**
-		 * Check with Felix if this is the correct way to do it
-		 */
-
-		await responseItem.publish(response);
-
-		const finalData = { ...user };
+		await responseItem.saveMessage(response);
 
 		this.triggerEvent();
 
@@ -87,7 +74,13 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	}
 
 	#currentAudio: Message;
-	async sendAudio(audio, transcription = undefined): Promise<Message> {
+	/**
+	 * This method saves the audio locally to be able to reproduce it.
+	 * @param audio
+	 * @param transcription
+	 * @returns
+	 */
+	async saveAudioLocally(audio, transcription = undefined): Promise<Message> {
 		try {
 			const item = new Message();
 			await item.isReady;
@@ -99,6 +92,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				type: 'audio',
 				audio,
 				role: 'user',
+				language: this.language?.default ?? languages.current,
 				timestamp: Date.now(),
 			};
 			if (transcription) {
@@ -109,7 +103,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			item.publishAudio(specs);
 
 			this.triggerEvent();
-			console.log(98, item.id, item);
+
 			return item;
 		} catch (e) {
 			console.error(e);
@@ -121,35 +115,40 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			this.fetching = true;
 			const item = new Message();
 			let response = new Message();
-			performance.mark('previous.create.messages');
+
 			await Promise.all([item.isReady, response.isReady]);
-			performance.mark('after.create.messages');
-
+			let published = false;
 			const onListen = async () => {
-				if (!response) {
-					await response.isReady;
-					response.setOffline(true);
-					response.role = 'system';
-					response.publishSystem();
+				if (!published) {
+					published = true;
+					response.publishSystem({
+						offline: true,
+						specs: {
+							chatId: this.id,
+							chat: { id: this.id },
+							content: '',
+							role: 'system',
+							timestamp: Date.now(),
+						},
+					});
 				}
-				response.content = item.response;
+				response.updateContent({ content: item.response });
 
+				response.triggerEvent();
 				this.triggerEvent();
 				//	this.#messages.elements(response.id).content = response.content;
 			};
 			const onEnd = () => {
 				this.trigger('response.finished');
-				console.log(100);
-				response.publish({ chatId: this.id, chat: { id: this.id } });
+				response.publishSystem({
+					specs: { chatId: this.id, chat: { id: this.id }, role: 'system', timestamp: Date.now() },
+				});
 				item.off('content.updated', onListen);
 			};
 			item.on('content.updated', onListen);
 			item.on('response.finished', onEnd);
-			performance.mark('previous.publish.messages');
+
 			item.publish({ chatId: this.id, content, role: 'user', timestamp: Date.now() });
-			performance.mark('after.publish.messages');
-			performance.measure('create.messages', 'previous.create.messages', 'after.create.messages');
-			performance.measure('publish.messages', 'previous.publish.messages', 'after.publish.messages');
 
 			return { message: item, response };
 

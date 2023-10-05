@@ -42,6 +42,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	async publish(specs): Promise<any> {
 		try {
 			this.setOffline(true);
+
 			const token = await sessionWrapper.user.firebaseToken;
 			this.#api
 				.bearer(token)
@@ -57,13 +58,39 @@ export /*bundle*/ class Message extends Item<IMessage> {
 		}
 	}
 
+	/**
+	 * This method publishes the audio message as item
+	 *
+	 * It does not saves the audio itself, it only saves the item or document,
+	 * @param specs
+	 * @returns
+	 */
 	async publishAudio(specs) {
 		this.setOffline(true);
 		return super.publish(specs);
 	}
 
-	async publishSystem() {
+	/**
+	 * This method publishes the audio message as item
+	 *
+	 * It does not saves the audio itself, it only saves the item or document,
+	 * @param specs
+	 * @returns
+	 */
+	async saveMessage(specs) {
+		return super.publish(specs);
+	}
+
+	async publishSystem({ offline, specs }: { offline?: boolean; specs?: {} }) {
+		if (offline) this.setOffline(offline);
+		super.publish(specs);
+	}
+
+	async updateContent(specs) {
 		this.setOffline(true);
-		super.publish();
+		//@ts-ignore
+		await super.publish(specs);
+
+		this.trigger(`content.updated`);
 	}
 }

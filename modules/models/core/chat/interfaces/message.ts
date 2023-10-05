@@ -5,6 +5,7 @@ export interface IMessage {
 	role: string;
 	audio: Blob;
 	timestamp: number;
+	language: string;
 	type?: 'audio' | 'text';
 	usage?: {
 		completionTokens: number;

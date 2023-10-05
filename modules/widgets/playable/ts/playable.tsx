@@ -3,6 +3,7 @@ import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 import { useMarked } from '@aimpact/chat/shared/hooks';
 import { Code } from './code';
 import { useBoundary } from './useBoundary';
+import { parseText } from './parse-content';
 
 interface IPlayableProps {
 	content: string;
@@ -16,23 +17,8 @@ function PlayableComponent({ id, playable = true, content, player, onClickWord }
 	const mark = useMarked();
 	let autoplay = false;
 	const { ref, text, removeHighlight } = useBoundary(id, player, content);
-	/**
-	 * Split the text into blocks of code and text.
-	 */
 
-	const blocks = React.useMemo(() => {
-		if (!playable) return [];
-		return content
-			.split(/(```[\s\S]*?```|`[\s\S]*?`)/)
-			.filter(block => block.trim() !== '')
-			.map(block => {
-				const content = block.trim();
-				return {
-					content,
-					isCode: content.startsWith('```') || content.startsWith('`'),
-				};
-			});
-	}, [content, playable]);
+	const [blocks] = parseText(content);
 
 	React.useEffect(() => {
 		if (!playable) return;
@@ -48,9 +34,7 @@ function PlayableComponent({ id, playable = true, content, player, onClickWord }
 		event.stopPropagation();
 
 		if (event.target.classList.contains('word')) {
-			const index = event.target.dataset.index;
 			const word = event.target.dataset.word;
-
 			const wordsArray = text.split(' ');
 			const textToPlay = wordsArray.slice(word).join(' ');
 			player.positionToCut = parseInt(word);
