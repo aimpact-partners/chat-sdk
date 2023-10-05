@@ -63,10 +63,13 @@ class JCall extends ReactiveModel<JCall> {
 		url: string,
 		method: string = 'get',
 		params: Record<string, any> = {},
-		headersSpecs?: object = {},
+		headersSpecs?: object,
 		stream?: boolean
 	): Promise<any> => {
 		try {
+			if (!headersSpecs) {
+				headersSpecs = {};
+			}
 			let headers = this.getHeaders({ ...headersSpecs, bearer: params.bearer });
 			delete params.bearer;
 
