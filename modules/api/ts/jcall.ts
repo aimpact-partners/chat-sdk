@@ -10,8 +10,6 @@ interface session {
 
 export /*bundle*/
 class JCall extends ReactiveModel<JCall> {
-
-
 	#streamResponse: string = '';
 	get streamResponse() {
 		return this.#streamResponse;
@@ -65,10 +63,13 @@ class JCall extends ReactiveModel<JCall> {
 		url: string,
 		method: string = 'get',
 		params: Record<string, any> = {},
-		headersSpecs?: object = {},
+		headersSpecs?: object,
 		stream?: boolean
 	): Promise<any> => {
 		try {
+			if (!headersSpecs) {
+				headersSpecs = {};
+			}
 			let headers = this.getHeaders({ ...headersSpecs, bearer: params.bearer });
 			delete params.bearer;
 
