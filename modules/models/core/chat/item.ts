@@ -53,7 +53,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 	loadAll = async specs => {
 		const response = await this.load(specs);
-		const messages = new Map();
+
 		const collection = new Messages();
 
 		const data = await collection.localLoad({ conversationId: this.id, sortBy: 'timestamp' });
