@@ -63,7 +63,6 @@ export /*bundle*/ class Message extends Item<IMessage> {
 					this.#offEvents();
 				});
 
-			console.log(200, specs);
 			super.publish(specs);
 		} catch (e) {
 			console.trace(e);
