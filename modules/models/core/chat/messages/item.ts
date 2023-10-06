@@ -57,12 +57,13 @@ export /*bundle*/ class Message extends Item<IMessage> {
 			const token = await sessionWrapper.user.firebaseToken;
 			this.#api
 				.bearer(token)
-				.stream(`/conversations/${specs.chatId}/messages`, { message: specs.content })
+				.stream(`/conversations/${specs.conversationId}/messages`, { message: specs.content })
 				.then(response => {
 					this.trigger('response.finished');
 					this.#offEvents();
 				});
 
+			console.log(200, specs);
 			super.publish(specs);
 		} catch (e) {
 			console.trace(e);

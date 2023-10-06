@@ -1,6 +1,6 @@
 export interface IMessage {
 	chat: { id: string };
-	chatId?: string;
+	conversationId?: string;
 	content?: string;
 	role: string;
 	audio: Blob;

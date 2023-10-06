@@ -92,7 +92,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 			const specs: IMessage = {
 				chat: { id: this.id },
-				chatId: this.id,
+				conversationId: this.id,
 				type: 'audio',
 				audio,
 				role: 'user',
@@ -128,7 +128,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 					response.publishSystem({
 						offline: true,
 						specs: {
-							chatId: this.id,
+							conversationId: this.id,
 							chat: { id: this.id },
 							content: '',
 							role: 'system',
@@ -145,14 +145,14 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const onEnd = () => {
 				this.trigger('response.finished');
 				response.publishSystem({
-					specs: { chatId: this.id, chat: { id: this.id }, role: 'system', timestamp: Date.now() },
+					specs: { conversationId: this.id, chat: { id: this.id }, role: 'system', timestamp: Date.now() },
 				});
 				item.off('content.updated', onListen);
 			};
 			item.on('content.updated', onListen);
 			item.on('response.finished', onEnd);
 
-			item.publish({ chatId: this.id, content, role: 'user', timestamp: Date.now() });
+			item.publish({ conversationId: this.id, content, role: 'user', timestamp: Date.now() });
 
 			return { message: item, response };
 
