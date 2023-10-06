@@ -57,7 +57,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 			const token = await sessionWrapper.user.firebaseToken;
 			this.#api
 				.bearer(token)
-				.stream(`/conversations/${specs.conversationId}/messages`, { message: specs.content })
+				.stream(`/conversations/${specs.conversationId}/messages`, { message: specs.content, id: this.id })
 				.then(response => {
 					this.trigger('response.finished');
 					this.#offEvents();
@@ -94,7 +94,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	}
 
 	async publishSystem({ offline, specs }: { offline?: boolean; specs?: {} }) {
-		if (offline) this.setOffline(offline);
+		this.setOffline(offline);
 		super.publish(specs);
 	}
 

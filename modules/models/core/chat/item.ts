@@ -145,6 +145,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const onEnd = () => {
 				this.trigger('response.finished');
 				response.publishSystem({
+					offline: false,
 					specs: { conversationId: this.id, chat: { id: this.id }, role: 'system', timestamp: Date.now() },
 				});
 				item.off('content.updated', onListen);

@@ -33,11 +33,13 @@ function PlayableComponent({ id, playable = true, content, player, onClickWord }
 		event.preventDefault();
 		event.stopPropagation();
 
+		console.log(99, event.target.classList.contains('word'));
 		if (event.target.classList.contains('word')) {
 			const word = event.target.dataset.word;
 			const wordsArray = text.split(' ');
 			const textToPlay = wordsArray.slice(word).join(' ');
 			player.positionToCut = parseInt(word);
+			console.log(100, id, word);
 			player.textId = id;
 			player.play(textToPlay);
 			if (onClickWord) onClickWord();

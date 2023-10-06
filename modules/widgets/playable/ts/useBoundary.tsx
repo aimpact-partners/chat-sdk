@@ -15,13 +15,17 @@ export function useBoundary(id, player, content) {
 			const currentIndex = player.currentWord;
 
 			const block = ref.current.querySelector('.message-text__container')?.dataset.block;
-
+			// console.log('ejecutamos', player.positionToCut, player.currentWord);
 			if (player.positionToCut > 0) {
 				const segmentToCut = player.text.slice(0, currentIndex).split(' ').length - 1;
-				const finalPosition = player.positionToCut + segmentToCut;
+				// const finalPosition = player.positionToCut + segmentToCut;
+				const finalPosition = player.currentWord;
 
 				removeHighlight();
-				if (!ref.current.querySelector(`[data-index="${finalPosition}"]`)) return;
+				if (!ref.current.querySelector(`[data-index="${finalPosition}"]`)) {
+					console.log('No', finalPosition, ref.current.querySelector(`[data-index="${finalPosition}"]`));
+					return;
+				}
 				ref.current.querySelector(`[data-index="${finalPosition}"]`).classList.add('highlight');
 				return;
 			}
