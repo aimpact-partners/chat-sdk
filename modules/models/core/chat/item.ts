@@ -55,12 +55,16 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		const response = await this.load(specs);
 		const messages = new Map();
 		const collection = new Messages();
-		const data = await collection.localLoad({ chatId: this.id, sortBy: 'timestamp' });
+
+		const data = await collection.localLoad({ conversationId: this.id, sortBy: 'timestamp' });
 		collection.on('change', this.triggerEvent);
+
 		if (response.data.messages?.length) {
 			await collection.setEntries(response.data.messages);
 		}
 		this.#messages = collection;
+		window.m = collection;
+		window.c = this;
 	};
 
 	async setAudioMessage({ user, response }) {

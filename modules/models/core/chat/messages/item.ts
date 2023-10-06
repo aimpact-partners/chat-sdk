@@ -7,7 +7,18 @@ import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { IMessage } from '../interfaces/message';
 
 export /*bundle*/ class Message extends Item<IMessage> {
-	protected properties = ['id', 'chatId', 'audio', 'chat', 'userId', 'role', 'content', 'usage', 'timestamp'];
+	protected properties = [
+		'id',
+		'chatId',
+		'audio',
+		'chat',
+		'userId',
+		'role',
+		'content',
+		'usage',
+		'timestamp',
+		'conversationId',
+	];
 	declare autoplay: boolean;
 
 	declare id: string;
