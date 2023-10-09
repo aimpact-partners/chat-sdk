@@ -1,11 +1,22 @@
 // ChatItem
 import { Item } from '@beyond-js/reactive/entities';
-import { ChatProvider } from '@aimpact/chat-api/provider';
+import config from '@aimpact/chat-sdk/config';
+// import { ChatProvider } from '@aimpact/chat-api/provider';
+import { Api } from '@aimpact/chat/api';
 import { Message } from './messages/item';
 import { IMessage } from './interfaces/message';
 import { Messages } from './messages';
 import { languages } from '@beyond-js/kernel/core';
+import { ChatProvider } from './provider';
+import { sessionWrapper } from '@aimpact/chat-sdk/session';
 
+interface IMessageSpecs {
+	systemId: string;
+	id: string;
+	role: string;
+	content?: string;
+	audio?: Blob;
+}
 interface IChat {
 	id: string;
 	name: string;
@@ -24,6 +35,7 @@ interface IChat {
 
 export /*bundle*/ class Chat extends Item<IChat> {
 	declare id: string;
+	#api: Api;
 	protected properties = [
 		'id',
 		'autoplay',
@@ -41,7 +53,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	localdb = false;
 	declare fetching: boolean;
 	declare triggerEvent: () => void;
-	declare provider: any;
+
 	#messages: Messages;
 	get messages() {
 		return this.#messages;
@@ -49,11 +61,11 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 	constructor({ id = undefined } = {}) {
 		super({ id, db: 'chat-api', storeName: 'Chat', provider: ChatProvider });
+		this.#api = new Api(config.params.apis.chat);
 	}
 
 	loadAll = async specs => {
 		const response = await this.load(specs);
-
 		const collection = new Messages();
 
 		const data = await collection.localLoad({ conversationId: this.id, sortBy: 'timestamp' });
@@ -63,18 +75,22 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			await collection.setEntries(response.data.messages);
 		}
 		this.#messages = collection;
-		window.m = collection;
-		window.c = this;
+		globalThis.m = collection;
+		globalThis.c = this;
 	};
 
-	async setAudioMessage({ user, response }) {
-		const responseItem = new Message();
-		await responseItem.isReady;
-		await responseItem.saveMessage(response);
+	async setAudioMessage(response) {
+		try {
+			const responseItem = new Message();
+			await responseItem.isReady;
+			await responseItem.saveMessage(response);
 
-		this.triggerEvent();
+			this.triggerEvent();
 
-		return responseItem;
+			return responseItem;
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
 	#currentAudio: Message;
@@ -104,8 +120,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			}
 
 			this.#currentAudio = item;
-			item.publishAudio(specs);
-
+			await item.saveMessage(specs);
+			this.setOffline(false);
 			this.triggerEvent();
 
 			return item;
@@ -114,11 +130,11 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		}
 	}
 
-	async sendMessage(content: string) {
+	async sendMessage(content: string | Blob) {
 		try {
 			this.fetching = true;
-			const item = new Message();
-			let response = new Message();
+			const item = new Message({ chat: this });
+			let response = new Message({ chat: this });
 
 			await Promise.all([item.isReady, response.isReady]);
 			let published = false;
@@ -130,6 +146,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 						specs: {
 							conversationId: this.id,
 							chat: { id: this.id },
+							conversation: { id: this.id },
 							content: '',
 							role: 'system',
 							timestamp: Date.now(),
@@ -140,20 +157,28 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 				response.triggerEvent();
 				this.triggerEvent();
-				//	this.#messages.elements(response.id).content = response.content;
 			};
 			const onEnd = () => {
 				this.trigger('response.finished');
-				response.publishSystem({
-					offline: false,
-					specs: { conversationId: this.id, chat: { id: this.id }, role: 'system', timestamp: Date.now() },
-				});
+				response.updateContent({ content: item.response });
+
 				item.off('content.updated', onListen);
 			};
 			item.on('content.updated', onListen);
 			item.on('response.finished', onEnd);
 
-			item.publish({ conversationId: this.id, content, role: 'user', timestamp: Date.now() });
+			const specs: IMessageSpecs = {
+				systemId: response.id,
+				id: item.id,
+				role: 'user',
+			};
+			if (typeof content === 'string') {
+				specs.content = content;
+			} else {
+				specs.audio = content;
+			}
+			console.log(99, specs);
+			response = await item.publish(specs);
 
 			return { message: item, response };
 

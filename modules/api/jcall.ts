@@ -8,27 +8,18 @@ interface session {
 	accessToken: string;
 }
 
-type MetaData = { started: boolean; value: string; parsed: { value: object | undefined; error?: string } };
-
 export /*bundle*/
-class JCall2 extends ReactiveModel<JCall> {
-	#SEPARATORS = {
-		METADATA: 'ÿ',
-		START: '😸',
-		END: '🖋️',
-	};
+class JCall extends ReactiveModel<JCall> {
 	#streamResponse: string = '';
 	get streamResponse() {
 		return this.#streamResponse;
 	}
 
-	#metadata: MetaData = {
+	#metadata: { started: boolean; value: string; parsed: { value: object | undefined; error?: string } } = {
 		started: false,
 		value: '',
 		parsed: { value: void 0 },
 	};
-
-	#toolsInformation: MetaData[];
 	get metadata(): { value: object | undefined; error?: string } | undefined {
 		return this.#metadata.parsed;
 	}
@@ -39,19 +30,8 @@ class JCall2 extends ReactiveModel<JCall> {
 		if (bearer) this.#bearer = bearer;
 		return this;
 	}
-	/**
-	 *  @deprecated
-	 */
-	checkToken = (headers: any): any => {
-		if (typeof window === 'undefined') return headers;
-		let session: string = window.localStorage.getItem('session');
-		if (!session) return headers;
-		const sessionObject: session = JSON.parse(session);
-		headers.append('Authorization', `Bearer ${sessionObject.accessToken}`);
-		return headers;
-	};
 
-	getHeaders = (specs: any): Headers => {
+	getHeaders = (specs: any, multipart): Headers => {
 		let headers: Headers = new Headers();
 
 		const bearer = specs.bearer || this.#bearer;
@@ -64,39 +44,80 @@ class JCall2 extends ReactiveModel<JCall> {
 		const keys: string[] = Object.keys(specs);
 		keys.forEach((key: string): void => {
 			if (key === 'bearer') return;
+
 			headers.append(key, specs[key]);
 		});
+
+		// if (multipart) {
+		// 	console.log(90, 'here');
+		// 	headers.append('Content-Type', 'multipart/form-data');
+		// }
+
 		return headers;
+	};
+
+	#formData: FormData;
+	formData = (specs: Record<string, any>): FormData => {
+		this.#formData = new FormData();
+		const keys: string[] = Object.keys(specs);
+		keys.forEach((key: string): void => {
+			this.#formData.append(key, specs[key]);
+		});
+		return this.#formData;
+	};
+
+	#processGetParams(params: Record<string, string>): URLSearchParams | string {
+		const emptyParams: boolean = Object.entries(params).length === 0 && params.constructor === Object;
+		if (emptyParams) return '';
+		const parameters: URLSearchParams = new URLSearchParams();
+		for (const key in params) {
+			if (![NaN, undefined, ''].includes(params[key])) {
+				parameters.append(key, params[key]);
+			}
+		}
+		return parameters;
+	}
+
+	#processPostParams = (params, multipart): FormData | string => {
+		const emptyParams: boolean = Object.entries(params).length === 0 && params.constructor === Object;
+		if (emptyParams) return;
+
+		if (multipart) {
+			const data = this.formData(params);
+			return data;
+		}
+
+		return JSON.stringify(params);
 	};
 	execute = async (
 		url: string,
 		method: string = 'get',
 		params: Record<string, any> = {},
-		headersSpecs?: object = {},
-		stream?: boolean
+		headersSpecs?: object,
+		stream?: boolean,
+		data?: FormData
 	): Promise<any> => {
 		try {
-			let headers = this.getHeaders({ ...headersSpecs, bearer: params.bearer });
+			if (!headersSpecs) {
+				headersSpecs = {};
+			}
+			const multipart = params.multipart;
+			let headers = this.getHeaders({ ...headersSpecs, bearer: params.bearer }, multipart);
+
 			delete params.bearer;
 
 			const specs: RequestInit = { method, headers, mode: 'cors' };
 
-			const emptyParams: boolean = Object.entries(params).length === 0 && params.constructor === Object;
 			if (params.bearer) delete params.bearer;
-			if (method === 'post' && !emptyParams) {
-				specs.body = JSON.stringify(params);
-			} else if (!emptyParams && method === 'get') {
-				const parameters: URLSearchParams = new URLSearchParams();
-				for (const key in params) {
-					if (![NaN, undefined, ''].includes(params[key])) {
-						parameters.append(key, params[key]);
-					}
-				}
-				const queryString: string = parameters.toString();
-				if (queryString) {
-					url += `?${queryString}`;
-				}
+
+			if (method === 'post') {
+				specs.body = this.#processPostParams(params, multipart);
+			} else if (method === 'get') {
+				const queryString: string = this.#processGetParams(params).toString();
+				if (queryString) url += `?${queryString}`;
 			}
+
+			console.log(9999, specs);
 
 			if (stream) return this.#stream(url, specs);
 
@@ -126,66 +147,42 @@ class JCall2 extends ReactiveModel<JCall> {
 			const reader = response.body?.getReader();
 
 			const metadata = this.#metadata;
-			//{ started: boolean; value: string; parsed: { value: object | undefined; error?: string } };
-			let tool = { started: false, value: '', parsed: { value: undefined, error: undefined } };
 			while (true) {
 				const { done, value } = await reader.read();
 
 				if (done) {
-					promise.resolve(value);
+					try {
+						metadata.parsed.value = JSON.parse(metadata.value);
+					} catch (exc) {
+						console.error(exc);
+						this.#metadata.parsed.error = 'Error parsing metadata';
+					}
+					console.log(500, 'Stream complete', metadata.parsed);
+					promise.resolve({
+						value: this.#streamResponse,
+						...metadata.parsed.value,
+					});
 					this.#streamResponse = undefined;
 					break;
 				}
 				const chunk = new TextDecoder().decode(value);
 
-				if (metadata.started) {
-					metadata.value += chunk;
-					continue;
-				}
-				if (!chunk.includes(this.#SEPARATORS.METADATA)) {
-					this.#streamResponse += chunk;
-					continue;
-				}
-
-				if (chunk.includes(this.#SEPARATORS.START)) {
-					const splitted = chunk.split(this.#SEPARATORS.START);
-
-					if (splitted.length > 0) {
-						this.#streamResponse += splitted[0];
-						tool.started = true;
-						tool.value += splitted[1].replace(this.#SEPARATORS.START, '');
+				if (!metadata.started) {
+					if (!chunk.includes('ÿ')) {
+						this.#streamResponse += chunk;
 					} else {
-						tool.started = true;
-						tool.value += splitted[0].replace(this.#SEPARATORS.START, '');
+						metadata.started = true;
+						const split = chunk.split('ÿ');
+						metadata.value += split[1];
+						if (split[0]) this.#streamResponse += split[0];
 					}
-
-					continue;
+				} else {
+					metadata.value += chunk;
 				}
-
-				if (chunk.includes(this.#SEPARATORS.END)) {
-					const splitted = chunk.split(this.#SEPARATORS.END);
-
-					tool.value += splitted[0];
-					tool.parsed = JSON.parse(tool.value);
-					this.#toolsInformation.push(tool);
-					tool = { started: false, value: '', parsed: { value: undefined, error: undefined } };
-					continue;
-				}
-
-				metadata.started = true;
-				const split = chunk.split(this.#SEPARATORS.METADATA);
-				metadata.value += split[1];
-				if (split[0]) this.#streamResponse += split[0];
 
 				this.triggerEvent('stream.response');
 			} // end while
 
-			try {
-				metadata.parsed.value = JSON.parse(metadata.value);
-			} catch (exc) {
-				console.error(exc);
-				this.#metadata.parsed.error = 'Error parsing metadata';
-			}
 			return promise;
 		} catch (e) {
 			console.error(e);

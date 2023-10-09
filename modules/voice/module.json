@@ -1,5 +1,6 @@
 {
 	"name": "voice",
 	"bundle": "ts",
+	"platforms": ["browser", "web", "ios", "android"],
 	"files": "*"
 }

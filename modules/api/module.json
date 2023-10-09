@@ -1,7 +1,6 @@
 {
-  "name": "api",
-  "ts": {
-    "path": "./ts",
-    "files": ["*"]
-  }
+	"name": "api",
+	"bundle": "ts",
+	"platforms": ["browser", "web", "ios", "android"],
+	"files": "*"
 }

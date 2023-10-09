@@ -1,5 +1,6 @@
 {
 	"name": "session",
 	"bundle": "ts",
+	"platforms": ["browser", "web", "ios", "android"],
 	"files": "*"
 }

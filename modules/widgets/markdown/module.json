@@ -1,9 +1,8 @@
 {
-  "name": "widgets/markdown",
-  "ts": {
-    "path": "ts",
-    "files": [
-      "*"
-    ]
-  }
+	"name": "widgets/markdown",
+	"platforms": ["browser", "web", "ios", "android"],
+	"ts": {
+		"path": "ts",
+		"files": ["*"]
+	}
 }

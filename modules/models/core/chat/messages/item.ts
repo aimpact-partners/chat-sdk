@@ -5,6 +5,8 @@ import { Api } from '@aimpact/chat-sdk/api';
 import config from '@aimpact/chat-sdk/config';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { IMessage } from '../interfaces/message';
+import { PendingPromise } from '@beyond-js/kernel/core';
+import { Chat } from '../item';
 
 export /*bundle*/ class Message extends Item<IMessage> {
 	protected properties = [
@@ -25,11 +27,16 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	declare triggerEvent: () => void;
 	#api: Api;
 	#response: string = '';
+	//#endregion
+	#chat: Chat;
+	localFields = ['audio'];
 	get response() {
 		return this.#response;
 	}
-	constructor({ id = undefined } = {}) {
+
+	constructor({ id = undefined, chat } = {}) {
 		super({ id, db: 'chat-api', storeName: 'Messages', provider: MessageProvider });
+		this.#chat = chat;
 		const api = new Api(config.params.apis.chat);
 		this.#api = api;
 
@@ -49,21 +56,32 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	#offEvents = () => {
 		this.#api.off('stream.response', this.#onListen);
 	};
+
+	async getResponse() {}
 	//@ts-ignore
 	async publish(specs): Promise<any> {
 		try {
 			this.setOffline(true);
-
+			const promise = new PendingPromise();
 			const token = await sessionWrapper.user.firebaseToken;
+
 			this.#api
 				.bearer(token)
-				.stream(`/conversations/${specs.conversationId}/messages`, { message: specs.content, id: this.id })
+				.stream(`/conversations/${specs.conversationId}/messages`, {
+					// multipart: true,
+					...specs,
+				})
 				.then(response => {
+					promise.resolve(response);
 					this.trigger('response.finished');
 					this.#offEvents();
+				})
+				.catch(e => {
+					console.error(e);
 				});
 
 			super.publish(specs);
+			return promise;
 		} catch (e) {
 			console.trace(e);
 		}
@@ -92,6 +110,19 @@ export /*bundle*/ class Message extends Item<IMessage> {
 		return super.publish(specs);
 	}
 
+	/**
+	 * This method publishes the audio message as item
+	 *
+	 * It does not saves the audio itself, it only saves the item or document,
+	 * @param specs
+	 * @returns
+	 */
+	async syncMessage(specs) {
+		let data = { ...specs };
+		delete data.offline;
+		return super.forceSync(specs);
+	}
+
 	async publishSystem({ offline, specs }: { offline?: boolean; specs?: {} }) {
 		this.setOffline(offline);
 		super.publish(specs);
@@ -105,3 +136,4 @@ export /*bundle*/ class Message extends Item<IMessage> {
 		this.trigger(`content.updated`);
 	}
 }
+//

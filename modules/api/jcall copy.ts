@@ -8,18 +8,27 @@ interface session {
 	accessToken: string;
 }
 
+type MetaData = { started: boolean; value: string; parsed: { value: object | undefined; error?: string } };
+
 export /*bundle*/
-class JCall extends ReactiveModel<JCall> {
+class JCall2 extends ReactiveModel<JCall2> {
+	#SEPARATORS = {
+		METADATA: 'ÿ',
+		START: '😸',
+		END: '🖋️',
+	};
 	#streamResponse: string = '';
 	get streamResponse() {
 		return this.#streamResponse;
 	}
 
-	#metadata: { started: boolean; value: string; parsed: { value: object | undefined; error?: string } } = {
+	#metadata: MetaData = {
 		started: false,
 		value: '',
 		parsed: { value: void 0 },
 	};
+
+	#toolsInformation: MetaData[];
 	get metadata(): { value: object | undefined; error?: string } | undefined {
 		return this.#metadata.parsed;
 	}
@@ -63,13 +72,10 @@ class JCall extends ReactiveModel<JCall> {
 		url: string,
 		method: string = 'get',
 		params: Record<string, any> = {},
-		headersSpecs?: object,
+		headersSpecs?: object = {},
 		stream?: boolean
 	): Promise<any> => {
 		try {
-			if (!headersSpecs) {
-				headersSpecs = {};
-			}
 			let headers = this.getHeaders({ ...headersSpecs, bearer: params.bearer });
 			delete params.bearer;
 
@@ -120,6 +126,8 @@ class JCall extends ReactiveModel<JCall> {
 			const reader = response.body?.getReader();
 
 			const metadata = this.#metadata;
+			//{ started: boolean; value: string; parsed: { value: object | undefined; error?: string } };
+			let tool = { started: false, value: '', parsed: { value: undefined, error: undefined } };
 			while (true) {
 				const { done, value } = await reader.read();
 
@@ -130,18 +138,44 @@ class JCall extends ReactiveModel<JCall> {
 				}
 				const chunk = new TextDecoder().decode(value);
 
-				if (!metadata.started) {
-					if (!chunk.includes('ÿ')) {
-						this.#streamResponse += chunk;
-					} else {
-						metadata.started = true;
-						const split = chunk.split('ÿ');
-						metadata.value += split[1];
-						if (split[0]) this.#streamResponse += split[0];
-					}
-				} else {
+				if (metadata.started) {
 					metadata.value += chunk;
+					continue;
 				}
+				if (!chunk.includes(this.#SEPARATORS.METADATA)) {
+					this.#streamResponse += chunk;
+					continue;
+				}
+
+				if (chunk.includes(this.#SEPARATORS.START)) {
+					const splitted = chunk.split(this.#SEPARATORS.START);
+
+					if (splitted.length > 0) {
+						this.#streamResponse += splitted[0];
+						tool.started = true;
+						tool.value += splitted[1].replace(this.#SEPARATORS.START, '');
+					} else {
+						tool.started = true;
+						tool.value += splitted[0].replace(this.#SEPARATORS.START, '');
+					}
+
+					continue;
+				}
+
+				if (chunk.includes(this.#SEPARATORS.END)) {
+					const splitted = chunk.split(this.#SEPARATORS.END);
+
+					tool.value += splitted[0];
+					tool.parsed = JSON.parse(tool.value);
+					this.#toolsInformation.push(tool);
+					tool = { started: false, value: '', parsed: { value: undefined, error: undefined } };
+					continue;
+				}
+
+				metadata.started = true;
+				const split = chunk.split(this.#SEPARATORS.METADATA);
+				metadata.value += split[1];
+				if (split[0]) this.#streamResponse += split[0];
 
 				this.triggerEvent('stream.response');
 			} // end while

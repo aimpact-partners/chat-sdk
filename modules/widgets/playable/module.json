@@ -1,6 +1,7 @@
 {
 	"name": "widgets/playable",
 	"bundle": "code",
+	"platforms": ["browser", "web", "ios", "android"],
 	"scss": {
 		"path": "/scss",
 		"files": ["*"]
