@@ -65,10 +65,15 @@ export /*bundle*/ class Message extends Item<IMessage> {
 			const promise = new PendingPromise();
 			const token = await sessionWrapper.user.firebaseToken;
 
+			const endpoint = {
+				text: 'messages',
+				audio: `messages/audio`,
+			};
+			const url = `/conversations/${this.#chat.id}/${specs.audio ? endpoint.audio : endpoint.text}`;
+
 			this.#api
 				.bearer(token)
-				.stream(`/conversations/${specs.conversationId}/messages`, {
-					// multipart: true,
+				.stream(url, {
 					...specs,
 				})
 				.then(response => {
@@ -79,7 +84,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 				.catch(e => {
 					console.error(e);
 				});
-
+			console.log(0.1, 'publicamos', specs);
 			super.publish(specs);
 			return promise;
 		} catch (e) {

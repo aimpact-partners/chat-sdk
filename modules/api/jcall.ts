@@ -48,10 +48,10 @@ class JCall extends ReactiveModel<JCall> {
 			headers.append(key, specs[key]);
 		});
 
-		// if (multipart) {
-		// 	console.log(90, 'here');
-		// 	headers.append('Content-Type', 'multipart/form-data');
-		// }
+		if (multipart) {
+			console.log(90, 'here');
+			headers.delete('Content-Type');
+		}
 
 		return headers;
 	};
@@ -103,7 +103,7 @@ class JCall extends ReactiveModel<JCall> {
 			}
 			const multipart = params.multipart;
 			let headers = this.getHeaders({ ...headersSpecs, bearer: params.bearer }, multipart);
-
+			delete params.multipart;
 			delete params.bearer;
 
 			const specs: RequestInit = { method, headers, mode: 'cors' };
@@ -116,8 +116,6 @@ class JCall extends ReactiveModel<JCall> {
 				const queryString: string = this.#processGetParams(params).toString();
 				if (queryString) url += `?${queryString}`;
 			}
-
-			console.log(9999, specs);
 
 			if (stream) return this.#stream(url, specs);
 

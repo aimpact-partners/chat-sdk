@@ -7,14 +7,18 @@ import { Message } from './messages/item';
 import { IMessage } from './interfaces/message';
 import { Messages } from './messages';
 import { languages } from '@beyond-js/kernel/core';
+import dayjs from 'dayjs';
 import { ChatProvider } from './provider';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 
 interface IMessageSpecs {
+	conversationId: string;
 	systemId: string;
 	id: string;
+	timestamp: number;
 	role: string;
 	content?: string;
+	multipart?: boolean;
 	audio?: Blob;
 }
 interface IChat {
@@ -141,6 +145,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const onListen = async () => {
 				if (!published) {
 					published = true;
+
 					response.publishSystem({
 						offline: true,
 						specs: {
@@ -153,6 +158,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 						},
 					});
 				}
+				console.log(0.2, item.response);
 				response.updateContent({ content: item.response });
 
 				response.triggerEvent();
@@ -160,25 +166,28 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			};
 			const onEnd = () => {
 				this.trigger('response.finished');
-				response.updateContent({ content: item.response });
 
+				response.updateContent({ content: item.response });
 				item.off('content.updated', onListen);
 			};
 			item.on('content.updated', onListen);
 			item.on('response.finished', onEnd);
 
 			const specs: IMessageSpecs = {
+				conversationId: this.id,
 				systemId: response.id,
 				id: item.id,
+				timestamp: Date.now(),
 				role: 'user',
 			};
 			if (typeof content === 'string') {
 				specs.content = content;
 			} else {
+				specs.multipart = true;
 				specs.audio = content;
 			}
-			console.log(99, specs);
-			response = await item.publish(specs);
+
+			item.publish(specs);
 
 			return { message: item, response };
 
