@@ -30,6 +30,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	//#endregion
 	#chat: Chat;
 	localFields = ['audio'];
+	#parsedContent: { value: string; data: any[] };
 	get response() {
 		return this.#response;
 	}
@@ -45,6 +46,12 @@ export /*bundle*/ class Message extends Item<IMessage> {
 		this.initialise();
 	}
 
+	async initialise() {
+		super.initialise();
+		//await this.isReady;
+		//this.#processContent();
+	}
+
 	#onListen = () => {
 		this.#response = this.#api.streamResponse;
 		this.trigger('content.updated');
@@ -57,7 +64,6 @@ export /*bundle*/ class Message extends Item<IMessage> {
 		this.#api.off('stream.response', this.#onListen);
 	};
 
-	async getResponse() {}
 	//@ts-ignore
 	async publish(specs): Promise<any> {
 		try {
@@ -65,67 +71,25 @@ export /*bundle*/ class Message extends Item<IMessage> {
 			const promise = new PendingPromise();
 			const token = await sessionWrapper.user.firebaseToken;
 
-			const endpoint = {
-				text: 'messages',
-				audio: `messages/audio`,
-			};
-			const url = `/conversations/${this.#chat.id}/${specs.audio ? endpoint.audio : endpoint.text}`;
-
 			this.#api
 				.bearer(token)
-				.stream(url, {
+				.stream(`/conversations/${this.#chat.id}/messages/tools`, {
 					...specs,
 				})
 				.then(response => {
-					promise.resolve(response);
+					console.log(20, response);
 					this.trigger('response.finished');
 					this.#offEvents();
 				})
 				.catch(e => {
 					console.error(e);
 				});
-			console.log(0.1, 'publicamos', specs);
+
 			super.publish(specs);
 			return promise;
 		} catch (e) {
 			console.trace(e);
 		}
-	}
-
-	/**
-	 * This method publishes the audio message as item
-	 *
-	 * It does not saves the audio itself, it only saves the item or document,
-	 * @param specs
-	 * @returns
-	 */
-	async publishAudio(specs) {
-		this.setOffline(true);
-		return super.publish(specs);
-	}
-
-	/**
-	 * This method publishes the audio message as item
-	 *
-	 * It does not saves the audio itself, it only saves the item or document,
-	 * @param specs
-	 * @returns
-	 */
-	async saveMessage(specs) {
-		return super.publish(specs);
-	}
-
-	/**
-	 * This method publishes the audio message as item
-	 *
-	 * It does not saves the audio itself, it only saves the item or document,
-	 * @param specs
-	 * @returns
-	 */
-	async syncMessage(specs) {
-		let data = { ...specs };
-		delete data.offline;
-		return super.forceSync(specs);
 	}
 
 	async publishSystem({ offline, specs }: { offline?: boolean; specs?: {} }) {
@@ -137,7 +101,6 @@ export /*bundle*/ class Message extends Item<IMessage> {
 		this.setOffline(true);
 		//@ts-ignore
 		await super.publish(specs);
-
 		this.trigger(`content.updated`);
 	}
 }

@@ -158,7 +158,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 						},
 					});
 				}
-				console.log(0.2, item.response);
+
 				response.updateContent({ content: item.response });
 
 				response.triggerEvent();
@@ -190,9 +190,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			item.publish(specs);
 
 			return { message: item, response };
-
-			this.triggerEvent();
-			// return { response: response.data.response, message: response.data.message };
 		} catch (e) {
 			console.error(e);
 		} finally {

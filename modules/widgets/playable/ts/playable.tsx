@@ -12,17 +12,22 @@ interface IPlayableProps {
 	id: string;
 	playable?: boolean;
 	onClickWord?: () => void;
+	types: string[];
+	toolTexts: Record<string, string>;
 }
-function PlayableComponent({ id, playable = true, content, player, onClickWord }: IPlayableProps) {
+
+interface IBlocks {
+	type: string;
+}
+function PlayableComponent({ toolTexts, id, playable = true, content, player, onClickWord }: IPlayableProps) {
 	const mark = useMarked();
 	let autoplay = false;
-	const { ref, text, removeHighlight } = useBoundary(id, player, content);
 
-	const [blocks] = parseText(content);
-
+	const [blocks, playableContent] = parseText(id, content);
+	const { ref, text, removeHighlight } = useBoundary(id, player, playableContent);
 	React.useEffect(() => {
 		if (!playable) return;
-		const playableContent = blocks.filter(item => !item.isCode);
+		const playableContent = blocks.filter(item => item.type === 'code');
 		if (autoplay) player.play(playableContent.map(item => item.content).join(' '));
 	}, [autoplay, playable]);
 
@@ -33,13 +38,11 @@ function PlayableComponent({ id, playable = true, content, player, onClickWord }
 		event.preventDefault();
 		event.stopPropagation();
 
-		console.log(99, event.target.classList.contains('word'));
 		if (event.target.classList.contains('word')) {
 			const word = event.target.dataset.word;
 			const wordsArray = text.split(' ');
 			const textToPlay = wordsArray.slice(word).join(' ');
 			player.positionToCut = parseInt(word);
-			console.log(100, id, word);
 			player.textId = id;
 			player.play(textToPlay);
 			if (onClickWord) onClickWord();
@@ -47,18 +50,23 @@ function PlayableComponent({ id, playable = true, content, player, onClickWord }
 		}
 	};
 
-	const output = React.useMemo(() => {
-		if (!playable) {
-			const output = mark(content);
-			return <div className='message-text__container word' dangerouslySetInnerHTML={{ __html: output }} />;
-		}
+	const output = (() => {
+		console.log(0.91, playable);
+
+		const attrs = playable ? { onClick } : {};
 		return blocks.map((block, i) => {
 			const createSpan = (word, index) =>
 				`<span data-word="${index}" data-index="${index}${i}" class="word">${word}</span>`;
-			if (block.isCode) {
+			if (block.type === 'code') {
 				return <Code key={`code-${i}`}>{block.content.replaceAll('`', '')}</Code>;
 			}
-
+			if (['tool', 'function', 'kb-response'].includes(block.type)) {
+				return (
+					<div key={`${block.type}.${i}`} className={`${block.type}`}>
+						{toolTexts[block.type]}
+					</div>
+				);
+			}
 			const content = mark(block.content.split(' ').map(createSpan).join(' '));
 			//content = mark(block.content);
 			return (
@@ -66,12 +74,12 @@ function PlayableComponent({ id, playable = true, content, player, onClickWord }
 					key={`content-${i}`}
 					data-block={i}
 					className='message-text__container'
-					onClick={onClick}
+					{...attrs}
 					dangerouslySetInnerHTML={{ __html: content }}
 				/>
 			);
 		});
-	}, [content, playable]);
+	})();
 
 	return <div ref={ref}>{output}</div>;
 }

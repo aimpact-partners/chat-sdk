@@ -11,6 +11,11 @@ interface session {
 export /*bundle*/
 class JCall extends ReactiveModel<JCall> {
 	#streamResponse: string = '';
+	#SEPARATORS = {
+		METADATA: 'ÿ',
+		START: '😸',
+		END: '🖋️',
+	};
 	get streamResponse() {
 		return this.#streamResponse;
 	}
@@ -134,57 +139,81 @@ class JCall extends ReactiveModel<JCall> {
 		}
 	) => this.execute(url, 'post', params, headers, true);
 
-	async #stream(url, specs) {
+	#processStream = (promise, metadata) => {
 		try {
-			const promise = new PendingPromise();
-			const response: Response = await fetch(url, specs);
-
-			if (!response.ok) {
-				throw new Error('error in stream');
-			}
-			const reader = response.body?.getReader();
-
-			const metadata = this.#metadata;
-			while (true) {
-				const { done, value } = await reader.read();
-
-				if (done) {
-					try {
-						metadata.parsed.value = JSON.parse(metadata.value);
-					} catch (exc) {
-						console.error(exc);
-						this.#metadata.parsed.error = 'Error parsing metadata';
-					}
-					console.log(500, 'Stream complete', metadata.parsed);
-					promise.resolve({
-						value: this.#streamResponse,
-						...metadata.parsed.value,
-					});
-					this.#streamResponse = undefined;
-					break;
-				}
-				const chunk = new TextDecoder().decode(value);
-
-				if (!metadata.started) {
-					if (!chunk.includes('ÿ')) {
-						this.#streamResponse += chunk;
-					} else {
-						metadata.started = true;
-						const split = chunk.split('ÿ');
-						metadata.value += split[1];
-						if (split[0]) this.#streamResponse += split[0];
-					}
-				} else {
-					metadata.value += chunk;
-				}
-
-				this.triggerEvent('stream.response');
-			} // end while
-
-			return promise;
-		} catch (e) {
-			console.error(e);
+			metadata.parsed.value = JSON.parse(metadata.value);
+		} catch (exc) {
+			console.error(exc);
+			this.#metadata.parsed.error = 'Error parsing metadata';
 		}
+
+		promise.resolve({
+			value: this.#streamResponse,
+			...metadata.parsed.value,
+		});
+		this.#streamResponse = undefined;
+	};
+
+	async #stream(url, specs) {
+		const promise = new PendingPromise();
+		const response: Response = await fetch(url, specs);
+
+		if (!response.ok) {
+			throw new Error('error in stream');
+		}
+		const reader = response.body?.getReader();
+
+		const metadata = this.#metadata;
+		let tool = '';
+		while (true) {
+			const { done, value } = await reader.read();
+
+			if (done) {
+				return this.#processStream(promise, metadata);
+			}
+			let chunk = new TextDecoder().decode(value);
+
+			const processStartTool = (tool, chunk) => {
+				const splitted = chunk.split(this.#SEPARATORS.START);
+				if (splitted.length > 0) {
+					tool = splitted[1];
+					chunk = splitted[0];
+				}
+				return [tool, chunk];
+			};
+
+			if (chunk.includes(this.#SEPARATORS.METADATA)) {
+				metadata.started = true;
+				const split = chunk.split(this.#SEPARATORS.METADATA);
+				metadata.value += split[1];
+				if (split[0]) this.#streamResponse += split[0];
+			}
+
+			if (metadata.started) {
+				metadata.value += chunk;
+				this.triggerEvent('stream.response');
+				return;
+			}
+
+			if (chunk.includes(this.#SEPARATORS.END)) {
+				[tool, chunk] = processStartTool(tool, chunk);
+				const splitted = tool.split(this.#SEPARATORS.END);
+				tool = splitted[0];
+				chunk = splitted[1];
+				this.#streamResponse += this.#SEPARATORS.START + tool + this.#SEPARATORS.END;
+				tool = undefined;
+			}
+
+			if (chunk.includes(this.#SEPARATORS.START)) {
+				[tool, chunk] = processStartTool(tool, chunk);
+			} else {
+				this.#streamResponse += chunk;
+			}
+
+			this.triggerEvent('stream.response');
+		} // end while
+
+		return promise;
 
 		// Parse the metadata data
 	}
