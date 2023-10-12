@@ -176,13 +176,15 @@ class JCall extends ReactiveModel<JCall> {
 			if (done) {
 				return this.#processStream(promise, metadata);
 			}
+
 			let chunk = new TextDecoder().decode(value);
 
 			const processStartTool = (tool, chunk) => {
+				if (!chunk.includes(this.#SEPARATORS.START)) return [tool, chunk];
 				const splitted = chunk.split(this.#SEPARATORS.START);
 				if (splitted.length > 0) {
 					tool = splitted[1];
-					chunk = splitted[0];
+					chunk = splitted[0] ?? '';
 				}
 				return [tool, chunk];
 			};
@@ -202,9 +204,10 @@ class JCall extends ReactiveModel<JCall> {
 
 			if (chunk.includes(this.#SEPARATORS.END)) {
 				[tool, chunk] = processStartTool(tool, chunk);
+
 				const splitted = tool.split(this.#SEPARATORS.END);
 				tool = splitted[0];
-				chunk = splitted[1];
+				chunk = splitted[1] ?? '';
 				this.#actions.push(tool);
 				this.triggerEvent('action.received');
 				this.#streamResponse += this.#SEPARATORS.START + tool + this.#SEPARATORS.END;

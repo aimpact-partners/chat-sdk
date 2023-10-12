@@ -4,7 +4,6 @@ import { useMarked } from '@aimpact/chat/shared/hooks';
 import { Code } from './code';
 import { useBoundary } from './useBoundary';
 import { parseText } from './parse-content';
-import { Action } from '../../../../../app/modules/conversations/chat/ts/views/chat/messages/message/system-actions/action';
 
 interface IPlayableProps {
 	content: string;
@@ -52,7 +51,6 @@ function PlayableComponent({ toolTexts, id, playable = true, content, player, on
 		}
 	};
 
-	
 	const finalBlocks = blocks.filter(item => !ACTIONS.includes(item.type));
 	const output = (() => {
 		const attrs = playable ? { onClick } : {};
