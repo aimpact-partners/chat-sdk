@@ -9,6 +9,9 @@ class Api extends Events {
 	}
 	#fetcher: JCall;
 
+	get actions() {
+		return this.#fetcher.actions;
+	}
 	get streamResponse() {
 		return this.#fetcher.streamResponse;
 	}
@@ -20,6 +23,7 @@ class Api extends Events {
 		super();
 		this.#url = url;
 		this.#fetcher = new JCall();
+		this.#fetcher.on('action.received', () => this.trigger('action.received'));
 		this.#fetcher.on('stream.response', this.#getResponse);
 	}
 

@@ -16,6 +16,11 @@ class JCall extends ReactiveModel<JCall> {
 		START: '😸',
 		END: '🖋️',
 	};
+
+	#actions = [];
+	get actions() {
+		return this.#actions;
+	}
 	get streamResponse() {
 		return this.#streamResponse;
 	}
@@ -200,6 +205,8 @@ class JCall extends ReactiveModel<JCall> {
 				const splitted = tool.split(this.#SEPARATORS.END);
 				tool = splitted[0];
 				chunk = splitted[1];
+				this.#actions.push(tool);
+				this.triggerEvent('action.received');
 				this.#streamResponse += this.#SEPARATORS.START + tool + this.#SEPARATORS.END;
 				tool = '';
 			}

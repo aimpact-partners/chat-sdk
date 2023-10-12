@@ -83,7 +83,22 @@ export /*bundle*/ class Message extends Item<IMessage> {
 				.catch(e => {
 					console.error(e);
 				});
-
+			this.#api.on('action.received', () => {
+				try {
+					let transcription = this.#api?.actions?.find(action => {
+						const data = JSON.parse(action);
+						if (data.type === 'transcription') {
+							return true;
+						}
+					});
+					if (transcription) {
+						transcription = JSON.parse(transcription);
+						super.publish({ content: transcription.data.transcription });
+					}
+				} catch (e) {
+					console.error(e);
+				}
+			});
 			super.publish(specs);
 			return promise;
 		} catch (e) {
