@@ -73,11 +73,10 @@ export /*bundle*/ class Message extends Item<IMessage> {
 
 			this.#api
 				.bearer(token)
-				.stream(`/conversations/${this.#chat.id}/messages/tools`, {
+				.stream(`/conversations/${this.#chat.id}/messages`, {
 					...specs,
 				})
 				.then(response => {
-					console.log(20, response);
 					this.trigger('response.finished');
 					this.#offEvents();
 				})

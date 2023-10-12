@@ -201,7 +201,7 @@ class JCall extends ReactiveModel<JCall> {
 				tool = splitted[0];
 				chunk = splitted[1];
 				this.#streamResponse += this.#SEPARATORS.START + tool + this.#SEPARATORS.END;
-				tool = undefined;
+				tool = '';
 			}
 
 			if (chunk.includes(this.#SEPARATORS.START)) {

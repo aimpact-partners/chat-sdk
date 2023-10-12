@@ -4,6 +4,7 @@ import { useMarked } from '@aimpact/chat/shared/hooks';
 import { Code } from './code';
 import { useBoundary } from './useBoundary';
 import { parseText } from './parse-content';
+import { Action } from '../../../../../app/modules/conversations/chat/ts/views/chat/messages/message/system-actions/action';
 
 interface IPlayableProps {
 	content: string;
@@ -22,8 +23,9 @@ interface IBlocks {
 function PlayableComponent({ toolTexts, id, playable = true, content, player, onClickWord }: IPlayableProps) {
 	const mark = useMarked();
 	let autoplay = false;
+	const ACTIONS = ['transcription', 'fetching-tool-data', 'kb-processed-response', 'function', 'kb-response'];
+	const [blocks, playableContent] = parseText(id, content, ACTIONS);
 
-	const [blocks, playableContent] = parseText(id, content);
 	const { ref, text, removeHighlight } = useBoundary(id, player, playableContent);
 	React.useEffect(() => {
 		if (!playable) return;
@@ -50,23 +52,17 @@ function PlayableComponent({ toolTexts, id, playable = true, content, player, on
 		}
 	};
 
+	
+	const finalBlocks = blocks.filter(item => !ACTIONS.includes(item.type));
 	const output = (() => {
-		console.log(0.91, playable);
-
 		const attrs = playable ? { onClick } : {};
-		return blocks.map((block, i) => {
+		return finalBlocks.map((block, i) => {
 			const createSpan = (word, index) =>
 				`<span data-word="${index}" data-index="${index}${i}" class="word">${word}</span>`;
 			if (block.type === 'code') {
 				return <Code key={`code-${i}`}>{block.content.replaceAll('`', '')}</Code>;
 			}
-			if (['tool', 'function', 'kb-response'].includes(block.type)) {
-				return (
-					<div key={`${block.type}.${i}`} className={`${block.type}`}>
-						{toolTexts[block.type]}
-					</div>
-				);
-			}
+
 			const content = mark(block.content.split(' ').map(createSpan).join(' '));
 			//content = mark(block.content);
 			return (

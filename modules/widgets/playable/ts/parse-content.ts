@@ -33,6 +33,7 @@ function validateTools(content): { type: string; value: any }[] {
 		const precedingText = content.slice(previousIndex, match.index);
 		if (precedingText) {
 			outputArray.push({ type: 'string', value: precedingText });
+			continue;
 		}
 
 		// Push matched text as 'tool'
@@ -56,7 +57,7 @@ function validateTools(content): { type: string; value: any }[] {
 
 const cache: Cache = {};
 
-export /*bundle*/ const parseText = (key, content: string): TextParsed => {
+export /*bundle*/ const parseText = (key, content: string, ACTIONS: string[]): TextParsed => {
 	if (!content) return [[], ''];
 	// const key = hashContent(content);
 
@@ -72,11 +73,12 @@ export /*bundle*/ const parseText = (key, content: string): TextParsed => {
 	}
 
 	const initial = validateTools(content);
-	let elements = [];
 
+	let elements = [];
+	const actions = [];
 	initial.forEach(item => {
-		if (['tool', 'function', 'kb-response'].includes(item.type)) {
-			elements.push(item);
+		if (ACTIONS.includes(item.type)) {
+			actions.push(item);
 			return;
 		}
 
@@ -95,7 +97,7 @@ export /*bundle*/ const parseText = (key, content: string): TextParsed => {
 		.map(item => item.content)
 		.join(' ');
 
-	cache[key] = [elements, playable];
+	cache[key] = [elements, playable, actions];
 
 	return cache[key];
 };
