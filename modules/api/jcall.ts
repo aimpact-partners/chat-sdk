@@ -8,6 +8,8 @@ interface session {
 	accessToken: string;
 }
 
+type StreamData = { started: boolean; value: string; parsed: { value: object | undefined; error?: string } };
+
 export /*bundle*/
 class JCall extends ReactiveModel<JCall> {
 	#streamResponse: string = '';
@@ -17,7 +19,7 @@ class JCall extends ReactiveModel<JCall> {
 		END: '🖋️',
 	};
 
-	#actions = [];
+	#actions: string[] = [];
 	get actions() {
 		return this.#actions;
 	}
@@ -25,7 +27,7 @@ class JCall extends ReactiveModel<JCall> {
 		return this.#streamResponse;
 	}
 
-	#metadata: { started: boolean; value: string; parsed: { value: object | undefined; error?: string } } = {
+	#metadata: StreamData = {
 		started: false,
 		value: '',
 		parsed: { value: void 0 },
@@ -148,6 +150,7 @@ class JCall extends ReactiveModel<JCall> {
 		try {
 			metadata.parsed.value = JSON.parse(metadata.value);
 		} catch (exc) {
+			console.log(metadata);
 			console.error(exc);
 			this.#metadata.parsed.error = 'Error parsing metadata';
 		}
@@ -169,7 +172,7 @@ class JCall extends ReactiveModel<JCall> {
 		const reader = response.body?.getReader();
 
 		const metadata = this.#metadata;
-		let tool = '';
+		let tool: StreamData = { started: false, value: '', parsed: { value: void 0 } };
 		while (true) {
 			const { done, value } = await reader.read();
 
@@ -179,21 +182,48 @@ class JCall extends ReactiveModel<JCall> {
 
 			let chunk = new TextDecoder().decode(value);
 
-			const processStartTool = (tool, chunk) => {
-				if (!chunk.includes(this.#SEPARATORS.START)) return [tool, chunk];
+			// starts to receive an action tool
+			if (chunk.includes(this.#SEPARATORS.START)) {
 				const splitted = chunk.split(this.#SEPARATORS.START);
-				if (splitted.length > 0) {
-					tool = splitted[1];
-					chunk = splitted[0] ?? '';
+
+				tool.started = true;
+				chunk = '';
+				if (splitted[1].includes(this.#SEPARATORS.END)) {
+					// the action tool is completed
+					const splitted2 = splitted[1].split(this.#SEPARATORS.END);
+					tool.value = splitted2[0];
+					this.#actions.push(splitted2[0]);
+					this.#streamResponse += this.#SEPARATORS.START + tool.value + this.#SEPARATORS.END;
+				} else {
+					this.#streamResponse += splitted[0];
+					tool.value += splitted[1];
 				}
-				return [tool, chunk];
-			};
+				this.triggerEvent('stream.response');
+				this.triggerEvent('action.received');
+				continue;
+			}
+
+			if (tool.started && chunk.includes(this.#SEPARATORS.END)) {
+				// ends to receive an action tool
+
+				const splitted = chunk.split(this.#SEPARATORS.END);
+				tool.value += splitted[0];
+				tool.started = false;
+
+				this.#actions.push(tool.value);
+				this.triggerEvent('stream.response');
+				this.triggerEvent('action.received');
+				this.#streamResponse += this.#SEPARATORS.START + tool.value + this.#SEPARATORS.END;
+				tool = { started: false, value: '', parsed: { value: void 0 } };
+				chunk = splitted[1];
+			}
 
 			if (chunk.includes(this.#SEPARATORS.METADATA)) {
 				metadata.started = true;
 				const split = chunk.split(this.#SEPARATORS.METADATA);
 				metadata.value += split[1];
 				if (split[0]) this.#streamResponse += split[0];
+				continue;
 			}
 
 			if (metadata.started) {
@@ -202,24 +232,7 @@ class JCall extends ReactiveModel<JCall> {
 				return;
 			}
 
-			if (chunk.includes(this.#SEPARATORS.END)) {
-				[tool, chunk] = processStartTool(tool, chunk);
-
-				const splitted = tool.split(this.#SEPARATORS.END);
-				tool = splitted[0];
-				chunk = splitted[1] ?? '';
-				this.#actions.push(tool);
-				this.triggerEvent('action.received');
-				this.#streamResponse += this.#SEPARATORS.START + tool + this.#SEPARATORS.END;
-				tool = '';
-			}
-
-			if (chunk.includes(this.#SEPARATORS.START)) {
-				[tool, chunk] = processStartTool(tool, chunk);
-			} else {
-				this.#streamResponse += chunk;
-			}
-
+			this.#streamResponse += chunk;
 			this.triggerEvent('stream.response');
 		} // end while
 

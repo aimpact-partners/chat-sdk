@@ -87,10 +87,12 @@ export /*bundle*/ class Message extends Item<IMessage> {
 				try {
 					let transcription = this.#api?.actions?.find(action => {
 						const data = JSON.parse(action);
+
 						if (data.type === 'transcription') {
 							return true;
 						}
 					});
+
 					if (transcription) {
 						transcription = JSON.parse(transcription);
 						super.publish({ content: transcription.data.transcription });
