@@ -16,11 +16,10 @@ export function useBoundary(id, player, content) {
 
 			const block = ref.current.querySelector('.message-text__container')?.dataset.block;
 			let finalPosition = `0`;
-			// console.log('ejecutamos', player.positionToCut, player.currentWord);
+
 			if (player.positionToCut > 0) {
 				const segmentToCut = player.text.slice(0, currentIndex).split(' ').length - 1;
 				finalPosition = `${player.positionToCut + segmentToCut}${block}`;
-				// const finalPosition = player.currentWord;
 
 				removeHighlight();
 				if (!ref.current.querySelector(`[data-index="${finalPosition}"]`)) {

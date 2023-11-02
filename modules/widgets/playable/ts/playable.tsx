@@ -2,7 +2,7 @@ import React from 'react';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 import { useMarked } from '@aimpact/chat/shared/hooks';
 import { Code } from './code';
-import { useBoundary } from './useBoundary';
+import { useBoundary } from './use-boundary';
 import { parseText } from './parse-content';
 
 interface IPlayableProps {
@@ -45,6 +45,7 @@ function PlayableComponent({ toolTexts, id, playable = true, content, player, on
 			const textToPlay = wordsArray.slice(word).join(' ');
 			player.positionToCut = parseInt(word);
 			player.textId = id;
+
 			player.play(textToPlay);
 			if (onClickWord) onClickWord();
 			// Implement your logic for playing the text from the clicked word to the end here.
