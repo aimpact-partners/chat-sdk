@@ -11,6 +11,7 @@ export function useBoundary(id, player, content) {
 	useBinder(
 		[player],
 		() => {
+			console.log(4.12);
 			if (id !== player.textId) return;
 			const currentIndex = player.currentWord;
 

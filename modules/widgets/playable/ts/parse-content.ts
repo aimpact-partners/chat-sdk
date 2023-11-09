@@ -2,22 +2,16 @@ type ContentBlock = {
 	content: string;
 	type: string;
 };
-export type TextParsed = [ContentBlock[]?, string?];
+type Action = {
+	type: string;
+	data: { [key: string]: any };
+};
+type Content = { type: string; value: string };
+type InitialValue = Action | Content;
+export type TextParsed = [ContentBlock[]?, string?, Action[]?];
 type Cache = { [key: string]: TextParsed };
 
-const hashContent = (content: string) => {
-	let hash = 0,
-		i,
-		chr;
-	for (i = 0; i < content.length; i++) {
-		chr = content.charCodeAt(i);
-		hash = (hash << 5) - hash + chr;
-		hash |= 0; // Convertir a entero de 32 bits
-	}
-	return hash.toString();
-};
-
-function validateTools(content): { type: string; value: any }[] {
+function validateTools(content): InitialValue[] {
 	if (typeof content !== 'string') {
 		throw new Error('Input must be a string.');
 	}
@@ -73,16 +67,17 @@ export /*bundle*/ const parseText = (key, content: string, ACTIONS: string[]): T
 	}
 
 	const initial = validateTools(content);
-
 	let elements = [];
-	const actions = [];
+	const actions: Action[] = [];
+
 	initial.forEach(item => {
 		if (ACTIONS.includes(item.type)) {
-			actions.push(item);
+			actions.push(item as Action);
 			return;
 		}
 
-		const result = item.value
+		const content = (item as Content).value;
+		const result = content
 			.split(/(```[\s\S]*?```|`[\s\S]*?`)/)
 			.filter(block => block.trim() !== '')
 			.map(block => ({

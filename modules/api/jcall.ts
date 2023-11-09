@@ -5,12 +5,6 @@ interface headers {
 	'Content-Type': string;
 }
 
-interface session {
-	accessToken: string;
-}
-
-type StreamData = { started: boolean; value: string; parsed: { value: object | undefined; error?: string } };
-
 export /*bundle*/
 class JCall extends ReactiveModel<JCall> {
 	get actions() {

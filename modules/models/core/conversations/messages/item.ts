@@ -94,6 +94,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 					});
 
 					if (transcription) {
+						console.log(10, transcription);
 						transcription = JSON.parse(transcription);
 						super.publish({ content: transcription.data.transcription });
 					}

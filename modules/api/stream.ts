@@ -108,10 +108,10 @@ export class Stream {
 			}
 
 			if (chunk.includes(this.#SEPARATORS.START)) {
-				this.#response += this.handleStart(chunk, this.#response);
+				this.handleStart(chunk, this.#response);
 			} else if (this.#currentTool.started && chunk.includes(this.#SEPARATORS.END)) {
 				// ends to receive an action tool
-				this.#response += this.handleEnd(chunk, this.#response);
+				this.handleEnd(chunk, this.#response);
 				this.#cleanCurrentTool();
 			}
 
@@ -124,6 +124,7 @@ export class Stream {
 	async execute(url, specs) {
 		try {
 			const promise = new PendingPromise();
+			this.#response = '';
 			const response: Response = await fetch(url, specs);
 
 			if (!response.ok) {
