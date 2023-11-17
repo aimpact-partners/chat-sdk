@@ -82,7 +82,7 @@ class SessionManager extends ReactiveModel<ISession> {
 
 			if (!response.status) return false;
 			this.#user = response.user;
-
+			this.triggerEvent('login');
 			return response;
 		} catch (e) {
 			console.error(e);

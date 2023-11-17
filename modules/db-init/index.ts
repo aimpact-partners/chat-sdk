@@ -2,7 +2,7 @@ import { DBManager } from '@beyond-js/reactive/database';
 
 async function initialize() {
 	try {
-		const db = await DBManager.config('chat-api@19', {
+		const db = await DBManager.config('chat-api@20', {
 			Chat: 'id, name, userId, category, usage, system, knowledgeBoxId',
 			Conversations: 'id, name, userId, system',
 			User: 'id',
@@ -14,7 +14,7 @@ async function initialize() {
 			Lessons: 'id, curriculumObjective, userId',
 			Topics: 'id, lessonId, title',
 			Sessions: 'id, lessonId, classRoomId',
-			GClasses: 'id, sessions',
+			Classrooms: 'id, name',
 			Projects: 'id, project',
 			PromptCategories: 'id',
 			Prompts: 'id',
