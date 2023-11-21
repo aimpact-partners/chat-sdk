@@ -27,6 +27,14 @@ const CONFIG = {
 		messagingSenderId: '1083395329827',
 		appId: '1:1083395329827:web:c6fead0e2d4124b4f90696',
 	},
+	production: {
+		apiKey: 'AIzaSyAEEozzwR0cguqynxvL1qB38i8liOCgtJc',
+		authDomain: 'aimpact-partners-prod.firebaseapp.com',
+		projectId: 'aimpact-partners-prod',
+		storageBucket: 'aimpact-partners-prod.appspot.com',
+		messagingSenderId: '741854278426',
+		appId: '1:741854278426:web:9ff2a50e705edcc501f2a3',
+	},
 };
 
 // Initialize Firebase
