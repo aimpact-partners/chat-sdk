@@ -20,6 +20,7 @@ async function initialize() {
 			Assignments: 'id, name',
 			Prompts: 'id',
 			Activities: 'id',
+			StudentsHome: 'id',
 		});
 
 		// For example, if you have user data to add you can use:
