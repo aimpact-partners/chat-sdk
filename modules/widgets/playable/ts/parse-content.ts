@@ -61,7 +61,6 @@ const cache: Cache = {};
 export /*bundle*/ const parseText = (key, content: string, ACTIONS: string[]): TextParsed => {
 	if (!content) return [[], ''];
 	// const key = hashContent(content);
-	console.log(20, content);
 	// Ahora puedes usar 'key' como una clave única.
 
 	if (key in cache && cache[key][1]?.length === content.length) {
