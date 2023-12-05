@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMarked } from '@aimpact/chat-sdk/widgets/markdown';
-import { Code } from '../code';
+import { Code } from '../code/code';
 import { IPlayableProps } from './interfaces/playable-props';
 
 export const PlayableItem = React.memo(function ({
@@ -12,6 +12,7 @@ export const PlayableItem = React.memo(function ({
 	player,
 	onClickWord,
 }: IPlayableItemProps) {
+	const mark = useMarked();
 	const onClick = event => {
 		event.preventDefault();
 		event.stopPropagation();
@@ -22,7 +23,6 @@ export const PlayableItem = React.memo(function ({
 			const textToPlay = wordsArray.slice(word).join(' ');
 			player.positionToCut = parseInt(word);
 			player.textId = id;
-
 			player.play(textToPlay);
 			if (onClickWord) onClickWord();
 			// Implement your logic for playing the text from the clicked word to the end here.
@@ -33,10 +33,7 @@ export const PlayableItem = React.memo(function ({
 		return <Code key={`code-${index}`}>{block.content.replaceAll('`', '')}</Code>;
 	}
 
-	const createSpan = (word, index) =>
-		`<span data-word="${index}" data-index="${index}${index}" class="word">${word}</span>`;
-
-	// const content = mark(block.content).split(' ').map(createSpan).join(' ');
+	const createSpan = (word, i) => `<span data-word="${i}" data-index="${i}${index}" class="word">${word}</span>`;
 
 	const content = block.content.split(' ').map(createSpan).join(' ');
 	// const content = block.content;
