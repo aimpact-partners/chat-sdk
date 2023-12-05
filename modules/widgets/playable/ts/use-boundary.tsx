@@ -11,7 +11,6 @@ export function useBoundary(id, player, content) {
 	useBinder(
 		[player],
 		() => {
-			console.log(4.12);
 			if (id !== player.textId) return;
 			const currentIndex = player.currentWord;
 
@@ -35,7 +34,7 @@ export function useBoundary(id, player, content) {
 			finalPosition = `${position}${block}`;
 
 			removeHighlight();
-			ref.current.querySelector(`[data-index="${finalPosition}"]`).classList.add('highlight');
+			ref.current.querySelector(`[data-index="${finalPosition}"]`)?.classList.add('highlight');
 		},
 		'boundary'
 	);

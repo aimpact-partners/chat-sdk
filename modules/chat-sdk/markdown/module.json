@@ -1,0 +1,15 @@
+{
+	"name": "/chat-sdk/markdown",
+	"widget": {
+		"route": "/chat/sdk/markdown",
+		"is": "page",
+		"layout": "general-layout",
+		"ts": {
+			"path": "/ts",
+			"files": ["*"]
+		},
+		"element": {
+			"name": "chat-sdk-markdown-page"
+		}
+	}
+}

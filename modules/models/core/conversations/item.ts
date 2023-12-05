@@ -10,6 +10,7 @@ import { languages } from '@beyond-js/kernel/core';
 import dayjs from 'dayjs';
 import { ChatProvider } from './provider';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
+import { IChat } from './interfaces/chat';
 
 interface IMessageSpecs {
 	conversationId: string;
@@ -20,21 +21,6 @@ interface IMessageSpecs {
 	content?: string;
 	multipart?: boolean;
 	audio?: Blob;
-}
-interface IChat {
-	id: string;
-	name: string;
-	userId: string;
-	category: string;
-	system: string;
-	parent: string;
-	knowledgeBoxId: string;
-	usage: {
-		completionTokens: number;
-		promptTokens: number;
-		totalTokens: number;
-	};
-	metadata: {};
 }
 
 export /*bundle*/ class Chat extends Item<IChat> {
@@ -159,15 +145,17 @@ export /*bundle*/ class Chat extends Item<IChat> {
 					});
 				}
 
+				this.trigger(`message.${response.id}.updated`);
 				response.updateContent({ content: item.response });
 
 				response.triggerEvent();
 				this.triggerEvent();
 			};
 			const onEnd = () => {
-				this.trigger('response.finished');
-
 				response.updateContent({ content: item.response });
+				console.log(99.2, 'onEnd');
+				this.trigger(`message.${response.id}.ended`);
+				this.trigger(`message.${response.id}.updated`);
 				item.off('content.updated', onListen);
 			};
 			item.on('content.updated', onListen);

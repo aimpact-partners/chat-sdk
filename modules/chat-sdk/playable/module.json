@@ -1,0 +1,14 @@
+{
+	"name": "chat-sdk/playable",
+	"widget": {
+		"route": "/chat-sdk/playable",
+		"is": "page",
+		"ts": {
+			"path": "/ts",
+			"files": ["*"]
+		},
+		"element": {
+			"name": "chat-sdk-playable"
+		}
+	}
+}

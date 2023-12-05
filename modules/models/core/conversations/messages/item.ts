@@ -7,7 +7,7 @@ import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { IMessage } from '../interfaces/message';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { Chat } from '../item';
-
+import { Spinner } from 'pragmate-ui/components';
 export /*bundle*/ class Message extends Item<IMessage> {
 	protected properties = [
 		'id',
@@ -54,6 +54,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 
 	#onListen = () => {
 		this.#response = this.#api.streamResponse;
+
 		this.trigger('content.updated');
 	};
 	#listen = () => {
@@ -83,6 +84,11 @@ export /*bundle*/ class Message extends Item<IMessage> {
 				.catch(e => {
 					console.error(e);
 				});
+
+			/**
+			 * @todo: Julio, the next code probably can be removed;
+			 * I don't know what transcription is or where is used
+			 */
 			this.#api.on('action.received', () => {
 				try {
 					let transcription = this.#api?.actions?.find(action => {
@@ -94,7 +100,6 @@ export /*bundle*/ class Message extends Item<IMessage> {
 					});
 
 					if (transcription) {
-						console.log(10, transcription);
 						transcription = JSON.parse(transcription);
 						super.publish({ content: transcription.data.transcription });
 					}
@@ -118,6 +123,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 		this.setOffline(true);
 		//@ts-ignore
 		await super.publish(specs);
+
 		this.trigger(`content.updated`);
 	}
 }

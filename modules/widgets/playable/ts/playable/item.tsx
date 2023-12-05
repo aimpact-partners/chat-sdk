@@ -1,16 +1,8 @@
 import React from 'react';
-import { useMarked } from '@aimpact/chat/shared/hooks';
+import { useMarked } from '@aimpact/chat-sdk/widgets/markdown';
 import { Code } from '../code';
+import { IPlayableProps } from './interfaces/playable-props';
 
-interface IPlayableProps {
-	block: any;
-	text: string;
-	id: string;
-	index: number;
-	playable: boolean;
-	player: any;
-	onClickWord?: () => void;
-}
 export const PlayableItem = React.memo(function ({
 	block,
 	text,
@@ -19,9 +11,7 @@ export const PlayableItem = React.memo(function ({
 	playable,
 	player,
 	onClickWord,
-}: IPlayableProps) {
-	const mark = useMarked();
-
+}: IPlayableItemProps) {
 	const onClick = event => {
 		event.preventDefault();
 		event.stopPropagation();
@@ -47,6 +37,7 @@ export const PlayableItem = React.memo(function ({
 		`<span data-word="${index}" data-index="${index}${index}" class="word">${word}</span>`;
 
 	// const content = mark(block.content).split(' ').map(createSpan).join(' ');
+
 	const content = block.content.split(' ').map(createSpan).join(' ');
 	// const content = block.content;
 	return (
