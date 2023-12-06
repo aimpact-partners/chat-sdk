@@ -32,7 +32,7 @@ function PlayableComponent({ className, id, playable = true, content, player, on
 			<PlayableItem
 				key={`content-${i}`}
 				onClickWord={onClickWord}
-				text={text}
+				text={content}
 				block={block}
 				index={i}
 				id={id}

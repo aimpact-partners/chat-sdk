@@ -8,16 +8,14 @@ export function useBoundary(id, player, content) {
 		ref.current.querySelectorAll('.highlight').forEach(element => element.classList.remove('highlight'));
 	};
 
-	useBinder(
-		[player],
-		() => {
-			console.log(22, id, player.textId);
+	React.useEffect(() => {
+		const onBoundary = () => {
 			if (id !== player.textId) return;
 			const currentIndex = player.currentWord;
-			console.log(22.5, currentIndex);
+
 			const block = ref.current.querySelector('.message-text__container')?.dataset.block;
 			let finalPosition = `0`;
-			console.log(23, block, player.positionToCut);
+
 			if (player.positionToCut > 0) {
 				const segmentToCut = player.text.slice(0, currentIndex).split(' ').length - 1;
 				finalPosition = `${player.positionToCut + segmentToCut}${block}`;
@@ -30,15 +28,19 @@ export function useBoundary(id, player, content) {
 				return;
 			}
 
-			const segment = text.slice(0, currentIndex);
+			const segment = content.slice(0, currentIndex);
 			const position = segment.split(' ').length - 1;
 			finalPosition = `${position}${block}`;
-			console.log(24, finalPosition);
+
 			removeHighlight();
 			ref.current.querySelector(`[data-index="${finalPosition}"]`)?.classList.add('highlight');
-		},
-		'boundary'
-	);
+		};
 
-	return { ref, text, removeHighlight };
+		player.on('boundary', onBoundary);
+		return () => {
+			player.off('boundary', onBoundary);
+		};
+	}, [content]);
+
+	return { ref, text: content, removeHighlight };
 }

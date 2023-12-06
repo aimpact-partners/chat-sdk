@@ -1,18 +1,14 @@
 import React from 'react';
-import { useMarked } from '@aimpact/chat-sdk/widgets/markdown';
+
 import { Code } from '../code/code';
 import { IPlayableProps } from './interfaces/playable-props';
-
-export const PlayableItem = React.memo(function ({
-	block,
-	text,
-	id,
-	index,
-	playable,
-	player,
-	onClickWord,
-}: IPlayableItemProps) {
-	const mark = useMarked();
+/**
+ * A  text message can contains more than one block of text,
+ * the "block" value represents the number of the block, usually the value
+ * is 0 at least you have a message with code blocks.
+ *
+ */
+export const PlayableItem = function ({ block, text, id, index, playable, player, onClickWord }: IPlayableItemProps) {
 	const onClick = event => {
 		event.preventDefault();
 		event.stopPropagation();
@@ -23,11 +19,13 @@ export const PlayableItem = React.memo(function ({
 			const textToPlay = wordsArray.slice(word).join(' ');
 			player.positionToCut = parseInt(word);
 			player.textId = id;
+
 			player.play(textToPlay);
 			if (onClickWord) onClickWord();
 			// Implement your logic for playing the text from the clicked word to the end here.
 		}
 	};
+	
 	const attrs = playable ? { onClick } : {};
 	if (block.type === 'code') {
 		return <Code key={`code-${index}`}>{block.content.replaceAll('`', '')}</Code>;
@@ -46,4 +44,4 @@ export const PlayableItem = React.memo(function ({
 			dangerouslySetInnerHTML={{ __html: content }}
 		/>
 	);
-});
+};

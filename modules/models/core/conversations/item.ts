@@ -153,7 +153,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			};
 			const onEnd = () => {
 				response.updateContent({ content: item.response });
-				console.log(99.2, 'onEnd');
 				this.trigger(`message.${response.id}.ended`);
 				this.trigger(`message.${response.id}.updated`);
 				item.off('content.updated', onListen);
