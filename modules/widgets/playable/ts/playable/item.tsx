@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Code } from '../code/code';
 import { IPlayableProps } from './interfaces/playable-props';
+import { Markdown } from '@aimpact/chat-sdk/widgets/markdown';
 /**
  * A  text message can contains more than one block of text,
  * the "block" value represents the number of the block, usually the value
@@ -25,7 +26,7 @@ export const PlayableItem = function ({ block, text, id, index, playable, player
 			// Implement your logic for playing the text from the clicked word to the end here.
 		}
 	};
-	
+
 	const attrs = playable ? { onClick } : {};
 	if (block.type === 'code') {
 		return <Code key={`code-${index}`}>{block.content.replaceAll('`', '')}</Code>;
@@ -36,12 +37,8 @@ export const PlayableItem = function ({ block, text, id, index, playable, player
 	const content = block.content.split(' ').map(createSpan).join(' ');
 	// const content = block.content;
 	return (
-		<div
-			key={`content-${index}`}
-			data-block={index}
-			className='message-text__container'
-			{...attrs}
-			dangerouslySetInnerHTML={{ __html: content }}
-		/>
+		<div key={`content-${index}`} data-block={index} className='message-text__container' {...attrs}>
+			<Markdown content={content} />
+		</div>
 	);
 };
