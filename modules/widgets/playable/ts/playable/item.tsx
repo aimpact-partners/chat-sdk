@@ -1,8 +1,7 @@
 import React from 'react';
-
 import { Code } from '../code/code';
-import { IPlayableProps } from './interfaces/playable-props';
-import { Markdown } from '@aimpact/chat-sdk/widgets/markdown';
+import { useMarked, Markdown } from '@aimpact/chat-sdk/widgets/markdown';
+
 /**
  * A  text message can contains more than one block of text,
  * the "block" value represents the number of the block, usually the value
@@ -10,6 +9,7 @@ import { Markdown } from '@aimpact/chat-sdk/widgets/markdown';
  *
  */
 export const PlayableItem = function ({ block, text, id, index, playable, player, onClickWord }: IPlayableItemProps) {
+	const marked = useMarked();
 	const onClick = event => {
 		event.preventDefault();
 		event.stopPropagation();
@@ -33,8 +33,8 @@ export const PlayableItem = function ({ block, text, id, index, playable, player
 	}
 
 	const createSpan = (word, i) => `<span data-word="${i}" data-index="${i}${index}" class="word">${word}</span>`;
-
-	const content = block.content.split(' ').map(createSpan).join(' ');
+	const markedText = marked(block.content);
+	const content = markedText.split(' ').map(createSpan).join(' ');
 	// const content = block.content;
 	return (
 		<div key={`content-${index}`} data-block={index} className='message-text__container' {...attrs}>
