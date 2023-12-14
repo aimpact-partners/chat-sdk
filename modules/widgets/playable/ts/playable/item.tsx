@@ -38,7 +38,7 @@ export const PlayableItem = function ({ block, text, id, index, playable, player
 	// const content = block.content;
 	return (
 		<div key={`content-${index}`} data-block={index} className='message-text__container' {...attrs}>
-			<Markdown content={content} />
+			<Markdown content={text} />
 		</div>
 	);
 };
