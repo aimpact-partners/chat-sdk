@@ -21,7 +21,7 @@ export const PlayableItem = function ({ block, text, id, index, playable, player
 			player.positionToCut = parseInt(word);
 			player.textId = id;
 
-			player.play(textToPlay);
+			player.play(textToPlay.replaceAll(/[-\\*_#]+/g, '').trim()); // remove markdown characters to avoid reading them with the text-to-speech engine
 			if (onClickWord) onClickWord();
 			// Implement your logic for playing the text from the clicked word to the end here.
 		}
@@ -33,12 +33,30 @@ export const PlayableItem = function ({ block, text, id, index, playable, player
 	}
 
 	const createSpan = (word, i) => `<span data-word="${i}" data-index="${i}${index}" class="word">${word}</span>`;
+
+	function wrapTextWithSpan(htmlString, index) {
+		return htmlString.replace(/([^<]+)|(<[^>]+>)/g, (match, text) => {
+			// If the match is text (not an HTML tag)
+			if (!text) return match;
+			// Split the text into words and wrap each word with a span
+
+			return text
+				.split(/\s+/)
+				.map(word => {
+					// Ignore special characters or empty strings
+					if (!word.trim() || word.match(/[\.,¿¡!\?;:\-\n\t]/)) return word;
+					return createSpan(word, index++);
+				})
+				.join(' ');
+		});
+	}
+
 	const markedText = marked(block.content);
-	const content = markedText.split(' ').map(createSpan).join(' ');
-	// const content = block.content;
+	const content = markedText.split(' ').map(wrapTextWithSpan).join(' ');
+
 	return (
-		<div key={`content-${index}`} data-block={index} className='message-text__container' {...attrs}>
-			<Markdown content={text} />
-		</div>
+		<Markdown key={`content-${index}`} data-block={index} className='message-text__container' {...attrs}>
+			{content}
+		</Markdown>
 	);
 };

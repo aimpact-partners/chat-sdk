@@ -38,6 +38,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		'usage',
 		'children',
 		'knowledgeBoxId',
+		'user',
 		'metadata',
 	];
 	localdb = false;
@@ -52,6 +53,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	constructor({ id = undefined } = {}) {
 		super({ id, db: 'chat-api', storeName: 'Chat', provider: ChatProvider });
 		this.#api = new Api(config.params.apis.chat);
+		globalThis.chat = this;
+		console.log(`chat is being exposed in console as chat`);
 	}
 
 	loadAll = async specs => {

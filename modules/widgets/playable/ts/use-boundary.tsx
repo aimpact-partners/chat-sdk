@@ -9,10 +9,14 @@ export function useBoundary(id, player, content) {
 	};
 
 	React.useEffect(() => {
+		/**
+		 * todo: @jircdev content replacemennt is being done here and in item.tsx
+		 */
+		content = content.replaceAll(/[-\\*_#\n\t]+/g, '').trim();
+
 		const onBoundary = () => {
 			if (id !== player.textId) return;
 			const currentIndex = player.currentWord;
-
 			const block = ref.current.querySelector('.message-text__container')?.dataset.block;
 			let finalPosition = `0`;
 
@@ -31,7 +35,6 @@ export function useBoundary(id, player, content) {
 			const segment = content.slice(0, currentIndex);
 			const position = segment.split(' ').length - 1;
 			finalPosition = `${position}${block}`;
-
 			removeHighlight();
 			ref.current.querySelector(`[data-index="${finalPosition}"]`)?.classList.add('highlight');
 		};
