@@ -40,6 +40,7 @@ export /*bundle*/ class User extends Item<IUser> {
 
 	initialize = async specs => {
 		super.initialise();
+		//@ts-ignore
 		if (this.#promiseInit) return this.#promiseInit;
 		this.#promiseInit = new PendingPromise();
 		await this.isReady;

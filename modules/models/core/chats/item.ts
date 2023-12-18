@@ -39,7 +39,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		'children',
 		'knowledgeBoxId',
 		'user',
-		'metadata',
+		'metadata'
 	];
 	localdb = false;
 	declare fetching: boolean;
@@ -54,7 +54,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		super({ id, db: 'chat-api', storeName: 'Chat', provider: ChatProvider });
 		this.#api = new Api(config.params.apis.chat);
 		globalThis.chat = this;
-		console.log(`chat is being exposed in console as chat`);
+		console.log(`chat is being exposed in console as chat`, id);
 	}
 
 	loadAll = async specs => {
@@ -106,7 +106,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				audio,
 				role: 'user',
 				language: this.language?.default ?? languages.current,
-				timestamp: Date.now(),
+				timestamp: Date.now()
 			};
 			if (transcription) {
 				specs.content = transcription;
@@ -143,8 +143,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 							conversation: { id: this.id },
 							content: '',
 							role: 'system',
-							timestamp: Date.now(),
-						},
+							timestamp: Date.now()
+						}
 					});
 				}
 
@@ -168,7 +168,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				systemId: response.id,
 				id: item.id,
 				timestamp: Date.now(),
-				role: 'user',
+				role: 'user'
 			};
 			if (typeof content === 'string') {
 				specs.content = content;

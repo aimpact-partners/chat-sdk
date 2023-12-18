@@ -1,6 +1,5 @@
 // KnowledgeBox
 import { Item } from '@beyond-js/reactive/entities';
-import { KnowledgeBoxProvider } from '@aimpact/chat-api/provider';
 
 interface IKnowledgeBox {
 	knowledgeBoxId: string;
@@ -13,6 +12,6 @@ interface IKnowledgeBox {
 export /*bundle*/ class KnowledgeBox extends Item<IKnowledgeBox> {
 	protected properties = ['id', 'path', 'identifier', 'documents', 'type'];
 	constructor({ id = undefined } = {}) {
-		super({ id, db: 'chat-api', storeName: 'KnowledgeBoxes', provider: KnowledgeBoxProvider });
+		super({ id, db: 'chat-api', storeName: 'KnowledgeBoxes' });
 	}
 }
