@@ -2,7 +2,7 @@
 import { Item } from '@beyond-js/reactive/entities';
 import config from '@aimpact/chat-sdk/config';
 // import { ChatProvider } from '@aimpact/chat-api/provider';
-import { Api } from '@aimpact/chat/api';
+import { Api } from '@aimpact/chat-sdk/api';
 import { Message } from './messages/item';
 import { IMessage } from './interfaces/message';
 import { Messages } from './messages';
@@ -36,7 +36,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		'category',
 		'language',
 		'usage',
-		'children',
+		'ch ildren',
 		'knowledgeBoxId',
 		'user',
 		'metadata'

@@ -1,4 +1,4 @@
-import { Api } from '@aimpact/chat/api';
+import { Api } from '@aimpact/chat-sdk/api';
 import config from '@aimpact/chat-sdk/config';
 import { IProvider } from '@beyond-js/reactive/entities';
 import type { Chat } from './item';
