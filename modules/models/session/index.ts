@@ -96,8 +96,6 @@ class SessionManager extends ReactiveModel<ISession> {
 
 			if (!response.status) return { status: false, error: response.error };
 
-			//this.#user = response.user;
-			//this.triggerEvent('login');
 			return response;
 		} catch (e) {
 			return { status: false, error: 'CANNOT' };
