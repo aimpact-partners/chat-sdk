@@ -1,6 +1,6 @@
 export interface IMessage {
 	chat: { id: string };
-	conversationId?: string;
+	chatId?: string;
 	content?: string;
 	role: string;
 	audio: Blob;
@@ -12,4 +12,15 @@ export interface IMessage {
 		promptTokens: number;
 		totalTokens: number;
 	};
+}
+
+export interface IMessageSpecs {
+	chatId: string;
+	systemId: string;
+	id: string;
+	timestamp: number;
+	role: string;
+	content?: string;
+	multipart?: boolean;
+	audio?: Blob;
 }

@@ -32,6 +32,10 @@ export /*bundle*/ class User extends Item<IUser> {
 	get firebaseToken() {
 		return this.#firebaseUser ? this.#firebaseUser.getIdToken() : null;
 	}
+	/**
+	 * todo: @carlos implement http request to get user data
+	 * @param specs
+	 */
 	constructor(specs) {
 		super({ id: specs.id, db: 'chat-api', storeName: 'User', provider: UserProvider });
 

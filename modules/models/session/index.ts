@@ -2,7 +2,6 @@ import { auth, googleProvider } from './firebase/config';
 import { User } from '@aimpact/chat-sdk/users';
 import { onAuthStateChanged, UserCredential } from 'firebase/auth';
 import { ReactiveModel } from '@beyond-js/reactive/model';
-
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { Auth } from './auth';
 

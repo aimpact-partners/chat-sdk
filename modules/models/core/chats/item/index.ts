@@ -1,27 +1,13 @@
 // ChatItem
 import { Item } from '@beyond-js/reactive/entities';
 import config from '@aimpact/chat-sdk/config';
-// import { ChatProvider } from '@aimpact/chat-api/provider';
 import { Api } from '@aimpact/chat-sdk/api';
-import { Message } from './messages/item';
-import { IMessage } from './interfaces/message';
-import { Messages } from './messages';
+import { Message } from '../messages/item';
+import { IMessage, IMessageSpecs } from '../interfaces/message';
+import { Messages } from '../messages';
 import { languages } from '@beyond-js/kernel/core';
-import dayjs from 'dayjs';
 import { ChatProvider } from './provider';
-import { sessionWrapper } from '@aimpact/chat-sdk/session';
-import { IChat } from './interfaces/chat';
-
-interface IMessageSpecs {
-	conversationId: string;
-	systemId: string;
-	id: string;
-	timestamp: number;
-	role: string;
-	content?: string;
-	multipart?: boolean;
-	audio?: Blob;
-}
+import { IChat } from '../interfaces/chat';
 
 export /*bundle*/ class Chat extends Item<IChat> {
 	declare id: string;
@@ -61,7 +47,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		const response = await this.load(specs);
 		const collection = new Messages();
 
-		const data = await collection.localLoad({ conversationId: this.id, sortBy: 'timestamp' });
+		const data = await collection.localLoad({ chatId: this.id, sortBy: 'timestamp' });
 		collection.on('change', this.triggerEvent);
 
 		if (response.data.messages?.length) {
@@ -101,7 +87,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 			const specs: IMessage = {
 				chat: { id: this.id },
-				conversationId: this.id,
+				chatId: this.id,
 				type: 'audio',
 				audio,
 				role: 'user',
@@ -138,7 +124,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 					response.publishSystem({
 						offline: true,
 						specs: {
-							conversationId: this.id,
+							chatId: this.id,
 							chat: { id: this.id },
 							conversation: { id: this.id },
 							content: '',
@@ -164,7 +150,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			item.on('response.finished', onEnd);
 
 			const specs: IMessageSpecs = {
-				conversationId: this.id,
+				chatId: this.id,
 				systemId: response.id,
 				id: item.id,
 				timestamp: Date.now(),

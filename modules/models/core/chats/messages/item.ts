@@ -9,18 +9,7 @@ import { PendingPromise } from '@beyond-js/kernel/core';
 import { Chat } from '../item';
 import { Spinner } from 'pragmate-ui/components';
 export /*bundle*/ class Message extends Item<IMessage> {
-	protected properties = [
-		'id',
-		'chatId',
-		'audio',
-		'chat',
-		'userId',
-		'role',
-		'content',
-		'usage',
-		'timestamp',
-		'conversationId',
-	];
+	protected properties = ['id', 'chatId', 'audio', 'chat', 'userId', 'role', 'content', 'usage', 'timestamp'];
 	declare autoplay: boolean;
 
 	declare id: string;
@@ -74,8 +63,8 @@ export /*bundle*/ class Message extends Item<IMessage> {
 
 			this.#api
 				.bearer(token)
-				.stream(`/conversations/${this.#chat.id}/messages`, {
-					...specs,
+				.stream(`/chats/${this.#chat.id}/messages`, {
+					...specs
 				})
 				.then(response => {
 					this.trigger('response.finished');

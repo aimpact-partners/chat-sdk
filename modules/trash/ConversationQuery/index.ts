@@ -1,7 +1,7 @@
 import { config } from '@aimpact/chat-sdk/config';
 
 export /*bundle*/ class ConversationQuery extends Events {
-	#conversationId: string;
+	#chatId: string;
 	#prompt: string;
 	#bearerToken: string;
 
@@ -38,9 +38,9 @@ export /*bundle*/ class ConversationQuery extends Events {
 		return !this.#error;
 	}
 
-	constructor(conversationId: string, prompt: string, bearerToken: string) {
+	constructor(chatId: string, prompt: string, bearerToken: string) {
 		super();
-		this.#conversationId = conversationId;
+		this.#chatId = chatId;
 		this.#prompt = prompt;
 		this.#bearerToken = bearerToken;
 	}
@@ -52,9 +52,9 @@ export /*bundle*/ class ConversationQuery extends Events {
 		this.trigger('change');
 
 		const host = config.CHAT_API_HOST;
-		const conversationId = this.#conversationId;
+		const chatId = this.#chatId;
 		const bearerToken = this.#bearerToken;
-		const url = `${host}/conversation/${conversationId}/messages`;
+		const url = `${host}/conversation/${chatId}/messages`;
 		const method = 'POST';
 		const headers = {
 			'Content-Type': 'application/json',

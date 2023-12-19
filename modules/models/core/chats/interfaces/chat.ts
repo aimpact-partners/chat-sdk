@@ -1,3 +1,5 @@
+import type { Chat } from '../item';
+
 export /*bundle */ interface IChatProperties {
 	name: string;
 	userId: string;
@@ -20,4 +22,8 @@ export /*bundle */ interface IChat {
 		totalTokens: number;
 	};
 	metadata: {};
+}
+
+export interface IChats {
+	items: Chat[];
 }

@@ -1,7 +1,7 @@
 import { Api } from '@aimpact/chat-sdk/api';
 import config from '@aimpact/chat-sdk/config';
 import { IProvider } from '@beyond-js/reactive/entities';
-import type { Chat } from './item';
+import type { Chat } from './index';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 export class ChatProvider implements IProvider {
 	#api: Api;
@@ -16,22 +16,11 @@ export class ChatProvider implements IProvider {
 		const token = await sessionWrapper.user.firebaseToken;
 
 		this.#api.bearer(token);
-		const { status, data } = await this.#api.get(`/conversations/${this.#parent.id}`);
+		const { status, data } = await this.#api.get(`/chats/${this.#parent.id}`);
 		if (!status) {
 			throw new Error('error loading chat');
 		}
 
 		return { status, data };
 	}
-
-	// async publish(specs) {
-	// 	const token = await sessionWrapper.user.firebaseToken;
-	// 	this.#api.bearer(token);
-	// 	try {
-	// 		const { status, data } = await this.#api.post(`/conversations/${this.#parent.id}/messages`, { ...specs });
-
-	// 	} catch (e) {
-	// 		console.error(e);
-	// 	}
-	// }
 }
