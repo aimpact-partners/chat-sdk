@@ -1,6 +1,6 @@
 // AudioItem
 import { Item } from '@beyond-js/reactive/entities';
-import { UserProvider } from '@aimpact/chat-api/provider';
+import { UserProvider } from './provider';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import type firebaseAuth from 'firebase/auth';
 interface IUser {
@@ -55,13 +55,14 @@ export /*bundle*/ class User extends Item<IUser> {
 	setFirebaseUser = async user => {
 		this.#firebaseUser = user;
 	};
+
 	async login(firebaseToken) {
 		await this.isReady;
 		if (this.#logged) return;
 
 		const specs = { ...this.getProperties(), id: this.id, firebaseToken };
 
-		const response = await this.provider.login(specs);
+		const response = await this.provider.load(specs);
 
 		if (!response.status) {
 			throw new Error(response.error);

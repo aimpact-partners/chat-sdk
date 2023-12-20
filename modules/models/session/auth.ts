@@ -10,7 +10,7 @@ import {
 	sendPasswordResetEmail,
 	verifyPasswordResetCode,
 	confirmPasswordReset,
-	UserCredential,
+	UserCredential
 } from 'firebase/auth';
 import { PendingPromise } from '@beyond-js/kernel/core';
 
@@ -65,17 +65,17 @@ export class Auth {
 		} catch (error) {
 			const errors = {
 				'auth/account-exists-with-different-credential': 'ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL',
-				'auth/popup-closed-by-user': 'POPUP_CLOSED_BY_USER',
+				'auth/popup-closed-by-user': 'POPUP_CLOSED_BY_USER'
 			};
 
 			return { status: false, error: errors[error.code] || 'CANNOT' };
 		}
 	};
 
-	registerWithEmail = async (email: string, password: string, userName: string) => {
+	registerWithEmail = async (email: string, password: string, username: string) => {
 		try {
 			const response = await createUserWithEmailAndPassword(auth, email, password);
-			const userWithDisplayName = { ...response.user, displayName: userName };
+			const userWithDisplayName = { ...response.user, displayName: username };
 
 			return await this.appLogin({ ...response, user: userWithDisplayName });
 		} catch (error) {
