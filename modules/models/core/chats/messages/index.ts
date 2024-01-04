@@ -1,5 +1,5 @@
 import { Collection } from '@beyond-js/reactive/entities';
-import { MessageProvider } from '@aimpact/chat-api/provider';
+// import { MessageProvider } from '@aimpact/chat-api/provider';
 import { Message } from './item';
 
 interface IMessages {
@@ -10,6 +10,6 @@ export class Messages extends Collection {
 	item = Message;
 
 	constructor() {
-		super({ provider: MessageProvider, storeName: 'Messages', db: 'chat-api' });
+		super({ storeName: 'Messages', db: 'chat-api' });
 	}
 }

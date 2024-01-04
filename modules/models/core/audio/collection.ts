@@ -1,5 +1,5 @@
 import { Collection } from '@beyond-js/reactive/entities';
-import { AudioProvider } from '@aimpact/chat-api/provider';
+
 import { Audio } from './item';
 
 interface IAudios {
@@ -11,9 +11,9 @@ export class Audios extends Collection {
 	protected storeName = 'AudioRecords';
 	protected db = 'chat-api';
 
-	constructor() {
-		super();
-		this.provider = new AudioProvider();
+	constructor(a) {
+		super(a);
+		// this.provider = new AudioProvider();
 		this.init();
 	}
 }

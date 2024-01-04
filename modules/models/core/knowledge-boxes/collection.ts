@@ -1,5 +1,5 @@
 import { Collection } from '@beyond-js/reactive/entities';
-import { KnowledgeBoxProvider } from '@aimpact/chat-api/provider';
+
 import { KnowledgeBox } from './item';
 import { Api } from '@aimpact/chat-sdk/api';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
@@ -14,7 +14,7 @@ export /*bundle*/ class KnowledgeBoxes extends Collection {
 		return this.#api;
 	}
 	constructor() {
-		super({ provider: KnowledgeBoxProvider, storeName: 'KnowledgeBoxes', db: 'chat-api' });
+		super({ storeName: 'KnowledgeBoxes', db: 'chat-api' });
 		this.#api = new Api(this.#url);
 		this.#project = config.params.project;
 	}

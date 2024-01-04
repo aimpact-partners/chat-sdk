@@ -1,13 +1,13 @@
 // ChatItem
 import { Item } from '@beyond-js/reactive/entities';
-import { MessageProvider } from '@aimpact/chat-api/provider';
+
 import { Api } from '@aimpact/chat-sdk/api';
 import config from '@aimpact/chat-sdk/config';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { IMessage } from '../interfaces/message';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { Chat } from '../item';
-import { Spinner } from 'pragmate-ui/components';
+
 export /*bundle*/ class Message extends Item<IMessage> {
 	protected properties = ['id', 'chatId', 'audio', 'chat', 'userId', 'role', 'content', 'usage', 'timestamp'];
 	declare autoplay: boolean;
@@ -25,7 +25,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	}
 
 	constructor({ id = undefined, chat } = {}) {
-		super({ id, db: 'chat-api', storeName: 'Messages', provider: MessageProvider });
+		super({ id, db: 'chat-api', storeName: 'Messages' });
 		this.#chat = chat;
 		const api = new Api(config.params.apis.chat);
 		this.#api = api;
