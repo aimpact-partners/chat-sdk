@@ -1,8 +1,7 @@
 import { Api } from '@aimpact/chat-sdk/api';
 import config from '@aimpact/chat-sdk/config';
-import { IProvider } from '@beyond-js/reactive/entities';
 
-export class UserProvider implements IProvider {
+export class UserProvider {
 	#api: Api;
 
 	constructor() {

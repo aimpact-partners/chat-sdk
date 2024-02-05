@@ -37,6 +37,7 @@ export /*bundle*/ class User extends Item<IUser> {
 	 * @param specs
 	 */
 	constructor(specs) {
+		//@ts-ignore
 		super({ id: specs.id, db: 'chat-api', storeName: 'User', provider: UserProvider });
 
 		this.initialize(specs);
