@@ -41,6 +41,7 @@ export class Auth {
 			this.#pendingLogin = new PendingPromise();
 
 			const { displayName, photoURL, email, phoneNumber, uid } = response.user;
+
 			const firebaseToken = await response.user.getIdToken();
 			const specs = { id: uid, displayName, photoURL, email, phoneNumber, firebaseToken };
 			const user = new User(specs);

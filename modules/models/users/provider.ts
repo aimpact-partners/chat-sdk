@@ -13,7 +13,6 @@ export class UserProvider implements IProvider {
 		this.#api.bearer(specs.firebaseToken);
 
 		const { status, data } = await this.#api.post('/auth/login', specs);
-
 		if (!status) {
 			throw new Error('error loading chat');
 		}

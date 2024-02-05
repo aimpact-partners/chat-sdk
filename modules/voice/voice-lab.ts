@@ -1,5 +1,5 @@
 import { Events } from '@beyond-js/kernel/core';
-import config from '@aimpact/chat/config';
+import config from '@aimpact/chat-sdk/config';
 
 export /*bundle*/
 class VoiceLab extends Events {
@@ -9,7 +9,7 @@ class VoiceLab extends Events {
 
 	#headers = {
 		'Content-Type': 'application/json',
-		'xi-api-key': this.#apiKey,
+		'xi-api-key': this.#apiKey
 	};
 
 	#audio;
@@ -43,9 +43,9 @@ class VoiceLab extends Events {
 				voice_id: this.#voiceId,
 				voice_settings: {
 					stability: 0,
-					similarity_boost: 0,
-				},
-			}),
+					similarity_boost: 0
+				}
+			})
 		});
 
 		const mediaSource = new MediaSource();
