@@ -1,6 +1,7 @@
 import React from 'react';
 import { Code } from '../code/code';
 import { useMarked, Markdown } from '@aimpact/chat-sdk/widgets/markdown';
+import { IPlayableItemProps } from './interfaces/playable-props';
 
 /**
  * A  text message can contains more than one block of text,
@@ -20,7 +21,7 @@ export const PlayableItem = function ({ block, text, id, index, playable, player
 			const textToPlay = wordsArray.slice(word).join(' ');
 			player.positionToCut = parseInt(word);
 			player.textId = id;
-
+			//@ts-ignore
 			player.play(textToPlay.replaceAll(/[-\\*_#]+/g, '').trim()); // remove markdown characters to avoid reading them with the text-to-speech engine
 			if (onClickWord) onClickWord();
 			// Implement your logic for playing the text from the clicked word to the end here.
@@ -52,10 +53,12 @@ export const PlayableItem = function ({ block, text, id, index, playable, player
 	}
 
 	const markedText = marked(block.content);
+	//@ts-ignore
 	const content = markedText.split(' ').map(wrapTextWithSpan).join(' ');
 
 	return (
-		<Markdown key={`content-${index}`} data-block={index} className='message-text__container' {...attrs}>
+		//@ts-ignore
+		<Markdown key={`content-${index}`} data-block={index} className="message-text__container" {...attrs}>
 			{content}
 		</Markdown>
 	);

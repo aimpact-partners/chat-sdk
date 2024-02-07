@@ -17,4 +17,5 @@ export interface IPlayableProps {
 	onClickWord?: () => void;
 	types: string[];
 	toolTexts: Record<string, string>;
+	className?: string;
 }

@@ -1,6 +1,5 @@
 import { User } from '@aimpact/chat-sdk/users';
 import { auth, googleProvider } from './firebase/config';
-import { TokenManager } from './token';
 
 import {
 	signOut,
@@ -22,18 +21,9 @@ interface IAuthResult {
 
 export class Auth {
 	#uid: string;
-	#pendingLogin: PendingPromise<IAuthResult>;
-	static async login(email: string, password: string): Promise<User> {
-		const userCredential = await auth().signInWithEmailAndPassword(email, password);
-		const user = new User(userCredential.user.uid, userCredential.user.displayName, userCredential.user.email);
+	#pendingLogin;
 
-		const token = await TokenManager.getToken(user);
-		await TokenManager.storeToken(token, user);
-
-		return user;
-	}
-
-	appLogin = async (response: UserCredential): Promise<IAuthResult> => {
+	appLogin = async (response: UserCredential) => {
 		if (response.user?.uid) {
 			if (this.#uid === response.user.uid) return;
 			this.#uid = response.user.uid;
@@ -58,7 +48,7 @@ export class Auth {
 		return { status: false, error: 'INVALID_USER' };
 	};
 
-	signInWithGoogle = async (): Promise<IAuthResult> => {
+	signInWithGoogle = async () => {
 		try {
 			const response = await signInWithPopup(auth, googleProvider);
 			//const response = await signInWithRedirect(auth, googleProvider);
