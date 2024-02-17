@@ -1,4 +1,5 @@
 import { auth } from './firebase/config';
+import { SDKSettings } from '@aimpact/chat-sdk/settings';
 import { User } from '@aimpact/chat-sdk/users';
 import { onAuthStateChanged } from 'firebase/auth';
 import { ReactiveModel } from '@beyond-js/reactive/model';
@@ -53,7 +54,7 @@ class SessionManager extends ReactiveModel<ISession> {
 		if (!data) return;
 		if (this.#user && this.#user.id === data.uid) return;
 
-		const user = new User({ id: data.uid });
+		const user = new SDKSettings.userModel({ id: data.uid });
 		await user.isReady;
 		user.setFirebaseUser(data);
 
