@@ -51,8 +51,12 @@ export class Auth extends ReactiveModel<Auth> {
 			const user = await this.getUserModel({ id: data.uid });
 
 			user.setFirebaseUser(data);
-			await user.set(data);
-			await user.load();
+			await user.login(data.accessToken);
+
+			if (user.token) {
+				await user.load();
+			}
+
 			/* TODO Review */
 
 			this.#user = user;
