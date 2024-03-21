@@ -1,27 +1,102 @@
-import { User } from '@aimpact/chat-sdk/users';
 import { auth, googleProvider } from './firebase/config';
-
+import { SDKSettings } from '@aimpact/chat-sdk/settings';
+import { PendingPromise } from '@beyond-js/kernel/core';
+import type { User } from '@aimpact/chat-sdk/users';
 import {
 	signOut,
 	signInWithPopup,
+	signInWithRedirect,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	sendPasswordResetEmail,
+	getRedirectResult,
 	verifyPasswordResetCode,
 	confirmPasswordReset,
-	UserCredential
+	UserCredential,
+	onAuthStateChanged
 } from 'firebase/auth';
-import { PendingPromise } from '@beyond-js/kernel/core';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 
-interface IAuthResult {
-	status: boolean;
-	error?: string;
-	user?: User; // or whatever the type of your User object is
-}
-
-export class Auth {
+export class Auth extends ReactiveModel<Auth> {
 	#uid: string;
 	#pendingLogin;
+	#user: User;
+	get user() {
+		return this.#user;
+	}
+
+	#getUserPromise: PendingPromise<User>;
+	#session;
+	constructor(session) {
+		super();
+		this.session = session;
+
+		getRedirectResult(auth).then(this.onRedirectResult.bind(this));
+		onAuthStateChanged(auth, this.onAuthStateChanged.bind(this));
+	}
+	async onRedirectResult(data) {
+		if (!data) return;
+		this.onAuthStateChanged(data);
+	}
+	async onAuthStateChanged(data) {
+		if (!data && this.#user) {
+			this.#user = undefined;
+			this.signOut();
+		}
+
+		if (data) {
+			if (this.#user && this.#user.id === data.uid) return;
+
+			// const user = new SDKSettings.userModel({ id: data.uid });
+			const user = await this.getUserModel({ id: data.uid });
+
+			user.setFirebaseUser(data);
+			await user.set(data);
+			await user.load();
+			/* TODO Review */
+
+			this.#user = user;
+		}
+
+		this.ready = true;
+		this.trigger('ready');
+	}
+
+	async setUser(data) {
+		if (!data && this.#user) {
+			this.#user = undefined;
+			this.signOut();
+		}
+		if (data) {
+			if (!data) return;
+			if (this.#user && this.#user.id === data.uid) return;
+
+			// const user = new SDKSettings.userModel({ id: data.uid });
+			const user = await this.getUserModel({ id: data.uid });
+
+			user.setFirebaseUser(data);
+
+			/* TODO Review */
+			await user.set(data);
+			this.#user = user;
+		}
+
+		this.ready = true;
+		this.triggerEvent('change');
+	}
+
+	async getUserModel(specs): Promise<User> {
+		if (this.#user && this.#user.id === specs.id) {
+			await this.#user.set(specs);
+			return this.#user;
+		}
+		if (this.#user) this.#user = undefined;
+
+		this.#user = new SDKSettings.userModel(specs);
+		await this.#user.initialize(specs);
+		// this.#getUserPromise.resolve(this.#user);
+		return this.#user;
+	}
 
 	appLogin = async (response: UserCredential) => {
 		if (response.user?.uid) {
@@ -34,19 +109,32 @@ export class Auth {
 
 			const firebaseToken = await response.user.getIdToken();
 			const specs = { id: uid, displayName, photoURL, email, phoneNumber, firebaseToken };
-			const user = new User(specs);
-			user.set(specs, true);
+			// const user = new User(specs);
+			const user = await this.getUserModel(specs);
 
-			user.login(firebaseToken).then(couldLog => {
+			const logInValidation = couldLog => {
 				if (!couldLog) {
 					console.error('Could not login', couldLog);
 				}
 				this.#pendingLogin.resolve({ status: true, user });
-			});
+			};
+
+			user.login(firebaseToken).then(logInValidation);
 			return this.#pendingLogin;
 		}
 		return { status: false, error: 'INVALID_USER' };
 	};
+
+	login = async (email: string, password: string) => {
+		try {
+			const response = await signInWithEmailAndPassword(auth, email, password);
+
+			return await this.appLogin(response);
+		} catch (error) {
+			return { status: false, error: error.message };
+		}
+	};
+	0;
 
 	signInWithGoogle = async () => {
 		try {
@@ -88,15 +176,6 @@ export class Auth {
 			await verifyPasswordResetCode(auth, code);
 			await confirmPasswordReset(auth, code, newPassword);
 			return { status: true };
-		} catch (error) {
-			return { status: false, error: error.message };
-		}
-	};
-
-	login = async (email: string, password: string) => {
-		try {
-			const response = await signInWithEmailAndPassword(auth, email, password);
-			return await this.appLogin(response);
 		} catch (error) {
 			return { status: false, error: error.message };
 		}

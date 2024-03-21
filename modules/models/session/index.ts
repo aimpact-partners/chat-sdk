@@ -1,6 +1,6 @@
 import { auth } from './firebase/config';
 import { SDKSettings } from '@aimpact/chat-sdk/settings';
-import { User } from '@aimpact/chat-sdk/users';
+import type { User } from '@aimpact/chat-sdk/users';
 import { onAuthStateChanged } from 'firebase/auth';
 import { ReactiveModel } from '@beyond-js/reactive/model';
 import { PendingPromise } from '@beyond-js/kernel/core';
@@ -12,25 +12,25 @@ interface ISession {
 
 class SessionManager extends ReactiveModel<ISession> {
 	declare triggerEvent: (event: string) => void;
-	#user: User;
-	get user() {
-		return this.#user;
+
+	get user(): User {
+		return this.#auth.user;
 	}
 	get userId() {
 		return auth.currentUser ? auth.currentUser.uid : null;
 	}
 
 	get logged() {
-		return !!this.user;
+		return !!this.#auth.user;
 	}
 
-	#promise;
+	#promise: PendingPromise<boolean>;
 	get isReady() {
 		return this.#promise;
 	}
 
 	declare ready;
-	#auth: Auth = new Auth();
+	#auth: Auth;
 	get auth() {
 		return this.#auth;
 	}
@@ -38,51 +38,24 @@ class SessionManager extends ReactiveModel<ISession> {
 		super();
 		this.#promise = new PendingPromise();
 
-		onAuthStateChanged(auth, this.listener);
+		this.#auth = new Auth(this);
+		this.#auth.on('ready', this.listenReady.bind(this));
 	}
 
-	listener = async user => {
-		if (user) {
-			await this.setUser(user);
-		}
-
+	listenReady() {
 		this.ready = true;
 		this.#promise.resolve(this.ready);
-	};
-
-	async updateUser(data) {
-		if (!data) return;
-		if (this.#user && this.#user.id === data.uid) return;
-
-		const user = new SDKSettings.userModel({ id: data.uid });
-		await user.isReady;
-		user.setFirebaseUser(data);
-
-		/* TODO Review */
-		await user.set(data);
-		this.#user = user;
-	}
-	setUser = async data => {
-		if (!data && this.#user) {
-			this.#user = undefined;
-			this.#auth.signOut();
-		}
-		if (data) {
-			await this.updateUser(data);
-		}
-
-		this.ready = true;
 		this.triggerEvent('change');
-		this.#promise.resolve(this.ready);
-	};
+	}
 
 	async signInWithGoogle() {
 		try {
 			const response = await this.#auth.signInWithGoogle();
 
 			if (!response.status) return false;
-			this.#user = response.user;
+
 			this.triggerEvent('login');
+
 			return response;
 		} catch (e) {
 			console.error(e);
@@ -104,8 +77,10 @@ class SessionManager extends ReactiveModel<ISession> {
 	async logout() {
 		try {
 			await this.#auth.signOut();
-			this.#user = undefined;
-			this.triggerEvent('change');
+
+			globalThis.localStorage.clear();
+			this.triggerEvent('logout');
+
 			return true;
 		} catch (e) {
 			console.error(e);

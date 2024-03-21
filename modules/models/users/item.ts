@@ -2,27 +2,14 @@
 import { Item } from '@beyond-js/reactive/entities';
 import { UserProvider } from './provider';
 import { PendingPromise } from '@beyond-js/kernel/core';
-import type firebaseAuth from 'firebase/auth';
-interface IUser {
-	id: string;
-	displayName: string;
-	email: string;
-	photoURL: string;
-	phoneNumber: string;
-}
+import firebaseAuth from 'firebase/auth';
+import { IChatUser } from './interface';
 
-export /*bundle*/ class User extends Item<IUser> {
+export /*bundle*/ class User extends Item<IChatUser> {
 	protected properties = ['displayName', 'id', 'email', 'photoURL', 'phoneNumber', 'token'];
-
 	#logged;
-	declare set;
-	declare displayName;
-	declare id;
-	declare email;
-	declare photoURL;
-	declare phoneNumber;
 	declare token;
-	declare getProperties;
+
 	#promiseInit: PendingPromise<boolean>;
 	#firebaseUser: firebaseAuth.User;
 	get logged() {
@@ -32,6 +19,7 @@ export /*bundle*/ class User extends Item<IUser> {
 	get firebaseToken() {
 		return this.#firebaseUser ? this.#firebaseUser.getIdToken() : null;
 	}
+
 	/**
 	 * todo: @carlos implement http request to get user data
 	 * @param specs
@@ -40,17 +28,22 @@ export /*bundle*/ class User extends Item<IUser> {
 		//@ts-ignore
 		super({ id: specs.id, db: 'chat-api', storeName: 'User', provider: UserProvider });
 
-		this.initialize(specs);
+		// this.initialize(specs);
 	}
 
 	initialize = async specs => {
 		super.initialise();
-		//@ts-ignore
+		console.log('init');
 		if (this.#promiseInit) return this.#promiseInit;
 		this.#promiseInit = new PendingPromise();
 		await this.isReady;
+
 		await this.set(specs);
+		// await this.login(this.firebaseToken);
 		this.#promiseInit.resolve();
+		this.loaded = true;
+
+		this.trigger('user.initialized');
 	};
 
 	setFirebaseUser = async user => {
@@ -68,7 +61,7 @@ export /*bundle*/ class User extends Item<IUser> {
 		if (!response.status) {
 			throw new Error(response.error);
 		}
-		await this.set(response.data.user, true);
+		await this.set(response.data, true);
 
 		// this.localUpdate(response.data.user);
 		this.#logged = true;

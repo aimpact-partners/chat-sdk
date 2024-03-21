@@ -12,8 +12,9 @@ export class UserProvider {
 		this.#api.bearer(specs.firebaseToken);
 
 		const { status, data } = await this.#api.post('/auth/login', specs);
+
 		if (!status) {
-			throw new Error('error loading chat');
+			throw new Error('error loading user data');
 		}
 
 		return { status, data };
