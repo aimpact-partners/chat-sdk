@@ -47,7 +47,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		const response = await this.load(specs);
 		const collection = new Messages();
 
-		const data = await collection.localLoad({ chatId: this.id, sortBy: 'timestamp' });
+		const data = await collection.localLoad({ chatId: this.id, sortBy: 'timestamp', limit: 1000 });
 		collection.on('change', this.triggerEvent);
 
 		if (response.data.messages?.length) {

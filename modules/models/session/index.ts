@@ -76,6 +76,7 @@ class SessionManager extends ReactiveModel<ISession> {
 
 	async logout() {
 		try {
+			console.log('cerramos');
 			await this.#auth.signOut();
 
 			globalThis.localStorage.clear();
