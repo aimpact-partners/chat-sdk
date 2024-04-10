@@ -39,6 +39,7 @@ class SessionManager extends ReactiveModel<ISession> {
 		this.#promise = new PendingPromise();
 
 		this.#auth = new Auth(this);
+		this.#auth.on('login', () => this.trigger('login'));
 		this.#auth.on('ready', this.listenReady.bind(this));
 	}
 
@@ -51,8 +52,8 @@ class SessionManager extends ReactiveModel<ISession> {
 	async signInWithGoogle() {
 		try {
 			const response = await this.#auth.signInWithGoogle();
-
-			if (!response.status) return false;
+			// console.log(-5, 'response', response);
+			if (!response?.status) return false;
 
 			this.triggerEvent('login');
 
@@ -76,7 +77,6 @@ class SessionManager extends ReactiveModel<ISession> {
 
 	async logout() {
 		try {
-			console.log('cerramos');
 			await this.#auth.signOut();
 
 			globalThis.localStorage.clear();

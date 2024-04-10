@@ -47,16 +47,12 @@ export class Auth extends ReactiveModel<Auth> {
 		if (data) {
 			if (this.#user && this.#user.id === data.uid) return;
 
-			// const user = new SDKSettings.userModel({ id: data.uid });
 			const user = await this.getUserModel({ id: data.uid });
 
 			user.setFirebaseUser(data);
 			await user.login(data.accessToken);
-
-			if (user.token) {
-				await user.load();
-			}
-
+			console.log(50);
+			await this.appLogin(data);
 			/* TODO Review */
 
 			this.#user = user;
@@ -98,11 +94,17 @@ export class Auth extends ReactiveModel<Auth> {
 
 		this.#user = new SDKSettings.userModel(specs);
 		await this.#user.initialize(specs);
+
+		if (this.#user.token) {
+			await this.#user.load();
+		}
 		// this.#getUserPromise.resolve(this.#user);
 		return this.#user;
 	}
 
 	appLogin = async (response: UserCredential) => {
+		if (this.#pendingLogin) return this.#pendingLogin;
+
 		if (response.user?.uid) {
 			if (this.#uid === response.user.uid) return;
 			this.#uid = response.user.uid;
@@ -120,6 +122,9 @@ export class Auth extends ReactiveModel<Auth> {
 				if (!couldLog) {
 					console.error('Could not login', couldLog);
 				}
+
+				console.log('in log in validation', this);
+				this.trigger('login');
 				this.#pendingLogin.resolve({ status: true, user });
 			};
 
@@ -187,6 +192,7 @@ export class Auth extends ReactiveModel<Auth> {
 
 	signOut = async () => {
 		try {
+			this.#pendingLogin = undefined;
 			await signOut(auth);
 		} catch (error) {
 			console.error(error);

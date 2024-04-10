@@ -33,7 +33,7 @@ export /*bundle*/ class User extends Item<IChatUser> {
 
 	initialize = async specs => {
 		super.initialise();
-		console.log('init');
+
 		if (this.#promiseInit) return this.#promiseInit;
 		this.#promiseInit = new PendingPromise();
 		await this.isReady;
