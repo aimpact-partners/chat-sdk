@@ -51,10 +51,8 @@ export class Auth extends ReactiveModel<Auth> {
 
 			user.setFirebaseUser(data);
 			await user.login(data.accessToken);
-			console.log(50);
 			await this.appLogin(data);
 			/* TODO Review */
-
 			this.#user = user;
 		}
 
