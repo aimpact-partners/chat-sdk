@@ -153,7 +153,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				chatId: this.id,
 				systemId: response.id,
 				id: item.id,
-				timestamp: Date.now(),
+				// timestamp: Date.now(),
 				role: 'user'
 			};
 			if (typeof content === 'string') {
@@ -162,7 +162,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				specs.multipart = true;
 				specs.audio = content;
 			}
-
+			console.log(2);
 			item.publish(specs);
 
 			return { message: item, response };
