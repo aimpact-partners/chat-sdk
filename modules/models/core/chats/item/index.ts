@@ -162,7 +162,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				specs.multipart = true;
 				specs.audio = content;
 			}
-			console.log(2);
+
 			item.publish(specs);
 
 			return { message: item, response };
