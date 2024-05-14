@@ -39,6 +39,12 @@
 				"chat": "https://chat-api-http-skvkre4apq-uc.a.run.app"
 			}
 		},
+		"quality": {
+			"baseUrl": "https://beta.app.rvd.ai",
+			"apis": {
+				"chat": "https://chat-api-http-beta-pjv2z6fura-uc.a.run.app"
+			}
+		},
 		"production": {
 			"baseUrl": "https://app.rvd.ai",
 			"apis": {
@@ -63,6 +69,11 @@
 				"ports": {
 					"bundles": 1531
 				}
+			},
+			{
+				"name": "web-quality",
+				"environment": "quality",
+				"platform": "web"
 			},
 			{
 				"name": "web-production",
