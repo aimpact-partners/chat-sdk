@@ -60,12 +60,12 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 	#languages = {
 		en: 'en-EN',
 		es: 'es-MX',
-		pr: 'pt-BR',
+		pr: 'pt-BR'
 	};
 	constructor({ language, rate }: { language?: string; rate?: number } = { rate: 1.25 }) {
 		super();
 		if (!language) language = languages.current;
-		this.reactiveProps(['positionToCut', 'textId']);
+		this.reactiveProps(['positionToCut', 'textId', 'playing']);
 		this.positionToCut = 0;
 
 		this.lang = language;
@@ -73,7 +73,7 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 
 		this.initialValues({
 			lang: language,
-			rate: rate,
+			rate: rate
 		});
 	}
 
