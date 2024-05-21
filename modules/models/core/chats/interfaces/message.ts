@@ -4,7 +4,7 @@ export interface IMessage {
 	content?: string;
 	role: string;
 	audio: Blob;
-	timestamp: number;
+	timestamp?: number;
 	language: string;
 	type?: 'audio' | 'text';
 	usage?: {

@@ -91,8 +91,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				type: 'audio',
 				audio,
 				role: 'user',
-				language: this.language?.default ?? languages.current,
-				timestamp: Date.now()
+				language: this.language?.default ?? languages.current
+				// timestamp: Date.now()
 			};
 			if (transcription) {
 				specs.content = transcription;
@@ -128,8 +128,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 							chat: { id: this.id },
 							conversation: { id: this.id },
 							content: '',
-							role: 'system',
-							timestamp: Date.now()
+							role: 'system'
+							// timestamp: Date.now()
 						}
 					});
 				}
