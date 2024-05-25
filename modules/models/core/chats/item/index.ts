@@ -8,7 +8,7 @@ import { Messages } from '../messages';
 import { languages } from '@beyond-js/kernel/core';
 import { ChatProvider } from './provider';
 import { IChat } from '../interfaces/chat';
-
+// chats/ea0572a8-ff07-4bf5-9962-16fc765603eb
 export /*bundle*/ class Chat extends Item<IChat> {
 	declare id: string;
 	#api: Api;
@@ -22,7 +22,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		'category',
 		'language',
 		'usage',
-		'ch ildren',
+		'children',
 		'knowledgeBoxId',
 		'user',
 		'metadata'
