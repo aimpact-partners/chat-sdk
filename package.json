@@ -63,6 +63,17 @@
 				}
 			},
 			{
+				"name": "web-tsc",
+				"environment": "development",
+				"platform": "web",
+				"ts": {
+					"compiler": "tsc"
+				},
+				"ports": {
+					"bundles": 1535
+				}
+			},
+			{
 				"name": "web-testing",
 				"environment": "testing",
 				"platform": "web",
