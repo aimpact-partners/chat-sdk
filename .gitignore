@@ -5,3 +5,4 @@ node_modules
 .env
 runners/.env
 package-lock.json
+!/modules/node_modules

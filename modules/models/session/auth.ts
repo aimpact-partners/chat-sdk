@@ -121,7 +121,6 @@ export class Auth extends ReactiveModel<Auth> {
 					console.error('Could not login', couldLog);
 				}
 
-				console.log('in log in validation', this);
 				this.trigger('login');
 				this.#pendingLogin.resolve({ status: true, user });
 			};
