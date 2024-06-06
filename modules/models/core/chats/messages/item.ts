@@ -7,7 +7,7 @@ import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { IMessage } from '../interfaces/message';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { Chat } from '../item';
-
+import { sdkConfig } from '@aimpact/chat-sdk/startup';
 export /*bundle*/ class Message extends Item<IMessage> {
 	protected properties = ['id', 'chatId', 'audio', 'chat', 'userId', 'role', 'content', 'usage', 'timestamp'];
 	declare autoplay: boolean;
@@ -27,7 +27,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	constructor({ id = undefined, chat } = {}) {
 		super({ id, db: 'chat-api', storeName: 'Messages' });
 		this.#chat = chat;
-		const api = new Api(config.params.apis.chat);
+		const api = new Api(sdkConfig.api);
 		this.#api = api;
 
 		this.reactiveProps(['autoplay']);

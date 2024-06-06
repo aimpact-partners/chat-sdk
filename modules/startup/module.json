@@ -1,0 +1,6 @@
+{
+	"name": "startup",
+	"ts": {
+		"files": ["*"]
+	}
+}

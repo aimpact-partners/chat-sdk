@@ -1,11 +1,11 @@
 import { Api } from '@aimpact/chat-sdk/api';
 import config from '@aimpact/chat-sdk/config';
-
+import { sdkConfig } from '@aimpact/chat-sdk/startup';
 export class UserProvider {
 	#api: Api;
 
 	constructor() {
-		this.#api = new Api(config.params.apis.chat);
+		this.#api = new Api(sdkConfig.api);
 	}
 
 	async load(specs) {

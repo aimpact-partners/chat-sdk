@@ -1,18 +1,15 @@
 import { auth, googleProvider } from './firebase/config';
-import { SDKSettings } from '@aimpact/chat-sdk/settings';
 import { PendingPromise } from '@beyond-js/kernel/core';
-import type { User } from '@aimpact/chat-sdk/users';
+import { User } from '@aimpact/chat-sdk/users';
 import {
 	signOut,
 	signInWithPopup,
-	signInWithRedirect,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	sendPasswordResetEmail,
 	getRedirectResult,
 	verifyPasswordResetCode,
 	confirmPasswordReset,
-	UserCredential,
 	onAuthStateChanged
 } from 'firebase/auth';
 import { ReactiveModel } from '@beyond-js/reactive/model';
@@ -90,7 +87,7 @@ export class Auth extends ReactiveModel<Auth> {
 		}
 		if (this.#user) this.#user = undefined;
 
-		this.#user = new SDKSettings.userModel(specs);
+		this.#user = await User.getModel(specs);
 		await this.#user.initialize(specs);
 
 		if (this.#user.token) {
@@ -100,21 +97,21 @@ export class Auth extends ReactiveModel<Auth> {
 		return this.#user;
 	}
 
-	appLogin = async (response: UserCredential) => {
+	appLogin = async (user: User) => {
 		if (this.#pendingLogin) return this.#pendingLogin;
 
-		if (response.user?.uid) {
-			if (this.#uid === response.user.uid) return;
-			this.#uid = response.user.uid;
+		if (user?.uid) {
+			if (this.#uid === user.uid) return;
+			this.#uid = user.uid;
 			if (this.#pendingLogin) return this.#pendingLogin;
 			this.#pendingLogin = new PendingPromise();
 
-			const { displayName, photoURL, email, phoneNumber, uid } = response.user;
+			const { displayName, photoURL, email, phoneNumber, uid } = user;
 
-			const firebaseToken = await response.user.getIdToken();
+			const firebaseToken = await user.getIdToken();
 			const specs = { id: uid, displayName, photoURL, email, phoneNumber, firebaseToken };
 			// const user = new User(specs);
-			const user = await this.getUserModel(specs);
+			const model = await this.getUserModel(specs);
 
 			const logInValidation = couldLog => {
 				if (!couldLog) {
@@ -122,10 +119,10 @@ export class Auth extends ReactiveModel<Auth> {
 				}
 
 				this.trigger('login');
-				this.#pendingLogin.resolve({ status: true, user });
+				this.#pendingLogin.resolve({ status: true, model });
 			};
 
-			user.login(firebaseToken).then(logInValidation);
+			model.login(firebaseToken).then(logInValidation);
 			return this.#pendingLogin;
 		}
 		return { status: false, error: 'INVALID_USER' };
@@ -146,7 +143,7 @@ export class Auth extends ReactiveModel<Auth> {
 		try {
 			const response = await signInWithPopup(auth, googleProvider);
 			//const response = await signInWithRedirect(auth, googleProvider);
-			return await this.appLogin(response);
+			return await this.appLogin(response.user);
 		} catch (error) {
 			const errors = {
 				'auth/account-exists-with-different-credential': 'ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL',

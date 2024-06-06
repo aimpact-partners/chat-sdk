@@ -44,6 +44,7 @@ const CONFIG = {
 // Initialize Firebase
 
 const app = initializeApp(CONFIG[config.environment]);
+
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export const facebookProvider = new FacebookAuthProvider();

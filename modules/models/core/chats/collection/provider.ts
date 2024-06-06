@@ -3,12 +3,13 @@ import config from '@aimpact/chat-sdk/config';
 import { IProvider } from '@beyond-js/reactive/entities';
 import type { Chats } from './index';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
+import { sdkConfig } from '@aimpact/chat-sdk/startup';
 export class ChatCollectionProvider implements IProvider {
 	#api: Api;
 	#parent: Chats;
 
 	constructor(parent: Chats) {
-		this.#api = new Api(config.params.apis.chat);
+		this.#api = new Api(sdkConfig.api);
 		this.#parent = parent;
 	}
 

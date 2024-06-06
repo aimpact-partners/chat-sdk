@@ -6,8 +6,10 @@ import { Message } from '../messages/item';
 import { IMessage, IMessageSpecs } from '../interfaces/message';
 import { Messages } from '../messages';
 import { languages } from '@beyond-js/kernel/core';
-import { ChatProvider } from './provider';
+
 import { IChat } from '../interfaces/chat';
+import { sdkConfig } from '@aimpact/chat-sdk/startup';
+import { ChatProvider } from './provider';
 // chats/ea0572a8-ff07-4bf5-9962-16fc765603eb
 export /*bundle*/ class Chat extends Item<IChat> {
 	declare id: string;
@@ -38,13 +40,16 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 	constructor({ id = undefined } = {}) {
 		super({ id, db: 'chat-api', storeName: 'Chat', provider: ChatProvider });
-		this.#api = new Api(config.params.apis.chat);
+		this.#api = new Api(sdkConfig.api);
 		globalThis.chat = this;
 		// console.log(`chat is being exposed in console as chat`, id);
 	}
 
 	loadAll = async specs => {
+		await this.isReady;
+
 		const response = await this.load(specs);
+
 		const collection = new Messages();
 
 		const data = await collection.localLoad({ chatId: this.id, sortBy: 'timestamp', limit: 1000 });

@@ -1,7 +1,5 @@
 import { auth } from './firebase/config';
-import { SDKSettings } from '@aimpact/chat-sdk/settings';
 import type { User } from '@aimpact/chat-sdk/users';
-import { onAuthStateChanged } from 'firebase/auth';
 import { ReactiveModel } from '@beyond-js/reactive/model';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { Auth } from './auth';

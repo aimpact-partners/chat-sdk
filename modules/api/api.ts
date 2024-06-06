@@ -20,6 +20,10 @@ class Api extends Events {
 	}
 	constructor(url) {
 		super();
+		if (!url) {
+			throw new Error('Api url is required');
+		}
+
 		this.#url = url;
 		this.#fetcher = new JCall();
 		this.#fetcher.on('action.received', () => this.trigger('action.received'));

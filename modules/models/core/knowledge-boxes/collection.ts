@@ -4,7 +4,7 @@ import { KnowledgeBox } from './item';
 import { Api } from '@aimpact/chat-sdk/api';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import config from '@aimpact/chat-sdk/config';
-
+import { sdkConfig } from '@aimpact/chat-sdk/startup';
 export /*bundle*/ class KnowledgeBoxes extends Collection {
 	item = KnowledgeBox;
 	#api;
@@ -15,7 +15,7 @@ export /*bundle*/ class KnowledgeBoxes extends Collection {
 	}
 	constructor() {
 		super({ storeName: 'KnowledgeBoxes', db: 'chat-api' });
-		this.#api = new Api(this.#url);
+		this.#api = new Api(sdkConfig.api);
 		this.#project = config.params.project;
 	}
 

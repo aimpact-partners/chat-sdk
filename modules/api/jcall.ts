@@ -122,7 +122,7 @@ class JCall extends ReactiveModel<JCall> {
 		url: string,
 		params: object,
 		headers: headers = {
-			'Content-Type': 'application/json',
+			'Content-Type': 'application/json'
 		}
 	) => this.execute(url, 'post', params, headers, true);
 
@@ -133,21 +133,21 @@ class JCall extends ReactiveModel<JCall> {
 		url: string,
 		params: object,
 		headers: headers = {
-			'Content-Type': 'application/json',
+			'Content-Type': 'application/json'
 		}
 	) => this.execute(url, 'post', params, headers);
 	delete = (
 		url: string,
 		params: object,
 		headers: headers = {
-			'Content-Type': 'application/json',
+			'Content-Type': 'application/json'
 		}
 	) => this.execute(url, 'DELETE', params, headers);
 	put = (
 		url: string,
 		params: object,
 		headers: headers = {
-			'Content-Type': 'application/json',
+			'Content-Type': 'application/json'
 		}
 	) => this.execute(url, 'PUT', params, headers);
 }

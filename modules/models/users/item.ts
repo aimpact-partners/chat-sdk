@@ -4,7 +4,7 @@ import { UserProvider } from './provider';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import firebaseAuth from 'firebase/auth';
 import { IChatUser } from './interface';
-
+import { sdkConfig } from '@aimpact/chat-sdk/startup';
 export /*bundle*/ class User extends Item<IChatUser> {
 	protected properties = ['displayName', 'id', 'email', 'photoURL', 'phoneNumber', 'token'];
 	#logged;
@@ -65,6 +65,12 @@ export /*bundle*/ class User extends Item<IChatUser> {
 
 		// this.localUpdate(response.data.user);
 		this.#logged = true;
+		this.trigger('login');
 		return true;
+	}
+
+	static async getModel(specs) {
+		if (sdkConfig.userModel) return new sdkConfig.userModel(specs);
+		return new User(specs);
 	}
 }
