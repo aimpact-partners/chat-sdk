@@ -27,7 +27,6 @@ class SDKInitializer extends ReactiveModel<SDKInitializer> {
 	}
 
 	async initialize({ environment, userModel, localdb = true }: ISDKSettings) {
-		
 		this.#environment = environment;
 		this.#userModel = userModel;
 		// const model = new this.#userModel();
