@@ -39,7 +39,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	}
 
 	constructor({ id = undefined } = {}) {
-		super({ id, db: 'chat-api', storeName: 'Chat', provider: ChatProvider });
+		super({ id, localdb: false, provider: ChatProvider });
 		this.#api = new Api(sdkConfig.api);
 		globalThis.chat = this;
 		// console.log(`chat is being exposed in console as chat`, id);
@@ -52,7 +52,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 		const collection = new Messages();
 
-		const data = await collection.localLoad({ chatId: this.id, sortBy: 'timestamp', limit: 1000 });
+		// const data = await collection.localLoad({ chatId: this.id, sortBy: 'timestamp', limit: 1000 });
 		collection.on('change', this.triggerEvent);
 
 		if (response.data.messages?.length) {

@@ -12,6 +12,6 @@ interface IKnowledgeBox {
 export /*bundle*/ class KnowledgeBox extends Item<IKnowledgeBox> {
 	protected properties = ['id', 'path', 'identifier', 'documents', 'type'];
 	constructor({ id = undefined } = {}) {
-		super({ id, db: 'chat-api', storeName: 'KnowledgeBoxes' });
+		super({ id, db: 'chat-api', localdb: false, storeName: 'KnowledgeBoxes' });
 	}
 }

@@ -14,7 +14,7 @@ export /*bundle*/ class KnowledgeBoxes extends Collection {
 		return this.#api;
 	}
 	constructor() {
-		super({ storeName: 'KnowledgeBoxes', db: 'chat-api' });
+		super({ storeName: 'KnowledgeBoxes', localdb: false, db: 'chat-api' });
 		this.#api = new Api(sdkConfig.api);
 		this.#project = config.params.project;
 	}

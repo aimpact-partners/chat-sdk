@@ -47,7 +47,7 @@ export class Auth extends ReactiveModel<Auth> {
 			const user = await this.getUserModel({ id: data.uid });
 
 			user.setFirebaseUser(data);
-			await user.login(data.accessToken);
+			// await user.login(data.accessToken);
 			await this.appLogin(data);
 			/* TODO Review */
 			this.#user = user;
@@ -90,10 +90,6 @@ export class Auth extends ReactiveModel<Auth> {
 		this.#user = await User.getModel(specs);
 		await this.#user.initialize(specs);
 
-		if (this.#user.token) {
-			await this.#user.load();
-		}
-		// this.#getUserPromise.resolve(this.#user);
 		return this.#user;
 	}
 
@@ -107,7 +103,6 @@ export class Auth extends ReactiveModel<Auth> {
 			this.#pendingLogin = new PendingPromise();
 
 			const { displayName, photoURL, email, phoneNumber, uid } = user;
-
 			const firebaseToken = await user.getIdToken();
 			const specs = { id: uid, displayName, photoURL, email, phoneNumber, firebaseToken };
 			// const user = new User(specs);

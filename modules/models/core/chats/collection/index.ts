@@ -7,6 +7,6 @@ import { ChatCollectionProvider } from './provider';
 export /*bundle*/ class Chats extends Collection {
 	item = Chat;
 	constructor() {
-		super({ provider: ChatCollectionProvider, storeName: 'Chat', db: 'chat-api' });
+		super({ provider: ChatCollectionProvider, localdb: false });
 	}
 }

@@ -17,11 +17,6 @@
 	"modules": {
 		"path": "modules"
 	},
-	"libraries": {
-		"includes": [
-			"@aimpact/chat-api"
-		]
-	},
 	"params": {
 		"elevenlabs": {
 			"key": "ebe05ca0a4d9aafb4024d0666471a0c7",
