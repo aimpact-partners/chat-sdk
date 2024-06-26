@@ -25,7 +25,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	}
 
 	constructor({ id = undefined, chat } = {}) {
-		super({ id, db: 'chat-api', storeName: 'Messages', localdb: false });
+		super({ id, db: 'chat-api', storeName: 'Messages' });
 		this.#chat = chat;
 		const api = new Api(sdkConfig.api);
 		this.#api = api;

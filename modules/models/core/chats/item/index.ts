@@ -31,7 +31,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	];
 	localdb = false;
 	declare fetching: boolean;
-	declare triggerEvent: () => void;
+	declare triggerEvent: () => void;	
 
 	#messages: Messages;
 	get messages() {
@@ -39,7 +39,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	}
 
 	constructor({ id = undefined } = {}) {
-		super({ id, localdb: false, provider: ChatProvider });
+		super({ id, db: 'chat-api', storeName: 'Chat', provider: ChatProvider, localdb: false });
 		this.#api = new Api(sdkConfig.api);
 		globalThis.chat = this;
 		// console.log(`chat is being exposed in console as chat`, id);

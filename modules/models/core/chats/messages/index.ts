@@ -10,6 +10,6 @@ export class Messages extends Collection {
 	item = Message;
 
 	constructor() {
-		super({ storeName: 'Messages', db: 'chat-api', localdb: false });
+		super({ storeName: 'Messages', db: 'chat-api' });
 	}
 }
