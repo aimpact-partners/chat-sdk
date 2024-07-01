@@ -1,0 +1,20 @@
+{
+	"name": "user/profile",
+	"txt": {
+		"path": "txt",
+		"files": "*"
+	},
+	"widget": {
+		"scss": {
+			"path": "/scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "/ts",
+			"files": ["*"]
+		},
+		"element": {
+			"name": "aimpact-chat-user-profile"
+		}
+	}
+}

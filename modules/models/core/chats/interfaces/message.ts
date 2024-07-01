@@ -1,11 +1,13 @@
+import type { Chat } from '../item';
 export interface IMessage {
-	chat: { id: string };
+	id?;
+	chat?: { id: string } | Chat;
 	chatId?: string;
 	content?: string;
-	role: string;
-	audio: Blob;
+	role?: string;
+	audio?: Blob;
 	timestamp?: number;
-	language: string;
+	language?: string;
 	type?: 'audio' | 'text';
 	usage?: {
 		completionTokens: number;
@@ -23,4 +25,14 @@ export interface IMessageSpecs {
 	content?: string;
 	multipart?: boolean;
 	audio?: Blob;
+}
+
+/**
+ * Represents the optional specs needed to create a new message
+ * @param id - The id of the message
+ * @param chat - The chat the message belongs to
+ */
+export interface IMessageConstructorSpecs extends IMessage {
+	id?: string;
+	chat?: Chat;
 }

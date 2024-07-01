@@ -1,5 +1,6 @@
 {
-	"name": "/chat-sdk/markdown",
+	"name": "tests/markdown",
+	"platform": ["web", "ios", "android"],
 	"widget": {
 		"route": "/chat/sdk/markdown",
 		"is": "page",

@@ -1,0 +1,12 @@
+{
+	"es": {
+		"welcome": "Bienvenido a AImpact Chat",
+		"action": "Guarda y chatea",
+		"save": "Guarda tus Documentos y empieza a chatear usando el contenido como base."
+	},
+	"en": {
+		"welcome": "Welcome to AImpact Chat",
+		"action": "Save & chat",
+		"save": "Save the Knowledge Box in your Documents section and start chatting with the content."
+	}
+}

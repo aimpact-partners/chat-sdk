@@ -1,0 +1,92 @@
+.input-container {
+	// position: sticky;
+	// bottom: 0rem;
+	position: fixed;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	margin: auto;
+	padding: 1rem;
+	z-index: 3;
+	padding: 1rem;
+	align-items: center;
+	background-color: var(--surface);
+	max-width: 1024px;
+	border: 1px solid transparent;
+
+	&.is-disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	&:focus-within {
+		// border: 1px solid 0var(--outline);
+		.chat-input-form {
+			border: 1px solid var(--outline);
+		}
+	}
+
+	&.is-fetching {
+		opacity: 0.8;
+		cursor: not-allowed;
+	}
+
+	&:has(textarea:disabled) {
+		background-color: var(--surface-variant);
+		.input__icon--left {
+			pointer-events: none;
+			cursor: not-allowed;
+		}
+		textarea {
+			opacity: 0.5;
+		}
+	}
+
+	.chat-input-form {
+		display: flex;
+		width: 100%;
+		border: var(--border-radius-sm);
+		position: relative;
+		background-color: var(--surface);
+		border: 1px solid var(--surface-dim);
+		border-radius: var(--border-radius-sm);
+		align-items: stretch;
+		.input__textarea {
+			border: none;
+			display: flex;
+			padding: 0.5rem;
+			align-items: center;
+			background-color: transparent;
+			color: var(--text-color);
+			resize: none;
+			overflow-y: auto;
+			width: 100%;
+			outline: none;
+			max-height: 100px;
+			&:disabled {
+				cursor: not-allowed;
+			}
+		}
+
+		.input__icon {
+			align-self: center;
+			transition: all 0.3s ease-in-out;
+		}
+
+		.system-form {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+}
+
+@keyframes animatedgradient {
+	0% {
+		background-position: 0% 100%;
+	}
+	50% {
+		background-position: 100% 0%;
+	}
+	100% {
+		background-position: 0% 100%;
+	}
+}

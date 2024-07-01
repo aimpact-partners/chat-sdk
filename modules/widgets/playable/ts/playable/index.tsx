@@ -5,8 +5,6 @@ import { parseText } from '../parse-content';
 import { PlayableItem } from './item';
 import { IPlayableProps } from './interfaces/playable-props';
 
-const cache = new Map();
-
 function PlayableComponent({ className, id, playable = true, content, player, onClickWord }: IPlayableProps) {
 	let autoplay = false;
 

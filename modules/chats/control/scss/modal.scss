@@ -1,0 +1,46 @@
+.pui-modal .modal-wrapper .modal-content {
+	.actions {
+		grid-gap: 2.5rem;
+
+		.pui-button {
+			margin: 0;
+			border-radius: 1rem;
+			min-width: 6rem;
+		}
+	}
+	.pui-modal-actions {
+		justify-content: center;
+		.pui-button {
+			padding-inline: 3rem;
+		}
+	}
+
+	@media (max-width: 1024px) {
+		max-width: 85%;
+	}
+	@media (max-width: 400px) {
+		max-width: 90%;
+	}
+}
+
+.permissions__modal-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: 1rem;
+	max-width: 470px;
+	.title-intro__modal-container {
+		.title__modal-text {
+			font-weight: 400;
+			margin-top: 0.1rem;
+		}
+	}
+
+	.mic__modal-icon {
+		fill: var(--primary);
+	}
+	.description__modal-text {
+		font-weight: 300;
+	}
+}

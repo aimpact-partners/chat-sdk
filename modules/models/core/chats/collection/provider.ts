@@ -1,5 +1,5 @@
-import { Api } from '@aimpact/chat-sdk/api';
-import config from '@aimpact/chat-sdk/config';
+import { Api } from '@aimpact/http-suite/api';
+
 import { IProvider } from '@beyond-js/reactive/entities';
 import type { Chats } from './index';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';

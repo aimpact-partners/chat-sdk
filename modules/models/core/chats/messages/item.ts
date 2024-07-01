@@ -1,17 +1,18 @@
 // ChatItem
-import { Item } from '@beyond-js/reactive/entities';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 
-import { Api } from '@aimpact/chat-sdk/api';
+import { Api } from '@aimpact/http-suite/api';
 import config from '@aimpact/chat-sdk/config';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
-import { IMessage } from '../interfaces/message';
+import { IMessage, IMessageConstructorSpecs } from '../interfaces/message';
 import { PendingPromise } from '@beyond-js/kernel/core';
-import { Chat } from '../item';
+import type { Chat } from '../item';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';
-export /*bundle*/ class Message extends Item<IMessage> {
-	protected properties = ['id', 'chatId', 'audio', 'chat', 'userId', 'role', 'content', 'usage', 'timestamp'];
+
+export /*bundle*/ class Message extends ReactiveModel<IMessage> {
 	declare autoplay: boolean;
 
+	
 	declare id: string;
 	declare triggerEvent: () => void;
 	#api: Api;
@@ -24,26 +25,25 @@ export /*bundle*/ class Message extends Item<IMessage> {
 		return this.#response;
 	}
 
-	constructor({ id = undefined, chat } = {}) {
-		super({ id, localdb: false });
+	constructor({ id = undefined, chat, ...specs }: IMessageConstructorSpecs) {
+		super({
+			id,
+			...specs,
+
+			properties: ['id', 'chatId', 'audio', 'chat', 'userId', 'role', 'content', 'usage', 'timestamp']
+		});
 		this.#chat = chat;
 		const api = new Api(sdkConfig.api);
 		this.#api = api;
 
 		this.reactiveProps(['autoplay']);
+		super.ready = true;
 		this.#listen();
-		this.initialise();
-	}
-
-	async initialise() {
-		super.initialise();
-		//await this.isReady;
-		//this.#processContent();
 	}
 
 	#onListen = () => {
 		this.#response = this.#api.streamResponse;
-
+		console.log(12, 'actualizando respuesta', this.#response);
 		this.trigger('content.updated');
 	};
 	#listen = () => {
@@ -54,64 +54,29 @@ export /*bundle*/ class Message extends Item<IMessage> {
 		this.#api.off('stream.response', this.#onListen);
 	};
 
-	//@ts-ignore
-	async publish(specs): Promise<any> {
+
+	#processAction = () => {
 		try {
-			// this.setOffline(true);
-			const promise = new PendingPromise();
-			const token = await sessionWrapper.user.firebaseToken;
+			let transcription = this.#api?.actions?.find(action => {
+				const data = JSON.parse(action);
 
-			this.#api
-				.bearer(token)
-				.stream(`/chats/${this.#chat.id}/messages`, {
-					...specs
-				})
-				.then(response => {
-					this.trigger('response.finished');
-					this.#offEvents();
-				})
-				.catch(e => {
-					console.error(e);
-				});
-
-			/**
-			 * @todo: Julio, the next code probably can be removed;
-			 * I don't know what transcription is or where is used
-			 */
-			this.#api.on('action.received', () => {
-				try {
-					let transcription = this.#api?.actions?.find(action => {
-						const data = JSON.parse(action);
-
-						if (data.type === 'transcription') {
-							return true;
-						}
-					});
-
-					if (transcription) {
-						transcription = JSON.parse(transcription);
-						super.publish({ content: transcription.data.transcription });
-					}
-				} catch (e) {
-					console.error(e);
+				if (data.type === 'transcription') {
+					return true;
 				}
 			});
-			super.publish(specs);
-			return promise;
-		} catch (e) {
-			console.trace(e);
-		}
-	}
 
-	async publishSystem({ offline, specs }: { offline?: boolean; specs?: {} }) {
-		// this.setOffline(offline);
-		super.publish(specs);
-	}
+			if (transcription) {
+				// let transcriptionData: Record<string, any> = JSON.parse(transcription);
+				// this.#publish({ content: transcriptionData.data.transcription });
+			}
+		} catch (e) {
+			console.error(e);
+		}
+	};
+	#publish(args) {}
 
 	async updateContent(specs) {
-		this.setOffline(true);
-		//@ts-ignore
-		await super.publish(specs);
+		await this.#publish(specs);
 
 		this.trigger(`content.updated`);
 	}

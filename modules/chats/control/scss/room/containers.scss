@@ -1,0 +1,22 @@
+.container--centered {
+	--app-container-width: 100%;
+	--app-container-max-width: 1140px;
+	width: 100%;
+	// min-height: 80%;
+	max-width: var(--app-container-max-width);
+	margin: auto;
+	position: relative;
+
+	@media (max-width: 1344px) {
+		--app-container-max-width: 1050px;
+		max-width: var(--app-container-max-width);
+	}
+	@media (max-width: 1140px) {
+		--app-container-max-width: 980px;
+		max-width: var(--app-container-max-width);
+	}
+}
+
+.container {
+	position: relative;
+}

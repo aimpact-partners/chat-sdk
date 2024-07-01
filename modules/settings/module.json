@@ -1,9 +1,8 @@
 {
-  "name": "settings",
-  "ts": {
-    "path": "ts",
-    "files": [
-      "*"
-    ]
-  }
+	"name": "settings",
+	"platform": ["web", "ios", "android"],
+	"ts": {
+		"path": "ts",
+		"files": ["*"]
+	}
 }

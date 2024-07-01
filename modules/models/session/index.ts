@@ -27,7 +27,6 @@ class SessionManager extends ReactiveModel<ISession> {
 		return this.#promise;
 	}
 
-	declare ready;
 	#auth: Auth;
 	get auth() {
 		return this.#auth;

@@ -24,9 +24,12 @@ export class Auth extends ReactiveModel<Auth> {
 
 	#getUserPromise: PendingPromise<User>;
 	#session;
+	get session() {
+		return this.#session;
+	}
 	constructor(session) {
 		super();
-		this.session = session;
+		this.#session = session;
 
 		getRedirectResult(auth).then(this.onRedirectResult.bind(this));
 		onAuthStateChanged(auth, this.onAuthStateChanged.bind(this));
@@ -93,7 +96,7 @@ export class Auth extends ReactiveModel<Auth> {
 		return this.#user;
 	}
 
-	appLogin = async (user: User) => {
+	appLogin = async user => {
 		if (this.#pendingLogin) return this.#pendingLogin;
 
 		if (user?.uid) {

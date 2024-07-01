@@ -1,0 +1,37 @@
+.messages__list {
+	padding: 1rem 0;
+	display: flex;
+	flex-direction: column;
+
+	.message__container {
+		width: 100%;
+		align-items: start;
+		gap: 0.5rem;
+		padding: 1rem;
+		border-radius: var(--border-radius-base);
+
+		box-sizing: border-box;
+		display: grid;
+		grid-template-columns: auto 1fr;
+		p {
+			&::first-letter {
+				text-transform: uppercase;
+			}
+		}
+
+		&.user {
+			background-color: var(--surface-dim);
+		}
+		&.assistant {
+			background-color: var(--surface-bright);
+		}
+
+		@media (max-width: 768px) {
+			border-radius: 0;
+		}
+	}
+
+	@media (min-width: 800px) {
+		gap: 1rem; // the gap does not look good on mobile
+	}
+}
