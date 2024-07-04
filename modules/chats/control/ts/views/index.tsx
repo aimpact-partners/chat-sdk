@@ -34,9 +34,10 @@ export function View({ store, ...props }) {
 		player,
 		attributes: props.attributes
 	};
+
 	const Control = !store.notFound ? Chat : ChatNotFound;
 	const View = ready ? Control : ChatSkeleton;
-	console.log(1, ready, Control);
+
 	return (
 		<ChatContext.Provider value={contextValue}>
 			<View />

@@ -13,7 +13,10 @@
 	background-color: var(--surface);
 	max-width: 1024px;
 	border: 1px solid transparent;
+	background: black;
+	border-radius: var(--border-radius-base);
 
+	&.is-fetching,
 	&.is-disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
@@ -50,6 +53,7 @@
 		border: 1px solid var(--surface-dim);
 		border-radius: var(--border-radius-sm);
 		align-items: stretch;
+
 		.input__textarea {
 			border: none;
 			display: flex;

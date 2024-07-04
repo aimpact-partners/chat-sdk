@@ -24,7 +24,7 @@ export /*bundle*/ function Chat(props): JSX.Element {
 	return (
 		<div className={cls}>
 			<Content separator={separator} />
-			<div className='footer-container'>
+			<div className="footer-container">
 				<BackArrow store={store} separator={separator} />
 				{!chatIntro?.metadata?.avoidChat && <ChatInput store={store} isWaiting={false} />}
 			</div>

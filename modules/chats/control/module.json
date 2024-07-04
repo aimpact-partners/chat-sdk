@@ -4,7 +4,7 @@
 	"widget": {
 		"element": {
 			"name": "aimpact-chat-control",
-			"attrs": ["id", "container", "disabled", "playable"]
+			"attrs": ["id", "container", "disabled", "playable", "icon"]
 		},
 		"scss": {
 			"path": "/scss",

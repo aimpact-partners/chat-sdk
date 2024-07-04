@@ -9,6 +9,7 @@ export /*bundle */ function Messages({ chat, player, messages, texts, current })
 	const totalMessages = messages.length;
 	if (!totalMessages) return <Empty text={texts.empty} />;
 
+	console.log('total mensajes', totalMessages);
 	const output = messages.map((message: any, i: number) => {
 		return <Message key={`message-${i}`} message={message} />;
 	});

@@ -12,8 +12,9 @@ export function Content({ separator }) {
 	const [ref, ready, webComponentName] = useExtension('chat-intro');
 
 	useBinder(
-		[store],
+		[store.chat],
 		() => {
+			console.log('me entero del nuevo mensaje', store.messages[store.messages.length - 1].getProperties());
 			setMessages(store.messages.length);
 		},
 		'new.message'

@@ -6,13 +6,19 @@ import { useChatMessagesContext } from '../../context';
 import { Spinner } from 'pragmate-ui/components';
 
 export function MessageText({ message, playable, fetching, autoplay = false }) {
-	const text = message?.content ?? '';
 	const ref = React.useRef(null);
 	const { texts, player, currentMessage, setCurrentMessage } = useChatMessagesContext();
 	const removeHighlight = () => {
 		ref.current.querySelectorAll('.highlight').forEach(element => element.classList.remove('highlight'));
 	};
-
+	const [text, setText] = React.useState(message.content ?? '');
+	useBinder(
+		[message],
+		() => {
+			setText(message.content ?? '');
+		},
+		'change'
+	);
 	useBinder([player], removeHighlight, 'on.finish');
 	if (typeof text !== 'string') return null;
 

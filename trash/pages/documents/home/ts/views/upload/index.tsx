@@ -19,7 +19,7 @@ interface ISpecs {
 export function Upload({ closeDialog }) {
 	const { userId } = sessionWrapper;
 	const { url, project } = config.params;
-	const selectRef = React.useRef(null);
+
 	const { uploadFiles, clearFiles, files, button, drag, deleteFile, totalFiles } = useUploader({
 		url,
 		multiple: true

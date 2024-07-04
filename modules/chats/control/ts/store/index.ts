@@ -1,5 +1,5 @@
 import { ReactiveModel } from '@beyond-js/reactive/model';
-import { Chat, Messages } from '@aimpact/chat-sdk/core';
+import { Chat, Message, Messages } from '@aimpact/chat-sdk/core';
 import { AppWrapper } from '@aimpact/chat-sdk/wrapper';
 import { AudioManager } from './audio';
 
@@ -8,7 +8,6 @@ import { CurrentTexts } from '@beyond-js/kernel/texts';
 import { module } from 'beyond_context';
 import { IStore } from './types';
 
-console.log(-1, module.specifier);
 export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	declare waitingResponse: boolean;
 	declare autoplay: boolean;
@@ -140,7 +139,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		this.audioManager.player.set({ language });
 
 		/* usar propiedad role para identificar owner del mensaje*/
-		chat.on('change', () => this.triggerEvent('new.message'));
+		// chat.on('change', () => this.triggerEvent('new.message'));
 
 		this.fetching = false;
 		super.ready = true;
@@ -149,7 +148,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		this.trigger('change');
 	};
 
-	async sendMessage(content: string | Blob) {
+	async sendMessage(content: string) {
 		try {
 			performance.mark('start');
 			this.#currentMessage = undefined;
@@ -157,34 +156,9 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 			if (typeof content === 'string' && [undefined, '', null].includes(content)) return;
 
 			this.fetching = true;
-			this.waitingResponse = true;
-
-			const { message, response } = await this.#chat.sendMessage(content);
-
-			// this.response = response;
-			// the system answer.
-			this.#currentMessage = message;
-			const onListen = () => {
-				this.triggerEvent(`message.${response.id}.updated`);
-			};
-
-			const onEnd = () => {
-				message.off('content.updated', onListen);
-				this.triggerEvent('chat.available');
-				this.triggerEvent(`message.${response.id}.received`);
-				message.off('response.finished', onEnd);
-			};
-
-			message.on('content.updated', onListen);
-			message.on('response.finished', onEnd);
-
-			this.waitingResponse = false;
-			this.triggerEvent('new.message');
+			return this.#chat.sendMessage(content);
 		} catch (e) {
 			console.error(e);
-		} finally {
-			this.waitingResponse = false;
-			this.fetching = false;
 		}
 	}
 

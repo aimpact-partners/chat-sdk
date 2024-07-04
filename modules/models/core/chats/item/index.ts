@@ -1,8 +1,8 @@
+import { PendingPromise } from '@beyond-js/kernel/core';
 // ChatItem
 import { Item } from '@beyond-js/reactive/entities';
-import { Api } from '@aimpact/http-suite/api';
+import { Api } from '@jircdev/http-suite/api';
 import { Message } from '../messages/item';
-import { PendingPromise } from '@beyond-js/kernel/core';
 import { Messages } from '../messages';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { IChat } from '../interfaces/chat';
@@ -41,8 +41,17 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		this.#messages = new Messages();
 		this.#messages.on('new.message', () => this.triggerEvent('new.message'));
 		globalThis.chat = this;
+		this.#listen();
 		// console.log(`chat is being exposed in console as chat`, id);
 	}
+
+	#listen = () => {
+		this.#api.on('stream.response', this.#onListen);
+	};
+
+	#offEvents = () => {
+		this.#api.off('stream.response', this.#onListen);
+	};
 
 	loadAll = async specs => {
 		await this.isReady;
@@ -61,46 +70,43 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 	#onListen = () => {
 		if (!this.#response) {
-			this.#response = new Message({ chat: this });
+			this.#response = new Message({ chatId: this.id, role: 'system' });
+			this.#messages.add(this.#response);
 		}
 
 		// this.#response.content = this.#api.streamResponse;
 
-		console.log(12, 'actualizando respuesta', this.#response);
+		this.#response.set({ content: this.#api.streamResponse });
+
+		// this.#response.publish();
 		this.trigger('content.updated');
 	};
-	#listen = () => {
-		this.#api.on('stream.response', this.#onListen);
-	};
 
-	#offEvents = () => {
-		this.#api.off('stream.response', this.#onListen);
-	};
-
-	async sendMessage(content: string) {
+	async sendMessage(content: string): PendingPromise<Message> {
 		try {
 			this.fetching = true;
-
-			const item = new Message({ chat: this, content });
-			this.messages.add(item);
-
-			const promise = new PendingPromise();
 			const token = await sessionWrapper.user.firebaseToken;
 			const uri = `/chats/${this.id}/messages`;
+			const promise = new PendingPromise<Message>();
+			const item = new Message({ chatId: this.id, content });
 			const onFinish = response => {
-				console.log(12, 'response', response);
 				this.trigger('response.finished');
+				this.#response = undefined;
+				promise.resolve(item);
 				// this.#offEvents();
 			};
 			const onError = e => {
 				console.error(e);
 			};
 
+			this.messages.add(item);
 			this.#api
 				.bearer(token)
 				.stream(uri, { ...item.getProperties() })
 				.then(onFinish)
 				.catch(onError);
+
+			return promise;
 		} catch (e) {
 			console.error(e);
 		} finally {

@@ -1,10 +1,8 @@
 import React from 'react';
-import { Form, Input } from 'pragmate-ui/form';
+import { Form } from 'pragmate-ui/form';
 
-import config from '@aimpact/chat/config';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 import { InputContext } from './context';
-import { RecordingButton } from './recording';
 import { SystemModal } from './system/index';
 import type { StoreManager } from '../../store';
 import { TextInput } from './text-input';
@@ -34,36 +32,49 @@ export /*bundle*/ const ChatInput = ({ store, isWaiting = false }: { store: Stor
 	};
 
 	const handleSend = async () => {
-		setText('');
-		setFetching(true);
-		store.sendMessage(text);
+		try {
+			setText('');
+			setFetching(true);
+			const response = await store.sendMessage(text);
+			console.log(1, 'obtenida respuesta');
+			setFetching(false);
+		} catch (e) {
+			console.error('error', e);
+		}
 	};
 	const onSubmit = !!text.length ? handleSend : sendAudio;
 
 	if (['', undefined, null].includes(text.replaceAll('\n', '')) || !text.trim().length) disabled.disabled = true;
 
-	let cls = `input-container ${waiting || isWaiting || fetching ? 'is-fetching' : ''}`;
+	const isFetching = fetching || recording || waiting || isWaiting;
+	let cls = `input-container ${isFetching ? 'is-fetching' : ''}`;
 	if (store.disabled) cls += 'is-disabled';
 	// Defines the "system" that the chat will use
-	const { system } = config.params.config;
+	// const { system } = config.params.config;
 	const contextValue = { store, onSubmit, recorder, setRecording, recording, disabled: store.disabled };
 	const buttonIsDisabled = disabled.disabled || store.waitingResponse || recording;
+	console.log(40, isFetching, fetching);
 	// if (attributes.has('container')) cls += ` container--${attributes.get('container')}`;
 	return (
 		<div className={cls}>
 			<InputContext.Provider value={contextValue}>
-				{system && <SystemModal chat={store.chat} />}
+				{/* {system && <SystemModal chat={store.chat} />} */}
 				<Form onSubmit={onSubmit} className="chat-input-form">
 					<TextInput
 						store={store}
 						text={text}
 						disabled={store.disabled}
 						setFetching={setFetching}
-						fetching={fetching || recording || waiting || isWaiting}
+						fetching={isFetching}
 						setText={setText}
 						handleSend={handleSend}
 					/>
-					<InputActionButton text={text}store={store} onSend={handleSend} buttonIsDisabled={buttonIsDisabled} />
+					<InputActionButton
+						text={text}
+						store={store}
+						onSend={handleSend}
+						buttonIsDisabled={buttonIsDisabled}
+					/>
 				</Form>
 			</InputContext.Provider>
 		</div>
