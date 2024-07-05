@@ -7,6 +7,7 @@ interface IChatMessagesContext {
 	texts: Record<string, any>;
 	currentMessage: any;
 	setCurrentMessage: (message: any) => void;
+	systemIcon: string;
 }
 export const ChatMessagesContext = React.createContext({} as IChatMessagesContext);
 export const useChatMessagesContext = () => React.useContext(ChatMessagesContext);

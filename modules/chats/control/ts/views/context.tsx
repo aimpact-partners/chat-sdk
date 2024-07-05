@@ -11,6 +11,7 @@ interface IChatContext {
 	attributes: Map<string, any>;
 	setScrollPosition: (position: string) => void;
 	scrollPosition: string;
+	systemIcon: string;
 }
 export const ChatContext = React.createContext({} as IChatContext);
 export const useChatContext = () => React.useContext(ChatContext);

@@ -50,18 +50,15 @@ export /*bundle*/ const ChatInput = ({ store, isWaiting = false }: { store: Stor
 	let cls = `input-container ${isFetching ? 'is-fetching' : ''}`;
 	if (store.disabled) cls += 'is-disabled';
 	// Defines the "system" that the chat will use
-	// const { system } = config.params.config;
-	const contextValue = { store, onSubmit, recorder, setRecording, recording, disabled: store.disabled };
+
+	const contextValue = { store, onSubmit, recorder, fetching, setRecording, recording, disabled: store.disabled };
 	const buttonIsDisabled = disabled.disabled || store.waitingResponse || recording;
-	console.log(40, isFetching, fetching);
-	// if (attributes.has('container')) cls += ` container--${attributes.get('container')}`;
+
 	return (
 		<div className={cls}>
 			<InputContext.Provider value={contextValue}>
-				{/* {system && <SystemModal chat={store.chat} />} */}
 				<Form onSubmit={onSubmit} className="chat-input-form">
 					<TextInput
-						store={store}
 						text={text}
 						disabled={store.disabled}
 						setFetching={setFetching}
@@ -69,12 +66,7 @@ export /*bundle*/ const ChatInput = ({ store, isWaiting = false }: { store: Stor
 						setText={setText}
 						handleSend={handleSend}
 					/>
-					<InputActionButton
-						text={text}
-						store={store}
-						onSend={handleSend}
-						buttonIsDisabled={buttonIsDisabled}
-					/>
+					<InputActionButton text={text} onSend={handleSend} buttonIsDisabled={buttonIsDisabled} />
 				</Form>
 			</InputContext.Provider>
 		</div>

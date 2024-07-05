@@ -6,6 +6,7 @@ export interface IInputContext {
 	recorder: any;
 	recording: any;
 	disabled?: boolean;
+	fetching?: boolean;
 	setRecording: (recording: boolean) => void;
 }
 export const InputContext = React.createContext(null as IInputContext);

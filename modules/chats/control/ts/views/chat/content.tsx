@@ -6,7 +6,7 @@ import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 import { ExtensionRenderer } from './extension-renderer';
 
 export function Content({ separator }) {
-	const { store, texts, attributes } = useChatContext();
+	const { store, texts, attributes, systemIcon } = useChatContext();
 	const { messages } = store;
 	const [totalMessages, setMessages] = React.useState<number>(messages?.length ?? [].length);
 	const [ref, ready, webComponentName] = useExtension('chat-intro');
@@ -32,6 +32,7 @@ export function Content({ separator }) {
 						player={store.audioManager.player}
 						current={store.currentMessage}
 						store={store}
+						systemIcon={systemIcon}
 						messages={store?.messages ?? []}
 						texts={texts}
 					/>

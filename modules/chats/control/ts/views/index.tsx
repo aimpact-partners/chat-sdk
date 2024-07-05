@@ -8,7 +8,7 @@ import { ChatNotFound } from './not-found';
 export function View({ store, ...props }) {
 	const [fetching, setFetching] = React.useState(store.fetching);
 	const [ready, setReady] = React.useState(store.ready);
-
+	const icon = props.attributes.get('icon');
 	const [scrollPosition, setScrollPosition] = React.useState('top');
 	const {
 		autoplay,
@@ -30,6 +30,7 @@ export function View({ store, ...props }) {
 		store,
 		texts: store.texts,
 		autoplay,
+		systemIcon: icon,
 		messages,
 		player,
 		attributes: props.attributes

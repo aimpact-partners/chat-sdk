@@ -1,7 +1,9 @@
 import React from 'react';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
+import { useInputContext } from './context';
 
-export function TextInput({ setFetching, store, setText, handleSend, fetching, text, disabled }) {
+export function TextInput({ setFetching, setText, handleSend, fetching, text, disabled }) {
+	const { store } = useInputContext();
 	const textAreaRef = React.useRef(null);
 	React.useEffect(() => {
 		const target = textAreaRef.current;
@@ -16,7 +18,7 @@ export function TextInput({ setFetching, store, setText, handleSend, fetching, t
 			globalThis.setTimeout(() => textAreaRef.current.focus(), 300);
 			setFetching(false);
 		},
-		'chat.available',
+		'chat.available'
 	);
 
 	const disabledTextarea = { disabled: fetching || disabled };
@@ -41,7 +43,7 @@ export function TextInput({ setFetching, store, setText, handleSend, fetching, t
 			onChange={handleInputChange}
 			onKeyDown={handleKeyDown}
 			autoFocus={true}
-			className='input__textarea'
+			className="input__textarea"
 			ref={textAreaRef}
 		/>
 	);
