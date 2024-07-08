@@ -1,0 +1,10 @@
+.recording-player__container {
+	display: flex;
+	align-items: center;
+	gap: 0.2rem;
+	.timer-message__container {
+		// border: 1px solid red;
+		display: flex;
+		padding: 0 0.5rem 0 0;
+	}
+}

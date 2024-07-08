@@ -1,0 +1,24 @@
+.in-test {
+	border: 1px solid;
+	&.test-red {
+		background: red;
+	}
+	&.test-blue {
+		background: blue;
+	}
+	&.test-green {
+		background: green;
+	}
+	&.test-yellow {
+		background: yellow;
+	}
+	&.test-purple {
+		background: purple;
+	}
+	&.test-orange {
+		background: orange;
+	}
+	&.test-pink {
+		background: pink;
+	}
+}

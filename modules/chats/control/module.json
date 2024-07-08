@@ -1,11 +1,7 @@
 {
-	"name": "chat-control",
+	"name": "chat-component",
 	"platforms": ["web", "android", "ios"],
-	"widget": {
-		"element": {
-			"name": "aimpact-chat-control",
-			"attrs": ["id", "container", "disabled", "playable", "icon"]
-		},
+	"code": {
 		"scss": {
 			"path": "/scss",
 			"files": ["*"]

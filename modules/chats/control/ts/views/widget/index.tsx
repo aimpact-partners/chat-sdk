@@ -1,10 +1,15 @@
 import React from 'react';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
-import { Chat } from './chat';
-import { ChatContext } from './context';
-import { ChatSkeleton } from './chat/skeleton';
-import { ChatNotFound } from './not-found';
+import { Chat } from '../chat';
+import { ChatContext } from '../context';
+import { ChatSkeleton } from '../chat/skeleton';
+import { ChatNotFound } from '../not-found';
 
+/**
+ * Main component of the chat web component
+ * @param param0 =
+ * @returns
+ */
 export function View({ store, ...props }) {
 	const [fetching, setFetching] = React.useState(store.fetching);
 	const [ready, setReady] = React.useState(store.ready);
@@ -33,6 +38,7 @@ export function View({ store, ...props }) {
 		systemIcon: icon,
 		messages,
 		player,
+		ready: store.ready,
 		attributes: props.attributes
 	};
 

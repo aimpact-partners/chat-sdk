@@ -1,5 +1,5 @@
 import { ReactiveModel } from '@beyond-js/reactive/model';
-import { Chat, Message, Messages } from '@aimpact/chat-sdk/core';
+import { Chat, Messages } from '@aimpact/chat-sdk/core';
 import { AppWrapper } from '@aimpact/chat-sdk/wrapper';
 import { AudioManager } from './audio';
 
@@ -96,18 +96,19 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		return super.ready && this.#texts.ready;
 	}
 
-	constructor(attrs) {
+	constructor(id) {
 		super();
 		this.#texts.on('change', this.triggerEvent);
-		this.#id = attrs.get('id');
+		this.#id = id;
 		this.reactiveProps(['waitingResponse', 'autoplay']);
 		this.autoplay = true;
 
-		attrs.on('change', () => this.checkAttributes(attrs));
+		// attrs.on('change', () => this.checkAttributes(attrs));
 		this.load(this.#id);
 	}
 
 	load = async (id: string) => {
+		console.log(1, 'cargamos');
 		if (!id) {
 			super.ready = true;
 			this.notFound = true;
@@ -162,13 +163,13 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		}
 	}
 
-	checkAttributes(attributes) {
-		this.disabled = attributes.get('disabled') === 'true';
-		this.playable = attributes.get('disabled') === 'true' || attributes.get('playable') === undefined;
-		if (!this.playable) {
-			this.#audio.player?.stop();
-		}
-	}
+	// checkAttributes(attributes) {
+	// 	this.disabled = attributes.get('disabled') === 'true';
+	// 	this.playable = attributes.get('disabled') === 'true' || attributes.get('playable') === undefined;
+	// 	if (!this.playable) {
+	// 		this.#audio.player?.stop();
+	// 	}
+	// }
 
 	unmount() {
 		this.#audio.player?.stop();

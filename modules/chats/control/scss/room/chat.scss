@@ -9,10 +9,6 @@
 // 	position: relative;
 // }
 
-.separator {
-	margin-top: 6rem;
-}
-
 .pragmate-icon-button svg.pragmate-icon {
 	width: 20px;
 	height: 20px;
@@ -21,22 +17,18 @@
 .chat-control__container {
 	height: 100%;
 	width: 100%;
+
 	// background: gray;
 	display: grid;
 	grid-template-rows: 1fr auto;
 
+	// background: yellow;
+
 	.chat__content {
 		position: relative;
-		overflow: auto;
+		// overflow: auto;
 
 		width: 100%;
 		// overflow-y: scroll;
-	}
-
-	.footer-container {
-		position: sticky;
-		bottom: 0;
-		padding: 1rem;
-		background: black;
 	}
 }

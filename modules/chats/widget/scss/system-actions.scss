@@ -1,0 +1,35 @@
+.message-action {
+	padding: 1rem;
+	margin-bottom: 1rem;
+	background: var(--surface-container-low);
+	border-radius: var(--border-radius-base);
+
+	h4 {
+		font-weight: bolder;
+
+		& + .detail__content {
+			margin-top: 0.5rem;
+		}
+	}
+
+	&.last-action {
+		border: 1px solid var(--outline);
+		border-radius: var(--border-radius-base);
+		background: var(--surface-container);
+
+		.detail__content {
+			--max-lines: 1;
+			overflow: hidden;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: var(--max-lines);
+		}
+	}
+}
+
+.actions__log {
+	padding: 1rem;
+	border: 1px solid var(--outline);
+	background: var(--surface-container);
+	margin: 1rem 0;
+}

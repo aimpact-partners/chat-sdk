@@ -1,0 +1,16 @@
+{
+	"name": "chats/chat-input",
+	"widget": {
+		"scss": {
+			"path": "/scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "/ts",
+			"files": ["*"]
+		},
+		"element": {
+			"name": "agents-chat-input-control"
+		}
+	}
+}

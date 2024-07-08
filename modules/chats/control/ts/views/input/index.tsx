@@ -1,42 +1,42 @@
 import React from 'react';
 import { Form } from 'pragmate-ui/form';
-
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 import { InputContext } from './context';
-import { SystemModal } from './system/index';
 import type { StoreManager } from '../../store';
 import { TextInput } from './text-input';
 import { InputActionButton } from './action-button';
+import { useChatContext } from '../context';
+import { AppIconButton } from '@aimpact/chat-sdk/components/icons';
 
-export /*bundle*/ const ChatInput = ({ store, isWaiting = false }: { store: StoreManager; isWaiting: boolean }) => {
+export /*bundle*/ const AgentsChatInput = ({ isWaiting = false }: { store: StoreManager; isWaiting: boolean }) => {
 	const [recording, setRecording] = React.useState<boolean>(false);
 	const [fetching, setFetching] = React.useState<boolean>(false);
 	const [waiting, setWaiting] = React.useState<boolean>(false);
 	const [text, setText] = React.useState('');
-	const {
-		audioManager: { recorder }
-	} = store;
+
+	const { store } = useChatContext();
+	console.log(30, store);
+	const recorder = {};
 
 	useBinder([store], () => setWaiting(store.waitingResponse));
 
 	const disabled = { disabled: false };
 	const sendAudio = async event => {
-		setFetching(true);
-		event.preventDefault();
-		event.stopPropagation();
-		const audio = await recorder.stop();
-
-		store.sendMessage(audio);
-		setRecording(!recording);
-		setFetching(false);
+		// 	setFetching(true);
+		// 	event.preventDefault();
+		// 	event.stopPropagation();
+		// 	const audio = await recorder.stop();
+		// 	store.sendMessage(audio);
+		// 	setRecording(!recording);
+		// 	setFetching(false);
 	};
 
 	const handleSend = async () => {
 		try {
 			setText('');
 			setFetching(true);
-			const response = await store.sendMessage(text);
-			console.log(1, 'obtenida respuesta');
+			await store.sendMessage(text);
+
 			setFetching(false);
 		} catch (e) {
 			console.error('error', e);
@@ -47,7 +47,7 @@ export /*bundle*/ const ChatInput = ({ store, isWaiting = false }: { store: Stor
 	if (['', undefined, null].includes(text.replaceAll('\n', '')) || !text.trim().length) disabled.disabled = true;
 
 	const isFetching = fetching || recording || waiting || isWaiting;
-	let cls = `input-container ${isFetching ? 'is-fetching' : ''}`;
+	let cls = `chat-input-container ${isFetching ? 'is-fetching' : ''}`;
 	if (store.disabled) cls += 'is-disabled';
 	// Defines the "system" that the chat will use
 
@@ -55,9 +55,12 @@ export /*bundle*/ const ChatInput = ({ store, isWaiting = false }: { store: Stor
 	const buttonIsDisabled = disabled.disabled || store.waitingResponse || recording;
 
 	return (
-		<div className={cls}>
-			<InputContext.Provider value={contextValue}>
-				<Form onSubmit={onSubmit} className="chat-input-form">
+		<InputContext.Provider value={contextValue}>
+			<Form onSubmit={onSubmit} className="chat-input-form">
+				<div className={cls}>
+					<div>
+						<AppIconButton className="chat-input__icon" icon="attachFile" />
+					</div>
 					<TextInput
 						text={text}
 						disabled={store.disabled}
@@ -67,8 +70,8 @@ export /*bundle*/ const ChatInput = ({ store, isWaiting = false }: { store: Stor
 						handleSend={handleSend}
 					/>
 					<InputActionButton text={text} onSend={handleSend} buttonIsDisabled={buttonIsDisabled} />
-				</Form>
-			</InputContext.Provider>
-		</div>
+				</div>
+			</Form>
+		</InputContext.Provider>
 	);
 };

@@ -36,15 +36,17 @@ export function TextInput({ setFetching, setText, handleSend, fetching, text, di
 	};
 
 	return (
-		<textarea
-			{...disabledTextarea}
-			rows={1}
-			value={text}
-			onChange={handleInputChange}
-			onKeyDown={handleKeyDown}
-			autoFocus={true}
-			className="input__textarea"
-			ref={textAreaRef}
-		/>
+		<div className="input__wrapper">
+			<textarea
+				{...disabledTextarea}
+				rows={1}
+				value={text}
+				onChange={handleInputChange}
+				onKeyDown={handleKeyDown}
+				autoFocus={true}
+				className="input__textarea"
+				ref={textAreaRef}
+			/>
+		</div>
 	);
 }

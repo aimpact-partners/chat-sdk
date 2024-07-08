@@ -1,0 +1,7 @@
+{
+	"name": "chat-state",
+	"ts": {
+		"path": "ts",
+		"files": ["*"]
+	}
+}

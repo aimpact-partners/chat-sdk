@@ -1,0 +1,23 @@
+.messages__list {
+	padding: 1rem 0;
+	display: flex;
+	flex-direction: column;
+	background: red;
+
+	.message__container {
+		width: 100%;
+		align-items: start;
+		gap: 0.5rem;
+		padding: 1rem;
+		border-radius: var(--border-radius-base);
+
+		box-sizing: border-box;
+		display: grid;
+		grid-template-columns: auto 1fr;
+		p {
+			&::first-letter {
+				text-transform: uppercase;
+			}
+		}
+	}
+}

@@ -2,6 +2,8 @@
 	padding: 1rem 0;
 	display: flex;
 	flex-direction: column;
+	overflow-y: auto;
+	height: 100%;
 
 	.message__container {
 		width: 100%;
@@ -18,20 +20,5 @@
 				text-transform: uppercase;
 			}
 		}
-
-		&.user {
-			background-color: var(--surface-dim);
-		}
-		&.assistant {
-			background-color: var(--surface-bright);
-		}
-
-		@media (max-width: 768px) {
-			border-radius: 0;
-		}
-	}
-
-	@media (min-width: 800px) {
-		gap: 1rem; // the gap does not look good on mobile
 	}
 }
