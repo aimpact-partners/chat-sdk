@@ -12,7 +12,7 @@ export function InputActionButton({ text, onSend, buttonIsDisabled }) {
 			{!!text.length ? (
 				<Button icon="send-arrow" onClick={onSend} disabled={buttonIsDisabled} />
 			) : (
-				<RecordingButton store={store} disabled={buttonIsDisabled} />
+				<RecordingButton store={store} />
 			)}
 		</span>
 	);

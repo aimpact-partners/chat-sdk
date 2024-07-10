@@ -1,3 +1,4 @@
+import { audio } from './../../../../../../api/modules/http/routes/chats/messages/audio';
 import { PendingPromise } from '@beyond-js/kernel/core';
 // ChatItem
 import { Item } from '@beyond-js/reactive/entities';
@@ -82,7 +83,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		this.trigger('content.updated');
 	};
 
-	async sendMessage(content: string): PendingPromise<Message> {
+	async sendMessage(content: string): Promise<Message> {
 		try {
 			this.fetching = true;
 			const token = await sessionWrapper.user.firebaseToken;
@@ -112,6 +113,45 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		} finally {
 			this.fetching = false;
 		}
+	}
+
+	async sendAudio(message: Blob): Promise<Message> {
+		try {
+			this.fetching = true;
+			const token = await sessionWrapper.user.firebaseToken;
+			const uri = `/chats/${this.id}/messages/audio`;
+			const promise = new PendingPromise<Message>();
+			const item = new Message({ chatId: this.id, audio: message });
+			const onFinish = response => {
+				this.trigger('response.finished');
+				this.#response = undefined;
+				promise.resolve(item);
+				// this.#offEvents();
+			};
+			const onError = e => {
+				console.error(e);
+			};
+
+			this.messages.add(item);
+			this.#api
+				.bearer(token)
+				.stream(uri, { ...item.getProperties(), multipart: true })
+				.then(onFinish)
+				.catch(onError);
+			globalThis.setTimeout(() => onFinish({}), 3000);
+			return promise;
+		} catch (e) {
+			console.error(e);
+		} finally {
+			this.fetching = false;
+		}
+	}
+
+	async transcribe(audio: Blob) {
+		const uri = `/audios/transcribe`;
+		const token = await sessionWrapper.user.firebaseToken;
+		const response = await this.#api.bearer(token).post(uri, { multipart: true, audio: audio });
+		console.log(10, response);
 	}
 
 	#processAction = () => {

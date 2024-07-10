@@ -18,6 +18,7 @@ export /*bundle */ function AgentsChatContainer({ children, icon, autoplay, play
 		store,
 		ready: store.ready,
 		texts: store.texts,
+		recorder: store?.audioManager?.recorder,
 		autoplay,
 		systemIcon: icon,
 		messages,

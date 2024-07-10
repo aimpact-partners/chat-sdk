@@ -1,10 +1,11 @@
+import { Recorder } from 'media-suite/recorder';
 import { Input } from 'pragmate-ui/form';
 import React from 'react';
 
 export interface IInputContext {
 	store: any;
 	onSubmit: (message: any) => void;
-	recorder: any;
+	recorder: Recorder;
 	recording: any;
 	disabled?: boolean;
 	fetching?: boolean;

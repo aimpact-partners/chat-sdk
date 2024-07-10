@@ -13,7 +13,7 @@ export /*bundle*/ const RecordingButton = ({ store, store: { audioManager }, dis
 	const [showModal, setShowModal] = useState(false);
 	const [error, setError] = useState(false);
 	const [hasPermission, setHasPermission] = useState(
-		globalThis?.localStorage.getItem('aimpact.recording.permission'),
+		globalThis?.localStorage.getItem('aimpact.recording.permission')
 	);
 	const { texts } = useChatContext();
 	const onRecord = async () => {
@@ -49,7 +49,6 @@ export /*bundle*/ const RecordingButton = ({ store, store: { audioManager }, dis
 
 			onRecord();
 		} catch (e) {
-			console.log(30);
 			setError(true);
 		} finally {
 			setFetching(false);
@@ -62,10 +61,12 @@ export /*bundle*/ const RecordingButton = ({ store, store: { audioManager }, dis
 	};
 
 	if (recording) return <Player />;
+	const isDisabled = disabled || fetching;
 
 	return (
 		<>
-			<Button icon='mic' fetching={fetching} onClick={playAction} disabled={disabled || fetching} />
+			11
+			<Button icon="mic" fetching={fetching} onClick={playAction} disabled={isDisabled} />
 			<PermissionsModal show={showModal} onClose={onClose} onConfirm={getUserMedia} />
 			<PermissionsErrorModal show={error} onClose={() => setError(false)} />
 		</>

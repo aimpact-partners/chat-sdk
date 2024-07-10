@@ -11,13 +11,13 @@ export /*bundle*/ const PermissionsErrorModal = ({ show, onClose }) => {
 
 	return (
 		<>
-			<AlertModal className='modal--centered' open={true} show={true} onClose={onClose} centered>
-				<div className='permissions__modal-container'>
-					<div className='title-intro__modal-container'>
+			<AlertModal className="modal--centered" onClose={onClose} centered>
+				<div className="permissions__modal-container">
+					<div className="title-intro__modal-container">
 						<h3>{title}</h3>
 					</div>
-					<Icon className='mic__modal-icon lg my-10' icon='mic' />
-					<p className='description__modal-text'>{description}</p>
+					<Icon className="mic__modal-icon lg my-10" icon="mic" />
+					<p className="description__modal-text">{description}</p>
 				</div>
 			</AlertModal>
 		</>

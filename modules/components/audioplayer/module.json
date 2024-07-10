@@ -1,6 +1,7 @@
 {
-	"name": "chats/chat-input",
-	"widget": {
+	"name": "audio-player",
+	"platforms": ["web", "ios", "android"],
+	"code": {
 		"scss": {
 			"path": "/scss",
 			"files": ["*"]
@@ -8,9 +9,6 @@
 		"ts": {
 			"path": "/ts",
 			"files": ["*"]
-		},
-		"element": {
-			"name": "agents-chat-input-control"
 		}
 	}
 }

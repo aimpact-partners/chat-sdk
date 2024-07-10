@@ -11,14 +11,14 @@ export /*bundle*/ const PermissionsModal = ({ show, onClose, onConfirm }) => {
 
 	return (
 		<>
-			<AlertModal show={true} onClose={onClose} centered onConfirm={onConfirm}>
-				<div className='permissions__modal-container'>
-					<div className='title-intro__modal-container'>
-						<span className='intro__modal-text p2'>{texts.permissions.intro}</span>
+			<AlertModal onClose={onClose} centered onConfirm={onConfirm}>
+				<div className="permissions__modal-container">
+					<div className="title-intro__modal-container">
+						<span className="intro__modal-text p2">{texts.permissions.intro}</span>
 						<h3>{subtitle}</h3>
 					</div>
-					<Icon className='mic__modal-icon lg my-10' icon='mic' />
-					<p className='description__modal-text'>{description}</p>
+					<Icon className="mic__modal-icon lg my-10" icon="mic" />
+					<p className="description__modal-text">{description}</p>
 				</div>
 			</AlertModal>
 		</>

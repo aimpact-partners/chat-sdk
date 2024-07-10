@@ -14,21 +14,21 @@ export /*bundle*/ const AgentsChatInput = ({ isWaiting = false }: { store: Store
 	const [waiting, setWaiting] = React.useState<boolean>(false);
 	const [text, setText] = React.useState('');
 
-	const { store } = useChatContext();
-	console.log(30, store);
-	const recorder = {};
+	const { store, recorder } = useChatContext();
 
 	useBinder([store], () => setWaiting(store.waitingResponse));
 
 	const disabled = { disabled: false };
+
 	const sendAudio = async event => {
-		// 	setFetching(true);
-		// 	event.preventDefault();
-		// 	event.stopPropagation();
-		// 	const audio = await recorder.stop();
-		// 	store.sendMessage(audio);
-		// 	setRecording(!recording);
-		// 	setFetching(false);
+		setFetching(true);
+		event.preventDefault();
+		event.stopPropagation();
+		const audio = await recorder.stop();
+		console.log(20, audio);
+		store.sendAudio(audio);
+		setRecording(!recording);
+		setFetching(false);
 	};
 
 	const handleSend = async () => {
@@ -69,6 +69,7 @@ export /*bundle*/ const AgentsChatInput = ({ isWaiting = false }: { store: Store
 						setText={setText}
 						handleSend={handleSend}
 					/>
+
 					<InputActionButton text={text} onSend={handleSend} buttonIsDisabled={buttonIsDisabled} />
 				</div>
 			</Form>

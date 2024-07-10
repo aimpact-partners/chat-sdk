@@ -4,6 +4,7 @@ import { Playable } from '@aimpact/chat-sdk/widgets/playable';
 import { AudioPlayer } from 'media-suite/audio-player';
 import { useChatMessagesContext } from '../../context';
 import { Spinner } from 'pragmate-ui/components';
+import { Player } from './audio-player';
 
 export function MessageText({ message, playable, fetching, autoplay = false }) {
 	const ref = React.useRef(null);
@@ -40,7 +41,7 @@ export function MessageText({ message, playable, fetching, autoplay = false }) {
 				/>
 			)}
 			{/* {fetching && <Spinner variant='primary' size='sm' active className='spinner-text' />} */}
-			{message.audio && <AudioPlayer src={message.audio} convert />}
+			{message.audio && <Player message={message} />}
 		</div>
 	);
 }

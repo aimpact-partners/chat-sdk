@@ -38,9 +38,21 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		return this.#chats.items ?? [];
 	}
 
+	#texts: CurrentTexts<StoreManager> = new CurrentTexts(module.specifier);
+	get textsModel() {
+		return this.#texts;
+	}
+	get texts() {
+		return this.#texts?.value;
+	}
 	#audio: AudioManager = new AudioManager(this);
 	get audioManager(): AudioManager {
 		return this.#audio;
+	}
+
+	#processTranscription = false;
+	get proccessTranscription() {
+		return this.#processTranscription;
 	}
 
 	#selectedModel = 'GPT 4';
@@ -84,13 +96,6 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		return this.#extensions;
 	}
 	#id: string;
-	#texts: CurrentTexts<StoreManager> = new CurrentTexts(module.specifier);
-	get textsModel() {
-		return this.#texts;
-	}
-	get texts() {
-		return this.#texts?.value;
-	}
 
 	get ready() {
 		return super.ready && this.#texts.ready;
@@ -102,13 +107,12 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		this.#id = id;
 		this.reactiveProps(['waitingResponse', 'autoplay']);
 		this.autoplay = true;
-
+		globalThis.store = this;
 		// attrs.on('change', () => this.checkAttributes(attrs));
 		this.load(this.#id);
 	}
 
 	load = async (id: string) => {
-		console.log(1, 'cargamos');
 		if (!id) {
 			super.ready = true;
 			this.notFound = true;
@@ -163,6 +167,18 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		}
 	}
 
+	async sendAudio(content: Blob) {
+		try {
+			performance.mark('start');
+			this.#currentMessage = undefined;
+			this.fetching = true;
+			return this.#chat.sendAudio(content);
+		} catch (e) {
+			console.error(e);
+		} finally {
+			this.fetching = false;
+		}
+	}
 	// checkAttributes(attributes) {
 	// 	this.disabled = attributes.get('disabled') === 'true';
 	// 	this.playable = attributes.get('disabled') === 'true' || attributes.get('playable') === undefined;

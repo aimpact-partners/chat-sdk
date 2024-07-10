@@ -8,17 +8,17 @@ import { ExtensionRenderer } from './extension-renderer';
 export function Content({ separator }) {
 	const { store, texts, systemIcon } = useChatContext();
 	const { messages } = store;
-	const [totalMessages, setMessages] = React.useState<number>(messages?.length ?? [].length);
+	const [, setMessages] = React.useState<number>(messages?.length ?? [].length);
 	const [ref, ready, webComponentName] = useExtension('chat-intro');
+	const onNewMessage = () => {
+		setMessages(store.messages.length);
+		globalThis.setTimeout(() => {
+			separator.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+		}, 100);
+		// globalThis.scrollTo(0, document.body.scrollHeight);
+	};
 
-	useBinder(
-		[store.chat],
-		() => {
-			console.log('me entero del nuevo mensaje', store.messages[store.messages.length - 1].getProperties());
-			setMessages(store.messages.length);
-		},
-		'new.message'
-	);
+	useBinder([store.chat], onNewMessage, 'new.message');
 
 	let cls = `chat__content`;
 

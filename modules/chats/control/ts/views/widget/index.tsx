@@ -21,7 +21,7 @@ export function View({ store, ...props }) {
 		texts,
 		audioManager: { player }
 	} = store;
-	globalThis.store = store;
+
 	useBinder([store], () => {
 		setReady(store.ready);
 	});

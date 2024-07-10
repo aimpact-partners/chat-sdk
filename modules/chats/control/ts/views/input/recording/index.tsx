@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 
 import { Button } from 'pragmate-ui/components';
 
-import { Player } from '../player';
+import { Player } from './player';
 import { useChatContext } from '../../context';
 import { useInputContext } from '../context';
 import { PermissionsModal } from './modal';
 import { PermissionsErrorModal } from './error-modal';
-export /*bundle*/ const RecordingButton = ({ store, store: { audioManager }, disabled }) => {
+export /*bundle*/ const RecordingButton = ({ store, store: { audioManager }, disabled = false }) => {
 	const { recorder, recording, setRecording } = useInputContext();
 	const [fetching, setFetching] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const [error, setError] = useState(false);
 	const [hasPermission, setHasPermission] = useState(
-		globalThis?.localStorage.getItem('aimpact.recording.permission'),
+		globalThis?.localStorage.getItem('aimpact.recording.permission')
 	);
 	const { texts } = useChatContext();
 	const onRecord = async () => {
@@ -41,15 +41,15 @@ export /*bundle*/ const RecordingButton = ({ store, store: { audioManager }, dis
 		try {
 			event.preventDefault();
 			setFetching(true);
+			const permissions = await recorder.hasPermissions();
 
-			if (!hasPermission || hasPermission !== 'true') {
+			if (!permissions) {
 				setShowModal(true);
 				return;
 			}
 
 			onRecord();
 		} catch (e) {
-			console.log(30);
 			setError(true);
 		} finally {
 			setFetching(false);
@@ -60,14 +60,15 @@ export /*bundle*/ const RecordingButton = ({ store, store: { audioManager }, dis
 		setFetching(false);
 		setShowModal(false);
 	};
-
+	const onCloseError = () => setError(false);
+	const isDisabled = disabled || fetching;
 	if (recording) return <Player />;
 
 	return (
 		<>
-			<Button icon='mic' fetching={fetching} onClick={playAction} disabled={disabled || fetching} />
+			<Button icon="mic" fetching={fetching} onClick={playAction} disabled={isDisabled} />
 			<PermissionsModal show={showModal} onClose={onClose} onConfirm={getUserMedia} />
-			<PermissionsErrorModal show={error} onClose={() => setError(false)} />
+			<PermissionsErrorModal show={error} onClose={onCloseError} />
 		</>
 	);
 };

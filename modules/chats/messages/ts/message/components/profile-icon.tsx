@@ -11,11 +11,11 @@ export function ProfileIcon({ role }) {
 	const userProps = sessionWrapper.user.getProperties();
 	const handleLoadError = () => setLoadError(true);
 	const src = role === 'user' ? userProps.photoURL : systemIcon;
-	console.log(30, systemIcon);
+
 	return (
 		<picture className="picture__container">
 			{(userProps.photoURL && !loadError) || role !== 'user' ? (
-				<Image alt="user image profile" src={src} onError={handleLoadError} />
+				<Image alt="agent" src={src} onError={handleLoadError} />
 			) : (
 				<Image alt="user image profile" src={systemIcon} onError={handleLoadError} />
 			)}
