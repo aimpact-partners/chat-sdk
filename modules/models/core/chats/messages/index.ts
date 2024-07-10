@@ -35,7 +35,11 @@ export class Messages extends ReactiveModel<Messages> {
 	add(item) {
 		this.#items.push(item);
 		this.#map.set(item.id, item);
-		console.log(1, 'mensaje enviado agregado');
+
 		this.trigger('new.message');
+	}
+
+	getData() {
+		return this.#items.map(item => item.getProperties());
 	}
 }

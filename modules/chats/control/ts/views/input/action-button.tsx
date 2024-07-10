@@ -1,19 +1,30 @@
 import React from 'react';
 import { RecordingButton } from './recording';
 import { Button } from 'pragmate-ui/components';
-
+import { AppIconButton } from '@aimpact/chat-sdk/components/icons';
 import { useInputContext } from './context';
 
-export function InputActionButton({ text, onSend, buttonIsDisabled }) {
-	const { store } = useInputContext();
+export function InputActionButton({ buttonIsDisabled }) {
+	const { onSubmit, text } = useInputContext();
+
+	if (!!text.length) {
+		console.log('ahora renderizamos');
+		return (
+			<span className="input__icon  input__icon--right">
+				<AppIconButton
+					icon="arrowUpward"
+					className="circle"
+					variant="primary"
+					onClick={onSubmit}
+					disabled={buttonIsDisabled}
+				/>
+			</span>
+		);
+	}
 
 	return (
 		<span className="input__icon  input__icon--right">
-			{!!text.length ? (
-				<Button icon="send-arrow" onClick={onSend} disabled={buttonIsDisabled} />
-			) : (
-				<RecordingButton store={store} />
-			)}
+			<RecordingButton />
 		</span>
 	);
 }

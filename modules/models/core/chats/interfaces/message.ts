@@ -4,11 +4,11 @@ export interface IMessage {
 	chat?: { id: string } | Chat;
 	chatId?: string;
 	content?: string;
-	role?: string;
+	role?: 'user' | 'system';
 	audio?: Blob;
 	timestamp?: number;
 	language?: string;
-	type?: 'audio' | 'text';
+	format?: 'audio' | 'text';
 	usage?: {
 		completionTokens: number;
 		promptTokens: number;

@@ -7,53 +7,40 @@ import { TextInput } from './text-input';
 import { InputActionButton } from './action-button';
 import { useChatContext } from '../context';
 import { AppIconButton } from '@aimpact/chat-sdk/components/icons';
+import { IAgentsInputProps } from './types/agents-input';
+import { useInputForm } from './hooks/use-input-form';
 
-export /*bundle*/ const AgentsChatInput = ({ isWaiting = false }: { store: StoreManager; isWaiting: boolean }) => {
-	const [recording, setRecording] = React.useState<boolean>(false);
-	const [fetching, setFetching] = React.useState<boolean>(false);
+export /*bundle*/ const AgentsChatInput = ({ isWaiting = false, autoTranscribe = false }: IAgentsInputProps) => {
 	const [waiting, setWaiting] = React.useState<boolean>(false);
-	const [text, setText] = React.useState('');
-
+	const disabled = { disabled: false };
 	const { store, recorder } = useChatContext();
+	const { text, setText, onSubmit, fetching, recording, setRecording, setFetching } = useInputForm();
 
 	useBinder([store], () => setWaiting(store.waitingResponse));
-
-	const disabled = { disabled: false };
-
-	const sendAudio = async event => {
-		setFetching(true);
-		event.preventDefault();
-		event.stopPropagation();
-		const audio = await recorder.stop();
-		console.log(20, audio);
-		store.sendAudio(audio);
-		setRecording(!recording);
-		setFetching(false);
-	};
-
-	const handleSend = async () => {
-		try {
-			setText('');
-			setFetching(true);
-			await store.sendMessage(text);
-
-			setFetching(false);
-		} catch (e) {
-			console.error('error', e);
-		}
-	};
-	const onSubmit = !!text.length ? handleSend : sendAudio;
 
 	if (['', undefined, null].includes(text.replaceAll('\n', '')) || !text.trim().length) disabled.disabled = true;
 
 	const isFetching = fetching || recording || waiting || isWaiting;
 	let cls = `chat-input-container ${isFetching ? 'is-fetching' : ''}`;
-	if (store.disabled) cls += 'is-disabled';
-	// Defines the "system" that the chat will use
 
-	const contextValue = { store, onSubmit, recorder, fetching, setRecording, recording, disabled: store.disabled };
+	if (store.disabled) cls += 'is-disabled';
+
+	const contextValue = {
+		store,
+		onSubmit,
+		recorder,
+		autoTranscribe,
+		fetching,
+		setText,
+		setRecording,
+		recording,
+		text,
+		setFetching,
+		disabled: store.disabled
+	};
 	const buttonIsDisabled = disabled.disabled || store.waitingResponse || recording;
 
+	
 	return (
 		<InputContext.Provider value={contextValue}>
 			<Form onSubmit={onSubmit} className="chat-input-form">
@@ -67,10 +54,10 @@ export /*bundle*/ const AgentsChatInput = ({ isWaiting = false }: { store: Store
 						setFetching={setFetching}
 						fetching={isFetching}
 						setText={setText}
-						handleSend={handleSend}
+						handleSend={onSubmit}
 					/>
 
-					<InputActionButton text={text} onSend={handleSend} buttonIsDisabled={buttonIsDisabled} />
+					<InputActionButton buttonIsDisabled={buttonIsDisabled} />
 				</div>
 			</Form>
 		</InputContext.Provider>

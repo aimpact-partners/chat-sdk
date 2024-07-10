@@ -22,6 +22,11 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> {
 		return this.#response;
 	}
 
+	#type: 'message' | 'answer';
+	get type() {
+		return this.#type;
+	}
+
 	constructor({ id = undefined, chat, ...specs }: IMessageConstructorSpecs) {
 		super({
 			id,
@@ -33,6 +38,7 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> {
 		if (!id) this.id = uuid();
 		const api = new Api(sdkConfig.api);
 		this.#api = api;
+		this.#type = specs.type ?? 'message';
 
 		this.reactiveProps(['autoplay']);
 		super.ready = true;

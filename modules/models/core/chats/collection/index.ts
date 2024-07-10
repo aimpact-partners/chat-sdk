@@ -1,11 +1,28 @@
-import { Collection } from '@beyond-js/reactive/entities';
-
-import { Chat } from '../item';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 import { Api } from '@jircdev/http-suite/api';
-import { ChatCollectionProvider } from './provider';
+import { sessionWrapper } from '@aimpact/chat-sdk/session';
+import { sdkConfig } from '@aimpact/chat-sdk/startup';
+export /*bundle*/ class Chats extends ReactiveModel<Chats> {
+	#api: Api;
 
-export /*bundle*/ class Chats extends Collection {
-	constructor() {
-		super({ provider: ChatCollectionProvider, localdb: false, item: Chat });
+	constructor(p) {
+		super();
+		this.#api = new Api(sdkConfig.api);
+	}
+
+	#items: any[] = [];
+	get items() {
+		return this.#items;
+	}
+	async load() {
+		const token = await sessionWrapper.user.firebaseToken;
+		this.#api.bearer(token);
+		const { status, data } = await this.#api.get(`/chats`);
+		if (!status) {
+			throw new Error('error loading chat');
+		}
+		this.#items = data.items;
+
+		return { status, data };
 	}
 }

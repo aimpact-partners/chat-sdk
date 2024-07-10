@@ -33,6 +33,10 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	get chat() {
 		return this.#chat;
 	}
+
+	get model(): Chat {
+		return this.#chat;
+	}
 	#chats = AppWrapper.chats;
 	get chats() {
 		return this.#chats.items ?? [];
@@ -161,8 +165,10 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 			if (typeof content === 'string' && [undefined, '', null].includes(content)) return;
 
 			this.fetching = true;
+			// return http.response(data);
 			return this.#chat.sendMessage(content);
 		} catch (e) {
+			// return http.error(400, message);
 			console.error(e);
 		}
 	}
@@ -179,13 +185,9 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 			this.fetching = false;
 		}
 	}
-	// checkAttributes(attributes) {
-	// 	this.disabled = attributes.get('disabled') === 'true';
-	// 	this.playable = attributes.get('disabled') === 'true' || attributes.get('playable') === undefined;
-	// 	if (!this.playable) {
-	// 		this.#audio.player?.stop();
-	// 	}
-	// }
+	transcribe(audio: Blob) {
+		return this.#chat.transcribe(audio);
+	}
 
 	unmount() {
 		this.#audio.player?.stop();

@@ -2,7 +2,8 @@ import React from 'react';
 import type { StoreManager } from '../store';
 //@ts-ignore
 import type { Voice, VoiceLab } from '@aimpact/chat-sdk/voice';
-import type { Recorder } from 'media-suite/recorder';
+import { Recorder } from '../store/recorder';
+
 interface IChatContext {
 	messages?: any[];
 	store: StoreManager;

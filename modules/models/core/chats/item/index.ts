@@ -1,4 +1,4 @@
-import { audio } from './../../../../../../api/modules/http/routes/chats/messages/audio';
+import { DBManager } from '@beyond-js/reactive/database';
 import { PendingPromise } from '@beyond-js/kernel/core';
 // ChatItem
 import { Item } from '@beyond-js/reactive/entities';
@@ -9,7 +9,7 @@ import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { IChat } from '../interfaces/chat';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';
 import { ChatProvider } from './provider';
-// chats/ea0572a8-ff07-4bf5-9962-16fc765603eb
+import { v4 as uuid } from 'uuid';
 export /*bundle*/ class Chat extends Item<IChat> {
 	declare id: string;
 	#api: Api;
@@ -30,8 +30,10 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	];
 	localdb = false;
 	declare fetching: boolean;
+	#currentMessage: Message;
 	#response: Message;
 	#messages: Messages;
+
 	get messages() {
 		return this.#messages;
 	}
@@ -42,12 +44,28 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		this.#messages = new Messages();
 		this.#messages.on('new.message', () => this.triggerEvent('new.message'));
 		globalThis.chat = this;
+		if (!id) this.id = uuid();
 		this.#listen();
 		// console.log(`chat is being exposed in console as chat`, id);
 	}
 
 	#listen = () => {
 		this.#api.on('stream.response', this.#onListen);
+		this.#api.on('action.received', () => {
+			try {
+				if (this.#api.actions) {
+					this.#api.actions.forEach(data => {
+						const action = JSON.parse(data);
+						if (action.type === 'transcription') {
+							this.#currentMessage.set({ content: action.data.transcription });
+						}
+					});
+				}
+				// const action = JSON.parse(this.#api.actions);
+			} catch (e) {
+				console.log('no ta listo', e);
+			}
+		});
 	};
 
 	#offEvents = () => {
@@ -70,12 +88,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	};
 
 	#onListen = () => {
-		if (!this.#response) {
-			this.#response = new Message({ chatId: this.id, role: 'system' });
-			this.#messages.add(this.#response);
-		}
-
-		// this.#response.content = this.#api.streamResponse;
+		this.#response.content = this.#api.streamResponse;
 
 		this.#response.set({ content: this.#api.streamResponse });
 
@@ -83,6 +96,11 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		this.trigger('content.updated');
 	};
 
+	getData() {
+		const properties = this.getProperties();
+		properties.messages = this.#messages.getData();
+		return properties;
+	}
 	async sendMessage(content: string): Promise<Message> {
 		try {
 			this.fetching = true;
@@ -90,15 +108,20 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const uri = `/chats/${this.id}/messages`;
 			const promise = new PendingPromise<Message>();
 			const item = new Message({ chatId: this.id, content });
+			this.#currentMessage = item;
 			const onFinish = response => {
 				this.trigger('response.finished');
 				this.#response = undefined;
 				promise.resolve(item);
+				this.saveLocally(this.getData());
 				// this.#offEvents();
 			};
 			const onError = e => {
 				console.error(e);
 			};
+
+			this.#response = new Message({ chatId: this.id, role: 'system' });
+			this.messages.add(this.#response);
 
 			this.messages.add(item);
 			this.#api
@@ -122,17 +145,20 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const uri = `/chats/${this.id}/messages/audio`;
 			const promise = new PendingPromise<Message>();
 			const item = new Message({ chatId: this.id, audio: message });
+			this.#currentMessage = item;
 			const onFinish = response => {
 				this.trigger('response.finished');
 				this.#response = undefined;
 				promise.resolve(item);
+				this.saveLocally(this.getData());
 				// this.#offEvents();
 			};
 			const onError = e => {
 				console.error(e);
 			};
-
 			this.messages.add(item);
+			this.#response = new Message({ chatId: this.id, role: 'system' });
+			this.messages.add(this.#response);
 			this.#api
 				.bearer(token)
 				.stream(uri, { ...item.getProperties(), multipart: true })
@@ -148,31 +174,64 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	}
 
 	async transcribe(audio: Blob) {
-		const uri = `/audios/transcribe`;
-		const token = await sessionWrapper.user.firebaseToken;
-		const response = await this.#api.bearer(token).post(uri, { multipart: true, audio: audio });
-		console.log(10, response);
+		try {
+			const uri = `/audios/transcribe`;
+			const token = await sessionWrapper.user.firebaseToken;
+			const response = await this.#api.bearer(token).post(uri, { multipart: true, audio: audio });
+
+			return response;
+		} catch (e) {
+			//todo: how to handle other kind of errors
+			throw e;
+		}
 	}
 
-	#processAction = () => {
-		try {
-			let transcription = this.#api?.actions?.find(action => {
-				const data = JSON.parse(action);
-
-				if (data.type === 'transcription') {
-					return true;
-				}
-			});
-
-			if (transcription) {
-				// let transcriptionData: Record<string, any> = JSON.parse(transcription);
-				// this.#publish({ content: transcriptionData.data.transcription });
-			}
-		} catch (e) {
-			console.error(e);
-		}
-	};
 	getMessage(id: string) {
 		return this.#messages.get(id);
+	}
+
+	response(data) {
+		return {
+			status: true,
+			data
+		};
+	}
+
+	async saveLocally(data: any) {
+		try {
+			return null;
+			const existingData = await DBManager.db.table('Chat').get(data.id);
+			if (existingData) {
+				await DBManager.db.table('Chat').update(data.id, data);
+			} else {
+				await DBManager.db.table('Chat').put(data);
+			}
+		} catch (error) {
+			console.error('Error saving locally:', error);
+		}
+	}
+
+	async loadLocally(chatId: string): Promise<any> {
+		try {
+			const data = await DBManager.db.table('Chat').get(chatId);
+			return data;
+		} catch (error) {
+			console.error('Error loading locally:', error);
+		}
+	}
+
+	create() {
+		this.#api.post('/chats', {
+			id: this.id,
+			name: 'My chat',
+			projectId: '02d991dd-8d57-42f3-b155-8e7133482c19',
+
+			metadata: {
+				prompt: 'topic-q&a'
+			},
+			language: {
+				default: 'es'
+			}
+		});
 	}
 }

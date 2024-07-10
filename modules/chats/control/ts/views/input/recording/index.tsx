@@ -3,19 +3,16 @@ import React, { useState } from 'react';
 import { Button } from 'pragmate-ui/components';
 
 import { Player } from './player';
-import { useChatContext } from '../../context';
 import { useInputContext } from '../context';
 import { PermissionsModal } from './modal';
 import { PermissionsErrorModal } from './error-modal';
-export /*bundle*/ const RecordingButton = ({ store, store: { audioManager }, disabled = false }) => {
+export /*bundle*/ const RecordingButton = ({ disabled = false }) => {
 	const { recorder, recording, setRecording } = useInputContext();
 	const [fetching, setFetching] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const [error, setError] = useState(false);
-	const [hasPermission, setHasPermission] = useState(
-		globalThis?.localStorage.getItem('aimpact.recording.permission')
-	);
-	const { texts } = useChatContext();
+	const [, setHasPermission] = useState(globalThis?.localStorage.getItem('aimpact.recording.permission'));
+
 	const onRecord = async () => {
 		try {
 			await recorder.record();
