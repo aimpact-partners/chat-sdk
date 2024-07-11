@@ -25,4 +25,9 @@ export /*bundle*/ class Chats extends ReactiveModel<Chats> {
 
 		return { status, data };
 	}
+
+	async addItem(item) {
+		this.#items.unshift(item);
+		this.triggerEvent('change');
+	}
 }

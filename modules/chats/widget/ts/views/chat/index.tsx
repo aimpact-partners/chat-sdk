@@ -16,7 +16,7 @@ export /*bundle*/ function Chat(): JSX.Element {
 	const [reader] = React.useState(false);
 	const separator = React.useRef(null);
 
-	let cls = `in-test chat-control__container${reader ? ' reader__container' : ''}`;
+	let cls = `chat-control__container${reader ? ' reader__container' : ''}`;
 
 	return (
 		<div className={cls}>

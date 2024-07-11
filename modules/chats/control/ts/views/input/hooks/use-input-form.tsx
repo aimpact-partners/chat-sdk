@@ -18,7 +18,7 @@ export function useInputForm() {
 
 	const handleSend = async event => {
 		try {
-			event.stopPropagation();
+			event?.stopPropagation();
 			setText('');
 			setFetching(true);
 			await store.sendMessage(text);

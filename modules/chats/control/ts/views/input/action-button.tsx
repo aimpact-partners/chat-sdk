@@ -8,7 +8,6 @@ export function InputActionButton({ buttonIsDisabled }) {
 	const { onSubmit, text } = useInputContext();
 
 	if (!!text.length) {
-		console.log('ahora renderizamos');
 		return (
 			<span className="input__icon  input__icon--right">
 				<AppIconButton

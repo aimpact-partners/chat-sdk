@@ -121,9 +121,9 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			};
 
 			this.#response = new Message({ chatId: this.id, role: 'system' });
+			this.messages.add(item);
 			this.messages.add(this.#response);
 
-			this.messages.add(item);
 			this.#api
 				.bearer(token)
 				.stream(uri, { ...item.getProperties() })
@@ -220,12 +220,12 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		}
 	}
 
-	create() {
-		this.#api.post('/chats', {
+	async create() {
+		const response = await this.#api.post('/chats', {
 			id: this.id,
 			name: 'My chat',
 			projectId: '02d991dd-8d57-42f3-b155-8e7133482c19',
-
+			uid: sessionWrapper.user.id,
 			metadata: {
 				prompt: 'topic-q&a'
 			},
@@ -233,5 +233,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				default: 'es'
 			}
 		});
+		this.set(response.data);
 	}
 }
