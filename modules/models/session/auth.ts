@@ -98,16 +98,17 @@ export class Auth extends ReactiveModel<Auth> {
 	}
 
 	appLogin = async (user: User) => {
-		if (this.#pendingLogin) return this.#pendingLogin;
+		if (this.#pendingLogin) {
+			return this.#pendingLogin;
+		}
 
 		if (user?.uid) {
-			if (this.#uid === user.uid) return;
+			// if (this.#uid === user.uid) return { status: true, model: this.#user };
 			this.#uid = user.uid;
 			if (this.#pendingLogin) return this.#pendingLogin;
 			this.#pendingLogin = new PendingPromise();
 
 			const { displayName, photoURL, email, phoneNumber, uid } = user;
-
 			const firebaseToken = await user.getIdToken();
 			const specs = { id: uid, displayName, photoURL, email, phoneNumber, firebaseToken };
 			// const user = new User(specs);
