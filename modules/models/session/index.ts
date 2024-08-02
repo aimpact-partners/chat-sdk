@@ -77,7 +77,15 @@ class SessionManager extends ReactiveModel<ISession> {
 		try {
 			await this.#auth.signOut();
 
-			globalThis.localStorage.clear();
+			function clear(keepKeys) {
+				const keysToKeep = new Set(keepKeys);
+				Object.keys(localStorage).forEach(key => {
+					if (!keysToKeep.has(key)) {
+						localStorage.removeItem(key);
+					}
+				});
+			}
+			clear(['ailearn.home.tour']);
 			this.triggerEvent('logout');
 
 			return true;
