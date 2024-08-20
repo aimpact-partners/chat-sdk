@@ -48,18 +48,8 @@ class SessionManager extends ReactiveModel<ISession> {
 	}
 
 	async signInWithGoogle() {
-		try {
-			const response = await this.#auth.signInWithGoogle();
-			// console.log(-5, 'response', response);
-			if (!response?.status) return false;
-
-			this.triggerEvent('login');
-
-			return response;
-		} catch (e) {
-			console.error(e);
-			return { status: false, error: 'CANNOT' };
-		}
+		return this.#auth.signInWithGoogle();
+		// console.log(-5, 'response', response);
 	}
 
 	async registerWithEmail({ email, password, username }) {
