@@ -39,7 +39,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	}
 
 	constructor({ id = undefined } = {}) {
-		super({ id, db: 'chat-api', storeName: 'Chat', provider: ChatProvider });
+		super({ id, db: 'chat-api', storeName: 'Chat', provider: ChatProvider, localdb: false });
 		this.#api = new Api(sdkConfig.api);
 		globalThis.chat = this;
 		// console.log(`chat is being exposed in console as chat`, id);
@@ -48,16 +48,17 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	loadAll = async specs => {
 		await this.isReady;
 
-		const response = await this.load(specs);
-
 		const collection = new Messages();
 
-		const data = await collection.localLoad({ chatId: this.id, sortBy: 'timestamp', limit: 1000 });
-		collection.on('change', this.triggerEvent);
-
+		// const data = await collection.localLoad({ chatId: this.id, sortBy: 'timestamp', limit: 1000 });
+		collection.on('change', () => {
+			this.triggerEvent();
+		});
+		const response = await this.load(specs);
 		if (response.data.messages?.length) {
 			await collection.setEntries(response.data.messages);
 		}
+
 		this.#messages = collection;
 		globalThis.m = collection;
 		globalThis.c = this;
@@ -114,16 +115,22 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		}
 	}
 
+	#response: Message;
 	async sendMessage(content: string | Blob) {
 		try {
 			this.fetching = true;
 			const item = new Message({ chat: this });
-			let response = new Message({ chat: this });
+			this.#messages.add(item);
+			await Promise.all([item.isReady]);
 
-			await Promise.all([item.isReady, response.isReady]);
 			let published = false;
+			let response;
 			const onListen = async () => {
 				if (!published) {
+					let response = new Message({ chat: this });
+					await response.isReady;
+					this.#messages.add(response);
+					this.#response = response;
 					published = true;
 
 					response.publishSystem({
@@ -133,12 +140,12 @@ export /*bundle*/ class Chat extends Item<IChat> {
 							chat: { id: this.id },
 							conversation: { id: this.id },
 							content: '',
-							role: 'system'
-							// timestamp: Date.now()
+							role: 'system',
+							timestamp: Date.now()
 						}
 					});
 				}
-
+				response = this.#response;
 				this.trigger(`message.${response.id}.updated`);
 				response.updateContent({ content: item.response });
 
@@ -146,6 +153,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				this.triggerEvent();
 			};
 			const onEnd = () => {
+				response = this.#response;
 				response.updateContent({ content: item.response });
 				this.trigger(`message.${response.id}.ended`);
 				this.trigger(`message.${response.id}.updated`);
@@ -156,7 +164,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 			const specs: IMessageSpecs = {
 				chatId: this.id,
-				systemId: response.id,
+				// systemId: response.id,
 				id: item.id,
 				// timestamp: Date.now(),
 				role: 'user'
@@ -168,7 +176,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				specs.audio = content;
 			}
 
-			item.publish(specs);
+			await item.publish(specs);
 
 			return { message: item, response };
 		} catch (e) {

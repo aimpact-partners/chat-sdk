@@ -25,7 +25,7 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	}
 
 	constructor({ id = undefined, chat } = {}) {
-		super({ id, db: 'chat-api', storeName: 'Messages' });
+		super({ id, localdb: false });
 		this.#chat = chat;
 		const api = new Api(sdkConfig.api);
 		this.#api = api;
@@ -57,7 +57,6 @@ export /*bundle*/ class Message extends Item<IMessage> {
 	//@ts-ignore
 	async publish(specs): Promise<any> {
 		try {
-			this.setOffline(true);
 			const promise = new PendingPromise();
 			const token = await sessionWrapper.user.firebaseToken;
 
@@ -68,7 +67,9 @@ export /*bundle*/ class Message extends Item<IMessage> {
 				})
 				.then(response => {
 					this.trigger('response.finished');
+
 					this.#offEvents();
+					promise.resolve();
 				})
 				.catch(e => {
 					console.error(e);
@@ -96,7 +97,8 @@ export /*bundle*/ class Message extends Item<IMessage> {
 					console.error(e);
 				}
 			});
-			super.publish(specs);
+			await super.publish(specs);
+
 			return promise;
 		} catch (e) {
 			console.trace(e);
