@@ -1,6 +1,6 @@
 // // ChatItem
 // import { Item } from '@beyond-js/reactive/entities';
-// import { Api } from '@jircdev/http-suite/api';
+// import { Api } from '@aimpact/http-suite/api';
 // import { Message } from '../messages/item';
 // import { IMessage, IMessageSpecs } from '../interfaces/message';
 // import { Messages } from '../messages';

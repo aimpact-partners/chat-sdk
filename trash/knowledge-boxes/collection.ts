@@ -1,7 +1,7 @@
 import { Collection } from '@beyond-js/reactive/entities';
 
 import { KnowledgeBox } from './item';
-import { Api } from '@jircdev/http-suite/api';
+import { Api } from '@aimpact/http-suite/api';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import config from '@aimpact/chat-sdk/config';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';

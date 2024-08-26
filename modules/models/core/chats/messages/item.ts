@@ -1,7 +1,7 @@
 // ChatItem
 import { ReactiveModel } from '@beyond-js/reactive/model';
 import { v4 as uuid } from 'uuid';
-import { Api } from '@jircdev/http-suite/api';
+import { Api } from '@aimpact/http-suite/api';
 import { IMessage, IMessageConstructorSpecs } from '../interfaces/message';
 import type { Chat } from '../item';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';

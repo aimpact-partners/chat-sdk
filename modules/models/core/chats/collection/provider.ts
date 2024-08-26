@@ -1,4 +1,4 @@
-import { Api } from '@jircdev/http-suite/api';
+import { Api } from '@aimpact/http-suite/api';
 
 import { IProvider } from '@beyond-js/reactive/entities';
 import type { Chats } from './index';

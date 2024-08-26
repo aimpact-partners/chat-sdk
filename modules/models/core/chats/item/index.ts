@@ -2,7 +2,7 @@ import { DBManager } from '@beyond-js/reactive/database';
 import { PendingPromise } from '@beyond-js/kernel/core';
 // ChatItem
 import { Item } from '@beyond-js/reactive/entities';
-import { Api } from '@jircdev/http-suite/api';
+import { Api } from '@aimpact/http-suite/api';
 import { Message } from '../messages/item';
 import { Messages } from '../messages';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
