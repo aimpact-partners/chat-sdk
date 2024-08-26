@@ -18,7 +18,7 @@ export interface IMessage {
 
 export interface IMessageSpecs {
 	chatId: string;
-	systemId: string;
+	systemId?: string;
 	id: string;
 	timestamp?: number;
 	role: string;

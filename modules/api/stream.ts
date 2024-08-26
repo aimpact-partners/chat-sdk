@@ -7,13 +7,13 @@ export class Stream {
 	#SEPARATORS = {
 		METADATA: 'ÿ',
 		START: '😸',
-		END: '🖋️',
+		END: '🖋️'
 	};
 
 	#metadata: StreamData = {
 		started: false,
 		value: '',
-		parsed: { value: void 0 },
+		parsed: { value: void 0 }
 	};
 	get metadata(): Metadata {
 		return this.#metadata.parsed;
@@ -39,14 +39,13 @@ export class Stream {
 		try {
 			this.#metadata.parsed.value = JSON.parse(metadata.value);
 		} catch (exc) {
-			console.log(metadata);
 			console.error(exc);
 			this.#metadata.parsed.error = 'Error parsing metadata';
 		}
 
 		promise.resolve({
 			value: this.#response,
-			...metadata.parsed.value,
+			...metadata.parsed.value
 		});
 		this.#response = undefined;
 	};

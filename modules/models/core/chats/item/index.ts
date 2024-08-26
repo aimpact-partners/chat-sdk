@@ -82,6 +82,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		if (response.data.messages?.length) {
 			await collection.setEntries(response.data.messages);
 		}
+
 		this.#messages = collection;
 		globalThis.m = collection;
 		globalThis.c = this;

@@ -2,6 +2,7 @@ import { Collection } from '@beyond-js/reactive/entities';
 // import { MessageProvider } from '@aimpact/chat-api/provider';
 import { Message } from './item';
 import { ReactiveModel } from '@beyond-js/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 
 interface IMessages {
 	items: Message[];

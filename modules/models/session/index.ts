@@ -47,18 +47,8 @@ class SessionManager extends ReactiveModel<ISession> {
 	}
 
 	async signInWithGoogle() {
-		try {
-			const response = await this.#auth.signInWithGoogle();
-			// console.log(-5, 'response', response);
-			if (!response?.status) return false;
-
-			this.triggerEvent('login');
-
-			return response;
-		} catch (e) {
-			console.error(e);
-			return { status: false, error: 'CANNOT' };
-		}
+		return this.#auth.signInWithGoogle();
+		// console.log(-5, 'response', response);
 	}
 
 	async registerWithEmail({ email, password, username }) {
@@ -76,7 +66,15 @@ class SessionManager extends ReactiveModel<ISession> {
 		try {
 			await this.#auth.signOut();
 
-			globalThis.localStorage.clear();
+			function clear(keepKeys) {
+				const keysToKeep = new Set(keepKeys);
+				Object.keys(localStorage).forEach(key => {
+					if (!keysToKeep.has(key)) {
+						localStorage.removeItem(key);
+					}
+				});
+			}
+			clear(['ailearn.home.tour']);
 			this.triggerEvent('logout');
 
 			return true;
