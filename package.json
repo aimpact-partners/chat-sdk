@@ -107,8 +107,8 @@
 		"marked-gfm-heading-id": "^3.1.2",
 		"marked-highlight": "^2.1.0",
 		"marked-mangle": "^1.1.6",
-		"media-suite": "^0.0.2",
-		"pragmate-ui": "^1.0.0-beta.1",
+		"media-suite": "^0.0.4",
+		"pragmate-ui": "^1.0.0-beta.2",
 		"prismjs": "^1.27.0",
 		"socket.io-client": "^4.5.4",
 		"wavesurfer.js": "^7.8.1"

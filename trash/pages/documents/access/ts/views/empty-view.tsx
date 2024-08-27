@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'pragmate-ui/link';
+import { Link } from 'prgamte-ui/components';
 import { Button } from 'pragmate-ui/components';
 import { Icon } from 'pragmate-ui/icons';
 import { EmptyView } from './empty-view';

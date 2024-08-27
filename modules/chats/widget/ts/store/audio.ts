@@ -2,7 +2,7 @@ import { ReactiveModel } from '@beyond-js/reactive/model';
 import { Voice, VoiceLab } from '@aimpact/chat-sdk/voice';
 import { AppWrapper } from '@aimpact/chat-sdk/wrapper';
 import { Recorder } from 'media-suite/recorder';
-import type { StoreManager } from '.';
+import type { StoreManager } from './';
 
 interface IStore {
 	recordings: [];
