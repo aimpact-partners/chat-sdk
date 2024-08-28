@@ -1,10 +1,8 @@
 import React from 'react';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
-import { Playable } from '@aimpact/chat-sdk/widgets/playable';
-import { AudioPlayer } from 'media-suite/audio-player';
 import { useChatMessagesContext } from '../../context';
-import { Spinner } from 'pragmate-ui/components';
 import { Player } from './audio-player';
+import { MessageContent } from './message';
 
 export function MessageText({ message, playable, fetching, autoplay = false }) {
 	const ref = React.useRef(null);
@@ -27,9 +25,12 @@ export function MessageText({ message, playable, fetching, autoplay = false }) {
 	const canBePlayed = message && message.role !== 'user' && autoplay;
 	const autoplayValue = message.id === currentMessage?.id && canBePlayed;
 
+	console.log(0.2, texts.tools);
 	return (
 		<div className="message-text__container p2" ref={ref}>
-			{text && (
+			{/* <MessageContent>{text}</MessageContent> */}
+			<div>{text}</div>
+			{/* {text && (
 				<Playable
 					content={text}
 					autoplay={autoplayValue && canBePlayed}
@@ -39,7 +40,7 @@ export function MessageText({ message, playable, fetching, autoplay = false }) {
 					onClickWord={onClickWord}
 					toolTexts={texts.tools}
 				/>
-			)}
+			)} */}
 			{/* {fetching && <Spinner variant='primary' size='sm' active className='spinner-text' />} */}
 			{message.audio && <Player message={message} />}
 		</div>
