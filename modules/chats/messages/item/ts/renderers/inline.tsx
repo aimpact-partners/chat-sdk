@@ -4,6 +4,7 @@ import { TextRenderer } from './text';
 import { InlineMath } from 'react-katex';
 
 export function InlineRenderer({ type, content }: { type: ElementType; content: string }) {
+	content = content.replace('\\n\\n', '');
 	const renders = {
 		// 'math-inline': content => <MathJax inline>{content}</MathJax>,
 		'math-inline': content => {
@@ -15,10 +16,11 @@ export function InlineRenderer({ type, content }: { type: ElementType; content: 
 			return <InlineMath math={process(content)} />;
 		},
 		'code-inline': content => <code>{content.slice(1, -1)}</code>, // Eliminar los backticks (`) del inicio y fin
-		text: content => {
+		'text-inline': content => {
 			return <TextRenderer content={content} />;
 		}
 	};
 
+	console.log(0.4, type, content);
 	return renders[type](content);
 }

@@ -1,4 +1,4 @@
-export type ElementType = 'math-inline' | 'math-block' | 'code-inline' | 'code-block' | 'text-block' | 'text';
+export type ElementType = 'math-inline' | 'math-block' | 'code-inline' | 'code-block' | 'text-block' | 'text-inline';
 
 export interface ParsedElement {
 	type: ElementType;

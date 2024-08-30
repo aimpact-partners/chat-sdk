@@ -3,12 +3,15 @@ import { ParsedElement, ElementType, ParsedText, ParsedContent } from './types';
 export class Parser {
 	private static types: { type: ElementType; regex: RegExp }[] = [
 		{ type: 'math-inline', regex: /\\\(.+?\\\)/g },
-		{ type: 'math-block', regex: /\\\[.+?\\\]/g },
-		{ type: 'code-inline', regex: /(?<!`)`[^`]+`(?!`)/g },
-		{ type: 'code-block', regex: /```[\s\S]+?```/g },
-		{ type: 'text', regex: /(.+?)(?=(\\\(.+?\\\)|\\\[.+?\\\]|`[^`]+`|```[\s\S]+?```|$))/gs }
+		{ type: 'text-inline', regex: /([^\\\(.+?\\\)]|[^`[^`]+`])+/g },
+		{ type: 'code-inline', regex: /(?<!`)`[^`]+`(?!`)/g }
 	];
 
+	private static blockTypes = [
+		{ type: 'math-block', regex: /\\\[.+?\\\]/g },
+		{ type: 'code-block', regex: /```[\s\S]+?```/g },
+		{ type: 'text-block', regex: /(.+?)(?=(\\\(.+?\\\)|\\\[.+?\\\]|`[^`]+`|```[\s\S]+?```|\n\n|$))/gs }
+	];
 	static parse(input: string): (ParsedElement | ParsedText)[] {
 		if (!input) return [];
 		const elements: (ParsedElement | ParsedText)[] = [];
@@ -18,12 +21,13 @@ export class Parser {
 
 		// Segundo paso: Procesar los bloques de texto para encontrar inline elements
 		for (const block of mainBlocks) {
-			if (block.type !== 'text') {
+			if (block.type !== 'text-block') {
 				elements.push(block);
 				continue;
 			}
 
 			const parsedText = this.getTextBlock(block.content as string);
+
 			elements.push(parsedText);
 		}
 
@@ -37,7 +41,7 @@ export class Parser {
 		while (remainingInput.length > 0) {
 			let matched = false;
 
-			for (const { type, regex } of Parser.types) {
+			for (const { type, regex } of Parser.blockTypes) {
 				regex.lastIndex = 0; // Reiniciar el índice de búsqueda de la regex
 				const match = regex.exec(remainingInput);
 				if (match && match.index === 0) {
@@ -51,7 +55,7 @@ export class Parser {
 			if (!matched) {
 				const nextMatchIndex = this.findNextMatchIndex(remainingInput);
 				const substring = remainingInput.slice(0, nextMatchIndex);
-				elements.push({ type: 'text', content: substring });
+				elements.push({ type: 'text-inline', content: substring });
 				remainingInput = remainingInput.slice(substring.length);
 			}
 		}
@@ -62,7 +66,7 @@ export class Parser {
 	private static findNextMatchIndex(input: string): number {
 		let minIndex = input.length;
 
-		for (const { regex } of Parser.types.filter(t => t.type !== 'text')) {
+		for (const { regex } of Parser.types.filter(t => t.type !== 'text-block')) {
 			regex.lastIndex = 0;
 			const match = regex.exec(input);
 			if (match && match.index < minIndex) {
@@ -80,26 +84,26 @@ export class Parser {
 		while (remainingText.length > 0) {
 			let matched = false;
 
-			for (const { type, regex } of Parser.types.filter(t => t.type !== 'text')) {
+			for (const { type, regex } of Parser.types) {
 				const match = regex.exec(remainingText);
+
 				if (!match) continue;
 
 				let string = match[0];
 				let limit = match[0].length;
-				content.push({ type, content: string });
-				matched = true;
 
 				if (match.index !== 0) {
 					string = remainingText.slice(0, match.index);
 					limit = match.index;
 				}
 
+				matched = true;
 				remainingText = remainingText.slice(limit);
-				content.push({ type: 'text', content: string });
+				content.push({ type, content: string });
 			} //end for
 
 			if (!matched) {
-				content.push({ type: 'text', content: remainingText });
+				content.push({ type: 'text-inline', content: remainingText });
 				break;
 			}
 		}

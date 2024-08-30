@@ -9,9 +9,9 @@ export function ContentRenderer({ content }: ContentRendererProps) {
 	const elements = useMemo(() => Parser.parse(content), [content]);
 
 	const output = elements.map((el: ParsedElement | ParsedText, index) => {
-		const isTextOrInline = el.type === 'text' || el.type.includes('-inline');
+		const isTextOrInline = el.type === 'text-block' || el.type.includes('-inline');
 		const space = isTextOrInline && index > 0 ? ' ' : '';
-		console.log(0.1, el.type);
+
 		if ((el as ParsedText).type === 'text-block') {
 			return <TextBlockRenderer items={el.content as ParsedContent[]} key={index} />;
 		}

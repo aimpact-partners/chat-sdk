@@ -39,11 +39,11 @@ export function BlockRenderer({ type, content }: { type: ElementType; content: s
 
 export function TextBlockRenderer({ items = [] }: { items: ParsedText['content'] }) {
 	return (
-		<>
+		<p>
 			{items.map(({ type, content }: ParsedContent, index) => (
 				<InlineRenderer type={type} content={content} key={index} />
 			))}
-		</>
+		</p>
 	);
 
 	// return <span>parsed text</span>;
