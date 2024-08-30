@@ -118,6 +118,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 
 	load = async (id: string) => {
 		if (!id) {
+			console.warn(`you're tring to load a chat without an id`);
 			super.ready = true;
 			this.notFound = true;
 			return;

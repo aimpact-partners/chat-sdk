@@ -10,21 +10,22 @@ import { AppIconButton } from '@aimpact/chat-sdk/components/icons';
 import { IAgentsInputProps } from './types/agents-input';
 import { useInputForm } from './hooks/use-input-form';
 
-export /*bundle*/ const AgentsChatInput = ({ isWaiting = false, autoTranscribe = false }: IAgentsInputProps) => {
+export /*bundle*/ const AgentsChatInput = ({
+	isWaiting = false,
+	autoTranscribe = false,
+	disabled = false,
+	onClick
+}: Partial<IAgentsInputProps>) => {
 	const [waiting, setWaiting] = React.useState<boolean>(false);
-	const disabled = { disabled: false };
+
 	const { store, recorder } = useChatContext();
 	const { text, setText, onSubmit, fetching, recording, setRecording, setFetching } = useInputForm();
 
 	useBinder([store], () => setWaiting(store.waitingResponse));
 
-	if (['', undefined, null].includes(text.replaceAll('\n', '')) || !text.trim().length) disabled.disabled = true;
-
 	const isFetching = fetching || recording || waiting || isWaiting;
-	let cls = `chat-input-container ${isFetching ? 'is-fetching' : ''}`;
 
-	if (store.disabled) cls += 'is-disabled';
-
+	const isDisabled = store.disabled || disabled;
 	const contextValue = {
 		store,
 		onSubmit,
@@ -36,25 +37,36 @@ export /*bundle*/ const AgentsChatInput = ({ isWaiting = false, autoTranscribe =
 		recording,
 		text,
 		setFetching,
-		disabled: store.disabled
+		disabled: isDisabled
 	};
-	const buttonIsDisabled = disabled.disabled || store.waitingResponse || recording;
 
-	
+	const attrs = { disabled: disabled || store.disabled };
+	const buttonIsDisabled = attrs.disabled || store.waitingResponse || recording;
+	let cls = `chat-input-container ${isFetching ? 'is-fetching' : ''} ${isDisabled ? 'is-disabled' : ''}`;
+	const containerAttrs = {
+		className: cls
+	};
+	const controlAttrs = {
+		onClick,
+		className: `chat-input-form ${isDisabled ? 'is-disabled' : ''}`
+	};
+
+	if (['', undefined, null].includes(text.replaceAll('\n', '')) || !text.trim().length) attrs.disabled = true;
+
 	return (
 		<InputContext.Provider value={contextValue}>
-			<Form onSubmit={onSubmit} className="chat-input-form">
-				<div className={cls}>
+			<Form onSubmit={onSubmit} {...controlAttrs}>
+				<div {...containerAttrs}>
 					<div>
 						<AppIconButton className="chat-input__icon" icon="attachFile" />
 					</div>
 					<TextInput
 						text={text}
-						disabled={store.disabled}
 						setFetching={setFetching}
 						fetching={isFetching}
 						setText={setText}
 						handleSend={onSubmit}
+						disabled={isDisabled}
 					/>
 
 					<InputActionButton buttonIsDisabled={buttonIsDisabled} />

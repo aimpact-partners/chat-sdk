@@ -2,12 +2,12 @@ import React from 'react';
 import { useManager } from './use-manager';
 import { ChatContext } from './context';
 import { StoreManager } from '../store';
-export /*bundle */ function AgentsChatContainer({ children, icon, autoplay, player, ...props }) {
+export /*bundle */ function AgentsChatContainer({ children, icon, autoplay, empty, player, ...props }) {
 	const [scrollPosition, setScrollPosition] = React.useState('top');
-
 	const { ready, store } = useManager(props.id);
-
 	const obj = store ? store : ({} as StoreManager);
+
+	if (!ready) return null;
 	const { messages, texts } = obj;
 	const contextValue = {
 		setScrollPosition: value => {
@@ -21,6 +21,7 @@ export /*bundle */ function AgentsChatContainer({ children, icon, autoplay, play
 		recorder: store?.audioManager?.recorder,
 		autoplay,
 		systemIcon: icon,
+		empty,
 		messages,
 		player,
 		attributes: props.attributes

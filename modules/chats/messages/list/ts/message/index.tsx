@@ -1,13 +1,12 @@
 import React from 'react';
 import { parseText } from '@aimpact/chat-sdk/widgets/playable';
-import { MessageText } from './components/text';
 import { MessageActions } from './actions';
 import { ProfileIcon } from './components/profile-icon';
 import { SystemActions } from './system-actions';
-import { useChatMessagesContext } from '../context';
 import { useMessage } from './use-message';
+import { Message } from '@aimpact/chat-sdk/chat/messages/item';
 
-export function Message({ message }) {
+export function MessageItemContainer({ message }) {
 	const { fetching } = useMessage(message);
 	const cls = `message__container ${message.role}`;
 	const messageTokens = message.role === 'assistant' ? message.usage?.totalTokens : null;
@@ -17,10 +16,9 @@ export function Message({ message }) {
 	return (
 		<div className={cls} data-id={message.id}>
 			<ProfileIcon role={message.role} />
-
 			<section className="message__content">
 				<SystemActions actions={actions} message={message} />
-				<MessageText playable={true} message={message} fetching={fetching} />
+				<Message message={message} fetching={fetching} />
 				<section className="message__actions">
 					<MessageActions
 						play={!message.audio}
@@ -33,5 +31,3 @@ export function Message({ message }) {
 		</div>
 	);
 }
-
-// export const Message = React.memo(MessageComponent);

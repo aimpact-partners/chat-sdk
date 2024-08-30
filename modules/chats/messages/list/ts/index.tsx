@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Message } from './message';
+import { MessageItemContainer } from './message';
 import { Empty } from 'pragmate-ui/empty';
 import { ChatMessagesContext } from './context';
 export /*bundle */ function Messages({ chat, player, messages, texts, current, systemIcon }) {
@@ -10,7 +10,7 @@ export /*bundle */ function Messages({ chat, player, messages, texts, current, s
 	if (!totalMessages) return <Empty text={texts.empty} />;
 
 	const output = messages.map((message: any, i: number) => {
-		return <Message key={`message-${i}`} message={message} />;
+		return <MessageItemContainer key={`message-${i}`} message={message} />;
 	});
 
 	const value = { chat, player, messages, texts, currentMessage, setCurrentMessage, systemIcon };

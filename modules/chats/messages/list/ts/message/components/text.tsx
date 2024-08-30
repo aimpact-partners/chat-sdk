@@ -25,7 +25,6 @@ export function MessageText({ message, playable, fetching, autoplay = false }) {
 	const canBePlayed = message && message.role !== 'user' && autoplay;
 	const autoplayValue = message.id === currentMessage?.id && canBePlayed;
 
-	console.log(0.2, texts.tools);
 	return (
 		<div className="message-text__container p2" ref={ref}>
 			{/* <MessageContent>{text}</MessageContent> */}

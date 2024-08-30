@@ -6,7 +6,7 @@ import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 import { ExtensionRenderer } from './extension-renderer';
 
 export function Content({ separator }) {
-	const { store, texts, systemIcon } = useChatContext();
+	const { store, texts, systemIcon, empty } = useChatContext();
 	const { messages } = store;
 	const [, setMessages] = React.useState<number>(messages?.length ?? [].length);
 	const [ref, ready, webComponentName] = useExtension('chat-intro');
@@ -21,6 +21,15 @@ export function Content({ separator }) {
 	useBinder([store.chat], onNewMessage, 'new.message');
 
 	let cls = `chat__content`;
+
+	if (!store.messages.length) {
+		const Control = empty ?? <>No hay contenido</>;
+		return (
+			<div className={cls}>
+				<Control />
+			</div>
+		);
+	}
 
 	return (
 		<div className={cls}>

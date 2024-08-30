@@ -1,0 +1,30 @@
+.mathjax-container {
+	// Ajusta el tamaño de fuente global para MathJax
+	font-size: 16px !important;
+
+	// Estilo para el texto matemático en bloques
+	.mjx-display {
+		font-size: 1.2em !important;
+		line-height: 1.3 !important;
+	}
+
+	// Estilo para el texto matemático en línea
+	.mjx-inline {
+		font-size: 1em !important;
+		line-height: 1.2 !important;
+	}
+
+	// Ajustes adicionales para componentes específicos de MathJax
+	.mjx-math {
+		font-size: inherit !important;
+	}
+
+	.mjx-texatom {
+		font-size: 1em !important;
+	}
+
+	// Ajustes para las etiquetas de ecuaciones
+	.mjx-tag {
+		font-size: 0.9em !important;
+	}
+}

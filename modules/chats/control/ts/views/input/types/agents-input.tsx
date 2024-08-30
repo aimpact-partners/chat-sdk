@@ -3,4 +3,7 @@ export interface IAgentsInputProps {
 	autoTranscribe: boolean;
 	onAudioSend?: (audio: Blob) => void;
 	onTextSend?: (text: string) => void;
+	beforeSend: () => void;
+	onClick: () => void;
+	disabled: boolean;
 }

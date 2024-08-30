@@ -1,14 +1,3 @@
-:host {
-	--offset: var(--chat-control-offset, 0.1px);
-	--height: calc(100svh - var(--offset));
-}
-
-// .chat-control__container {
-// 	// min-height: var(--height);
-// 	transition: all 300ms ease-in;
-// 	position: relative;
-// }
-
 .pragmate-icon-button svg.pragmate-icon {
 	width: 20px;
 	height: 20px;
@@ -30,5 +19,11 @@
 
 		width: 100%;
 		// overflow-y: scroll;
+	}
+
+	.code-block__container {
+		display: block;
+		overflow: scroll;
+		width: 100%;
 	}
 }

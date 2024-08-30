@@ -108,7 +108,6 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	}
 
 	load = async (id: string) => {
-		console.log(1, 'cargamos');
 		if (!id) {
 			super.ready = true;
 			this.notFound = true;
