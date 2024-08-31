@@ -1,17 +1,17 @@
 .chat-input-container {
 	--on-surface: var(--text-color);
-	--border-radius-sm: 2.5rem;
+	// --border-radius-sm: 2.5rem;
 	display: flex;
 	position: relative;
 	align-items: center;
 	max-height: 200px;
 	width: calc(100%);
-	border: var(--border-radius-sm);
+	// border: var(--border-radius-sm);
 
-	border: 1px solid var(--surface-dim);
-	border-radius: var(--border-radius-sm);
+	border: 1px solid var(--chat-input-border-color);
+	border-radius: var(--chat-input-border-radius, var(--border-radius-sm));
 	align-items: stretch;
-	border: 1px solid;
+
 	padding: 0.5rem 1rem;
 
 	&.is-disabled {
@@ -23,7 +23,7 @@
 			right: 0;
 			bottom: 0;
 			background: rgba(0, 0, 0, 0.1);
-			border-radius: var(--border-radius-sm);
+			border-radius: var(--chat-input-border-radius, var(--border-radius-sm));
 			z-index: 10;
 		}
 	}

@@ -79,6 +79,7 @@ export class Parser {
 
 	private static getTextBlock(text: string): ParsedText {
 		const content: ParsedContent[] = [];
+		
 		let remainingText = text;
 
 		while (remainingText.length > 0) {
