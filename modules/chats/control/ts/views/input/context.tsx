@@ -1,4 +1,3 @@
-import { Input } from 'pragmate-ui/form';
 import React from 'react';
 import type { Recorder } from '../../store/recorder';
 import type { StoreManager } from '../../store';

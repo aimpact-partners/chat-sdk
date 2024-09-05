@@ -2,7 +2,6 @@ import React from 'react';
 import { Form } from 'pragmate-ui/form';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 import { InputContext } from './context';
-import type { StoreManager } from '../../store';
 import { TextInput } from './text-input';
 import { InputActionButton } from './action-button';
 import { useChatContext } from '../context';
