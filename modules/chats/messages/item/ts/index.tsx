@@ -1,43 +1,27 @@
 import * as React from 'react';
-import { ContentRenderer } from './renderer';
+import { Markdown } from '@aimpact/chat-sdk/widgets/markdown';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
-import DOMPurify from 'dompurify';
-import MarkdownIt from 'markdown-it';
-import hljs from 'highlight.js';
-
-import katex from 'markdown-it-katex';
-
-const settings = {
-	html: true,
-	linkify: true,
-	typographer: true,
-	highlight: (str, lang) => {
-		if (lang && hljs.getLanguage(lang)) {
-			try {
-				return (
-					'<hr><pre class="hljs"><code>' + hljs.highlight(str, { language: lang }).value + '</code></pre><hr>'
-				);
-			} catch (__) {}
-		}
-		return '<hr><pre class="hljs"><code>' + mdParser.utils.escapeHtml(str) + '</code></pre><hr>';
-	}
-};
-
-const mdParser = new MarkdownIt(settings).use(katex);
-
 // Confi
 
 export /*bundle*/
 function Message({ message }: { message: any }) {
 	const [content, setContent] = React.useState(message.content ?? '');
-
-	const sanitizedContent = mdParser.render(message.content ?? '');
+	const [streaming, setStreaming] = React.useState(!!message?.streaming);
 	useBinder([message], () => {
 		setContent(message.content ?? '');
+		setStreaming(!!message?.streaming);
 	});
+
 	return (
 		<>
-			<div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+			<div className="message__content">
+				<Markdown content={content} />
+				{streaming && (
+					<div>
+						<div className="loader" />
+					</div>
+				)}
+			</div>
 		</>
 	);
 }

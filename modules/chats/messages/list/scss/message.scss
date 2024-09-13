@@ -6,7 +6,8 @@ $gradient-width: 2px;
 	}
 
 	@media (max-width: 768px) {
-		flex-direction: column;
+		// flex-direction: column;
+		display: block;
 
 		.message__actions {
 			align-self: end;

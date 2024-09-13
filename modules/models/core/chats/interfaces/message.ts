@@ -6,7 +6,9 @@ export interface IMessage {
 	content?: string;
 	role?: 'user' | 'system';
 	audio?: Blob;
+	streaming: boolean;
 	timestamp?: number;
+	actions?: any[];
 	language?: string;
 	format?: 'audio' | 'text';
 	usage?: {

@@ -1,0 +1,25 @@
+@use 'dark';
+@use 'light';
+
+/* Explicit dark mode set by data-beyond-mode */
+:host([data-beyond-mode='dark']) {
+	@include dark.highLightTheme();
+}
+
+/* Explicit light mode set by data-beyond-mode */
+:host([data-beyond-mode='light']) {
+	@include light.highLightTheme();
+}
+
+/* Fallback: If no explicit mode, follow user's system preference */
+@media (prefers-color-scheme: dark) {
+	:host(:not([data-beyond-mode])) {
+		@include dark.highLightTheme();
+	}
+}
+
+@media (prefers-color-scheme: light) {
+	:host(:not([data-beyond-mode])) {
+		@include light.highLightTheme();
+	}
+}

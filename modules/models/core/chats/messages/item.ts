@@ -18,6 +18,7 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> {
 	localFields = ['audio'];
 	declare audio: Blob;
 	#parsedContent: { value: string; data: any[] };
+
 	get response() {
 		return this.#response;
 	}
@@ -32,7 +33,18 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> {
 			id,
 			...specs,
 
-			properties: ['id', 'chatId', 'audio', 'userId', 'role', 'content', 'usage', 'timestamp']
+			properties: [
+				'id',
+				'chatId',
+				'audio',
+				'userId',
+				'role',
+				'content',
+				'usage',
+				'timestamp',
+				'streaming',
+				'actions'
+			]
 		});
 		this.#chat = chat;
 		if (!id) this.id = uuid();

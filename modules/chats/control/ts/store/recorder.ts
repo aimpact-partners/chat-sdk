@@ -129,7 +129,7 @@ class Recorder extends ReactiveModel<Recorder> {
 	#startRecording = (stream, specs) => {
 		this.#mediaRecorder = new MediaRecorder(stream);
 		this.#stream = stream;
-		console.log(89, this.#stream);
+
 		// Create an AudioContext
 		// this.#audioContext = new (globalThis.AudioContext || globalThis.webkitAudioContext)();
 		// Create an AnalyserNode
@@ -147,7 +147,6 @@ class Recorder extends ReactiveModel<Recorder> {
 		this.#mediaRecorder.addEventListener('dataavailable', this.#onDataAvailable);
 	};
 	async initialise(specs = {}) {
-		console.log(88, 'initialize');
 		if (this.#initPromise) return await this.#initPromise;
 		this.#initPromise = new PendingPromise<void>();
 

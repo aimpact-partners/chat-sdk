@@ -13,6 +13,9 @@ import { v4 as uuid } from 'uuid';
 export /*bundle*/ class Chat extends Item<IChat> {
 	declare id: string;
 	#api: Api;
+	get api() {
+		return this.#api;
+	}
 	protected properties = [
 		'id',
 		'autoplay',
@@ -46,6 +49,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		globalThis.chat = this;
 		if (!id) this.id = uuid();
 		this.#listen();
+		globalThis.chat = this;
 		// console.log(`chat is being exposed in console as chat`, id);
 	}
 
@@ -57,7 +61,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 					this.#api.actions.forEach(data => {
 						const action = JSON.parse(data);
 						if (action.type === 'transcription') {
-							this.#currentMessage.set({ content: action.data.transcription });
+							this.#currentMessage.set({ content: action.data.transcription, streaming: false });
 						}
 					});
 				}
@@ -84,14 +88,13 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		}
 
 		this.#messages = collection;
-		globalThis.m = collection;
-		globalThis.c = this;
 	};
 
 	#onListen = () => {
+		if (!this.#response) return;
 		this.#response.content = this.#api.streamResponse;
 
-		this.#response.set({ content: this.#api.streamResponse });
+		this.#response.set({ content: this.#api.stringContent, actions: this.#api.actions });
 
 		// this.#response.publish();
 		this.trigger('content.updated');
@@ -110,9 +113,12 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const promise = new PendingPromise<Message>();
 			const item = new Message({ chatId: this.id, content });
 			this.#currentMessage = item;
-			const onFinish = response => {
+			const onFinish = async response => {
 				this.trigger('response.finished');
+				await this.#response.set({ streaming: false });
+
 				this.#response = undefined;
+
 				promise.resolve(item);
 				this.saveLocally(this.getData());
 				// this.#offEvents();
@@ -121,7 +127,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				console.error(e);
 			};
 
-			this.#response = new Message({ chatId: this.id, role: 'system' });
+			this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
 			this.messages.add(item);
 			this.messages.add(this.#response);
 
@@ -145,9 +151,10 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const token = await sessionWrapper.user.firebaseToken;
 			const uri = `/chats/${this.id}/messages/audio`;
 			const promise = new PendingPromise<Message>();
-			const item = new Message({ chatId: this.id, audio: message });
+			const item = new Message({ chatId: this.id, audio: message, streaming: true });
 			this.#currentMessage = item;
-			const onFinish = response => {
+			const onFinish = async response => {
+				await this.#response.set({ streaming: false });
 				this.trigger('response.finished');
 				this.#response = undefined;
 				promise.resolve(item);
@@ -158,14 +165,14 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				console.error(e);
 			};
 			this.messages.add(item);
-			this.#response = new Message({ chatId: this.id, role: 'system' });
+			this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
 			this.messages.add(this.#response);
 			this.#api
 				.bearer(token)
 				.stream(uri, { ...item.getProperties(), multipart: true })
 				.then(onFinish)
 				.catch(onError);
-			globalThis.setTimeout(() => onFinish({}), 3000);
+			globalThis.setTimeout(() => onFinish({}), 3000); // TODO: remove this
 			return promise;
 		} catch (e) {
 			console.error(e);
