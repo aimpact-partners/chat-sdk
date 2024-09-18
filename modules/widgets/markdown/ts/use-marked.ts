@@ -22,49 +22,45 @@ export function useMarked(content: string) {
 
 	async function render(content) {
 		const options: ExtendedMarkedOptions = {
-			breaks: false // Enable line breaks for Markdown
-			// highlight: (code, lang) => {
-			// 	// Check if the language is valid, otherwise fall back to 'plaintext'
-			// 	const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-			// 	return hljs.highlight(code, { language }).value; // Return the highlighted code
-			// }
+			breaks: false // Disable line breaks for Markdown
 		};
+
 		marked.setOptions(options);
 		marked.use(
 			markedHighlight({
 				async: true,
 				langPrefix: 'language-', // Default langPrefix used by highlight.js
 				highlight(code, lang) {
-					// Check if the language is valid, otherwise fall back to 'plaintext'
 					const language = hljs.getLanguage(lang) ? lang : 'plaintext';
 					return hljs.highlight(code, { language }).value;
 				}
 			})
 		);
 
-		let output = await marked(content, {
-			breaks: true
+		// 1. Temporarily replace inline and block math expressions with placeholders
+		let placeholderCounter = 0;
+		const mathPlaceholders = {};
+		const placeholderPrefix = 'MATH_PLACEHOLDER_';
+
+		content = content.replace(/\\\((.*?)\\\)/g, (match, mathContent) => {
+			const placeholder = `${placeholderPrefix}${placeholderCounter++}`;
+			mathPlaceholders[placeholder] = katex.renderToString(mathContent, { displayMode: false });
+			return placeholder;
 		});
 
-		// Adjusted regex to match the processed block math delimiters `[ ... ]`
-		output = output
-			.replace(/\[([\s\S]+?)\]/g, (match, mathContent) => {
-				try {
-					return katex.renderToString(mathContent, { displayMode: true });
-				} catch (error) {
-					console.error('Error rendering block KaTeX:', error);
-					return match; // Return the original text if there is an error
-				}
-			})
-			// Match inline math (if needed)
-			.replace(/\\\((.+?)\\\)/g, (match, mathContent) => {
-				try {
-					return katex.renderToString(mathContent, { displayMode: false });
-				} catch (error) {
-					console.error('Error rendering inline KaTeX:', error);
-					return match;
-				}
-			});
+		content = content.replace(/\\\[(.*?)\\\]/gs, (match, mathContent) => {
+			const placeholder = `${placeholderPrefix}${placeholderCounter++}`;
+			mathPlaceholders[placeholder] = katex.renderToString(mathContent, { displayMode: true });
+			return placeholder;
+		});
+
+		// 2. Pass the content through marked
+		let output = await marked(content, { breaks: false });
+
+		// 3. Replace placeholders with actual rendered KaTeX
+		Object.keys(mathPlaceholders).forEach(placeholder => {
+			output = output.replace(new RegExp(placeholder, 'g'), mathPlaceholders[placeholder]);
+		});
 
 		setOutput(output);
 	}
