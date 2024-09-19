@@ -1,0 +1,25 @@
+.user-image {
+	width: inherit;
+	height: inherit;
+	border-radius: 50%;
+	display: block;
+	margin: 0 auto;
+	outline: none;
+	cursor: pointer;
+	background: var(--surface);
+	border: 1px solid var(--primary);
+}
+
+.user-image-wrapper {
+	width: 100px;
+	height: 100px;
+
+	input[type='file'] {
+		appearance: none;
+		width: 0px;
+		height: 0px;
+		visibility: hidden;
+		border: none;
+		display: none;
+	}
+}

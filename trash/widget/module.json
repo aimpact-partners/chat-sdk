@@ -1,0 +1,25 @@
+{
+	"name": "chat-control",
+	"platforms": ["web", "android", "ios"],
+	"widget": {
+		"element": {
+			"name": "aimpact-chat-control",
+			"attrs": ["id", "container", "disabled", "playable", "icon"]
+		},
+		"scss": {
+			"path": "/scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "/ts",
+			"files": ["*"]
+		}
+	},
+	"txt": {
+		"path": "txt",
+		"files": "*"
+	},
+	"static": {
+		"includes": "img"
+	}
+}

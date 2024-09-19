@@ -1,0 +1,14 @@
+{
+	"name": "messages",
+	"platforms": ["web", "android", "ios"],
+	"code": {
+		"ts": {
+			"files": "*",
+			"path": "/ts"
+		},
+		"scss": {
+			"path": "/scss",
+			"files": ["*"]
+		}
+	}
+}

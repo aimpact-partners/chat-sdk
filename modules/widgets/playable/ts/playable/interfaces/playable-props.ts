@@ -1,21 +1,21 @@
 export interface IPlayableItemProps {
+	id: string;
 	block: any;
 	text: string;
-	id: string;
 	index: number;
 	playable: boolean;
 	player: any;
-	onClickWord?: () => void;
+	onClickWord?: (e?) => void;
 }
 
 export interface IPlayableProps {
-	content: string;
-	autoplay: boolean;
-	player: any;
 	id: string;
+	content: string;
+	autoplay?: boolean;
+	player: any;
 	playable?: boolean;
-	onClickWord?: () => void;
-	types: string[];
-	toolTexts: Record<string, string>;
+	onClickWord?: (e?) => void;
+	types?: string[];
+	toolTexts?: Record<string, string>;
 	className?: string;
 }

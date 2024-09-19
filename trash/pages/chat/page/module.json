@@ -1,0 +1,27 @@
+{
+	"name": "chat-page",
+	"platforms": ["web", "android", "ios"],
+	"widget": {
+		"layout": "chat-layout",
+		"is": "page",
+		"route": "/chat/${id}",
+		"element": {
+			"name": "chat-wd-page"
+		},
+		"scss": {
+			"path": "/scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "/ts",
+			"files": ["*"]
+		}
+	},
+	"txt": {
+		"path": "txt",
+		"files": "*"
+	},
+	"static": {
+		"includes": "img"
+	}
+}

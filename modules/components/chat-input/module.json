@@ -1,0 +1,13 @@
+{
+	"name": "components/chat-input",
+	"code": {
+		"scss": {
+			"path": "/scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "/ts",
+			"files": ["*"]
+		}
+	}
+}

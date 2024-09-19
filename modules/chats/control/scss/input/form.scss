@@ -1,0 +1,58 @@
+.chat-input-container {
+	--on-surface: var(--text-color);
+	// --border-radius-sm: 2.5rem;
+	display: flex;
+	position: relative;
+	align-items: center;
+	max-height: 200px;
+	width: calc(100%);
+	// border: var(--border-radius-sm);
+
+	border: 1px solid var(--chat-input-border-color);
+	border-radius: var(--chat-input-border-radius, var(--border-radius-sm));
+	align-items: stretch;
+
+	padding: 0.5rem 1rem;
+
+	&.is-disabled {
+		&:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.1);
+			border-radius: var(--chat-input-border-radius, var(--border-radius-sm));
+			z-index: 10;
+		}
+	}
+
+	.input__wrapper {
+		display: flex;
+		align-items: center;
+		width: 100%;
+	}
+	.input__textarea {
+		border: none;
+		background: transparent;
+		outline: none;
+		width: 100%;
+		color: var(--text-color);
+		line-height: 1;
+		font-size: 1rem;
+		resize: none;
+		box-sizing: border-box;
+		padding: 0;
+	}
+
+	.input__icon {
+		align-self: center;
+		transition: all 0.3s ease-in-out;
+	}
+
+	.system-form {
+		display: flex;
+		flex-direction: column;
+	}
+}

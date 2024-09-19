@@ -1,0 +1,21 @@
+{
+	"name": "chat-component",
+	"platforms": ["web", "android", "ios"],
+	"code": {
+		"scss": {
+			"path": "/scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "/ts",
+			"files": ["*"]
+		}
+	},
+	"txt": {
+		"path": "txt",
+		"files": "*"
+	},
+	"static": {
+		"includes": "img"
+	}
+}

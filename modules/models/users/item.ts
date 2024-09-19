@@ -59,7 +59,7 @@ export /*bundle*/ class User extends Item<IChatUser> {
 		const response = await this.provider.load(specs);
 
 		if (!response.status) {
-			throw new Error(response.error);
+			throw new Error(response.error as string);
 		}
 		await this.set(response.data, true);
 

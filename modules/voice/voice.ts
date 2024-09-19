@@ -77,7 +77,7 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 		});
 	}
 
-	set({ language, rate }) {
+	set({ language, rate }: { language?: string; rate?: number }) {
 		if (language) {
 			this.lang = language;
 		}

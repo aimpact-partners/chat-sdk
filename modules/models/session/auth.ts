@@ -24,9 +24,12 @@ export class Auth extends ReactiveModel<Auth> {
 
 	#getUserPromise: PendingPromise<User>;
 	#session;
+	get session() {
+		return this.#session;
+	}
 	constructor(session) {
 		super();
-		this.session = session;
+		this.#session = session;
 
 		getRedirectResult(auth).then(this.onRedirectResult.bind(this));
 		onAuthStateChanged(auth, this.onAuthStateChanged.bind(this));
@@ -48,6 +51,7 @@ export class Auth extends ReactiveModel<Auth> {
 
 			user.setFirebaseUser(data);
 			// await user.login(data.accessToken);
+
 			await this.appLogin(data);
 			/* TODO Review */
 			this.#user = user;
@@ -94,33 +98,36 @@ export class Auth extends ReactiveModel<Auth> {
 	}
 
 	appLogin = async (user: User) => {
-		if (this.#pendingLogin) return this.#pendingLogin;
-
-		if (user?.uid) {
-			if (this.#uid === user.uid) return;
-			this.#uid = user.uid;
-			if (this.#pendingLogin) return this.#pendingLogin;
-			this.#pendingLogin = new PendingPromise();
-
-			const { displayName, photoURL, email, phoneNumber, uid } = user;
-			const firebaseToken = await user.getIdToken();
-			const specs = { id: uid, displayName, photoURL, email, phoneNumber, firebaseToken };
-			// const user = new User(specs);
-			const model = await this.getUserModel(specs);
-
-			const logInValidation = couldLog => {
-				if (!couldLog) {
-					console.error('Could not login', couldLog);
-				}
-
-				this.trigger('login');
-				this.#pendingLogin.resolve({ status: true, model });
-			};
-
-			model.login(firebaseToken).then(logInValidation);
+		if (this.#pendingLogin) {
 			return this.#pendingLogin;
 		}
-		return { status: false, error: 'INVALID_USER' };
+
+		if (!user?.uid) {
+			return { status: false, error: 'INVALID_USER' };
+		}
+
+		this.#uid = user.uid;
+
+		this.#pendingLogin = new PendingPromise();
+
+		const { displayName, photoURL, email, phoneNumber, uid } = user;
+		const firebaseToken = await user.getIdToken();
+
+		const specs = { id: uid, displayName, photoURL, email, phoneNumber, firebaseToken };
+		// const user = new User(specs);
+		const model = await this.getUserModel(specs);
+
+		const logInValidation = couldLog => {
+			if (!couldLog) {
+				console.error('Could not login', couldLog);
+			}
+
+			this.trigger('login');
+			this.#pendingLogin.resolve({ status: true, model });
+		};
+
+		model.login(firebaseToken).then(logInValidation);
+		return this.#pendingLogin;
 	};
 
 	login = async (email: string, password: string) => {

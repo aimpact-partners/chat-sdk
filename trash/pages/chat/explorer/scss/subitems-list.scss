@@ -1,0 +1,12 @@
+.sidebar__list {
+	.subitems__list {
+		margin-left: 0.5rem;
+		max-height: 0;
+		padding-left: 1rem;
+		overflow: hidden;
+		transition: max-height 0.3s ease-in-out;
+		&.visible {
+			max-height: 100vh;
+		}
+	}
+}

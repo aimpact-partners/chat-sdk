@@ -13,7 +13,8 @@ type Cache = { [key: string]: TextParsed };
 
 function validateTools(content): InitialValue[] {
 	if (typeof content !== 'string') {
-		throw new Error('Input must be a string.');
+		console.warn('Input must be a string.', content);
+		return;
 	}
 
 	const regex = /😸(.*?)🖋️/g;
@@ -60,6 +61,11 @@ const cache: Cache = {};
  */
 export /*bundle*/ const parseText = (key, content: string, ACTIONS: string[]): TextParsed => {
 	if (!content) return [[], ''];
+	if (typeof content !== 'string') {
+		console.warn('Input must be a string.', content);
+		return [[], ''];
+	}
+
 	// const key = hashContent(content);
 	// Ahora puedes usar 'key' como una clave única.
 
@@ -88,7 +94,7 @@ export /*bundle*/ const parseText = (key, content: string, ACTIONS: string[]): T
 			.filter(block => block.trim() !== '')
 			.map(block => ({
 				content: block,
-				type: block.startsWith('```') || block.startsWith('`') ? 'code' : 'text',
+				type: block.startsWith('```') || block.startsWith('`') ? 'code' : 'text'
 			}));
 		elements = [...elements, ...result];
 	});

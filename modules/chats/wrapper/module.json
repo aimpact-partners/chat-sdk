@@ -1,0 +1,6 @@
+{
+	"name": "wrapper",
+	"platforms": ["web", "android", "ios"],
+	"bundle": "ts",
+	"files": ["*"]
+}

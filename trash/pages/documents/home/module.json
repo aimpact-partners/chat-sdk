@@ -1,0 +1,24 @@
+{
+	"name": "documents",
+	"description": "Home View for Documents",
+	"widget": {
+		"layout": "chat-layout",
+		"route": "/documents",
+		"is": "page",
+		"scss": {
+			"path": "/scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "/ts",
+			"files": ["*"]
+		},
+		"element": {
+			"name": "app-documents-page"
+		}
+	},
+	"txt": {
+		"path": "txt",
+		"files": ["*"]
+	}
+}

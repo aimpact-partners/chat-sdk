@@ -1,0 +1,41 @@
+{
+	"en": {
+		"upload": {
+			"title": "Upload Content",
+			"action": "Upload file",
+			"drag": "Drag and drop or upload a document to the folder to create it",
+			"help": "You can upload documents in PDF, TXT, DOC formats. Remember that the maximum allowed file size is 10 MB.",
+			"save": "Save",
+			"input": "Indicate the Knowledge Box name",
+			"cancel": "Cancel",
+			"success": "Files uploaded successfully!",
+			"error": "'An error occurred while upfetching your files :'("
+		}
+	},
+	"es": {
+		"upload": {
+			"title": "Upload Content",
+			"action": "Upload file",
+			"drag": "Drag and drop or upload a document to the folder to create it",
+			"help": "You can upload documents in PDF, TXT, DOC formats. Remember that the maximum allowed file size is 10 MB.",
+			"save": "Save",
+			"input": "Indicate the Knowledge Box name",
+			"cancel": "Cancel",
+			"success": "Files uploaded successfully!",
+			"error": "'An error occurred while upfetching your files :'("
+		}
+	},
+	"pr": {
+		"upload": {
+			"title": "Carregar Conteúdo",
+			"action": "Carregar arquivo",
+			"drag": "Arraste e solte ou faça o upload de um documento para criar a pasta",
+			"help": "Você pode carregar documentos nos formatos PDF, TXT e DOC. Lembre-se de que o tamanho máximo permitido do arquivo é de 10 MB.",
+			"save": "Salvar",
+			"input": "Indique o nome da Caixa de Conhecimento",
+			"cancel": "Cancelar",
+			"success": "Arquivos carregados com sucesso!",
+			"error": "Ocorreu um erro ao carregar seus arquivos :'("
+		}
+	}
+}

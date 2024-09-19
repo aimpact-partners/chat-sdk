@@ -1,4 +1,4 @@
-import { Api } from '@aimpact/chat-sdk/api';
+import { Api } from '@aimpact/http-suite/api';
 import config from '@aimpact/chat-sdk/config';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';
 export class UserProvider {

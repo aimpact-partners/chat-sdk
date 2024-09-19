@@ -1,0 +1,15 @@
+.pragmate-element-spinner,
+.pui-spinner {
+	&.spinner-text {
+		display: inline-flex;
+		position: absolute;
+		right: 5rem;
+
+		svg {
+			height: 14px;
+			width: 14px;
+		}
+	}
+}
+
+// primary spinner-text pragmate-element-spinner spinner--sm is-active

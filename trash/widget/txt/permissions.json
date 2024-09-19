@@ -1,0 +1,39 @@
+{
+	"es": {
+		"permissions": {
+			"intro": "Permisos de acceso",
+			"title": "Activación de voz",
+			"description": "Activa el micrófono para potenciar tu experiencia interactuando por medio de comandos de voz.",
+			"concedded": {
+				"title": "¡Listo!",
+				"description": "Ahora puedes disfrutar de la activación por voz."
+			},
+			"error": {
+				"title": "No tenemos acceso al micrófono",
+				"description": "Para activar la función de voz, necesitamos acceso a tu micrófono. Por favor, habilítalo en la configuración de tu navegador y refresca la página."
+			}
+		}
+	},
+	"en": {
+		"permissions": {
+			"intro": "Access permissions",
+			"title": "Voice activation",
+			"description": "Activate the microphone to enhance your experience by interacting via voice commands.",
+			"concedded": {
+				"title": "Ready!",
+				"description": "Now you can enjoy voice activation."
+			},
+			"error": {
+				"title": "We don't have access to the microphone",
+				"description": "To activate the voice function, we need access to your microphone. Please enable it in your browser settings and refresh the page."
+			}
+		}
+	},
+	"pr": {
+		"permissions": {
+			"intro": "Permissões de acesso",
+			"title": "Ativação por voz",
+			"description": "Ative o microfone para aprimorar sua experiência, interagindo por meio de comandos de voz."
+		}
+	}
+}

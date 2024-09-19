@@ -1,0 +1,23 @@
+{
+	"name": "documents/access",
+	"widget": {
+		"layout": "auth-layout",
+		"route": "/documents/access",
+		"is": "page",
+		"scss": {
+			"path": "/scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "/ts",
+			"files": ["*"]
+		},
+		"element": {
+			"name": "chat-documents-access"
+		}
+	},
+	"txt": {
+		"path": "txt",
+		"files": "*"
+	}
+}

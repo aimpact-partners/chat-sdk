@@ -1,0 +1,34 @@
+{
+	"en": {
+		"home": {
+			"title": "Documents",
+			"search": "Search documents",
+			"upload": "Upload Content"
+		},
+
+		"kbs": {
+			"empty": "This folder is empty",
+			"new": "Create a new Knowledge Box"
+		},
+
+		"confirmation": {
+			"delete": "Are you sure you want to delete"
+		}
+	},
+	"es": {
+		"home": {
+			"title": "Documents",
+			"search": "Search documents",
+			"upload": "Upload Content"
+		},
+
+		"kbs": {
+			"empty": "This folder is empty",
+			"new": "Create a new Knowledge Box"
+		},
+
+		"confirmation": {
+			"delete": "Are you sure you want to delete"
+		}
+	}
+}

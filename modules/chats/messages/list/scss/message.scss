@@ -1,0 +1,40 @@
+$gradient-width: 2px;
+
+.message__container {
+	.player__container {
+		display: flex;
+	}
+
+	@media (max-width: 768px) {
+		// flex-direction: column;
+		display: block;
+
+		.message__actions {
+			align-self: end;
+		}
+	}
+
+	.tokens {
+		white-space: nowrap;
+		margin-top: 1rem;
+	}
+
+	&:nth-last-child(2) {
+		animation: dash 0.2s;
+	}
+
+	.message__actions {
+		display: flex;
+
+		flex-flow: column wrap;
+		justify-content: flex-end;
+	}
+
+	.audio__actions {
+		display: flex;
+		justify-content: flex-end;
+		.pui-icon-button {
+			padding: 0;
+		}
+	}
+}

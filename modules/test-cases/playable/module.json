@@ -1,5 +1,6 @@
 {
-	"name": "chat-sdk/playable",
+	"name": "tests/playable",
+	"platform": ["web", "ios", "android"],
 	"widget": {
 		"route": "/chat/sdk/playable",
 		"is": "page",
