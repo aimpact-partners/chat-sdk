@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { Image } from 'pragmate-ui/image';
 import { useChatMessagesContext } from '../../context';
 
 export function ProfileIcon({ role }) {
 	const [loadError, setLoadError] = useState(false);
-	const { systemIcon } = useChatMessagesContext();
-	// the local storage is used to store the user's default profile icon while is defined a better way to handle this.
-	const icon = role === 'user' ? 'user' : globalThis.localStorage.getItem('chat.app.user.default.profile');
-	const userProps = sessionWrapper.user.getProperties();
+	const { systemIcon, chat } = useChatMessagesContext();
+	const userProps = chat.user;
 	const handleLoadError = () => setLoadError(true);
+
 	const src = role === 'user' ? userProps.photoURL : systemIcon;
 
 	return (

@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 import config from '@aimpact/chat-sdk/config';
+import { getAnalytics } from 'firebase/analytics';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -46,5 +47,7 @@ const CONFIG = {
 const app = initializeApp(CONFIG[config.environment]);
 
 export const auth = getAuth(app);
+export const analytics = getAnalytics(app);
+console.log(1, analytics);
 export const googleProvider = new GoogleAuthProvider();
 export const facebookProvider = new FacebookAuthProvider();

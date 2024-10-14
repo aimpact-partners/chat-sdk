@@ -133,6 +133,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 
 		const chat = new Chat({ id });
 		this.#chat = chat;
+		globalThis.chat = chat;
 		this.#messages = chat.messages;
 		await chat.loadAll({ id });
 		globalThis.chat = chat;

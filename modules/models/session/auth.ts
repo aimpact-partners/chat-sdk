@@ -97,7 +97,7 @@ export class Auth extends ReactiveModel<Auth> {
 		return this.#user;
 	}
 
-	appLogin = async (user: User) => {
+	appLogin = async (user: any) => {
 		if (this.#pendingLogin) {
 			return this.#pendingLogin;
 		}

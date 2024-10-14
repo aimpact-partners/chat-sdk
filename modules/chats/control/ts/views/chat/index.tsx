@@ -3,6 +3,7 @@ import React from 'react';
 import { useChatContext } from '../context';
 import { Messages } from '@aimpact/chat-sdk/messages';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
+
 export /*bundle*/ function Chat(): JSX.Element {
 	const [reader] = React.useState(false);
 	const separator = React.useRef(null);

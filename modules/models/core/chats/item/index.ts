@@ -33,7 +33,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	];
 	localdb = false;
 	declare fetching: boolean;
-	declare triggerEvent: () => void;	
+	declare triggerEvent: () => void;
 
 	#currentMessage: Message;
 	#response: Message;
@@ -113,7 +113,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const token = await sessionWrapper.user.firebaseToken;
 			const uri = `/chats/${this.id}/messages`;
 			const promise = new PendingPromise<Message>();
-			const item = new Message({ chatId: this.id, content });
+			const item = new Message({ chatId: this.id, role: 'user', content });
 			this.#currentMessage = item;
 			const onFinish = async response => {
 				this.trigger('response.finished');
