@@ -48,6 +48,6 @@ const app = initializeApp(CONFIG[config.environment]);
 
 export const auth = getAuth(app);
 export const analytics = getAnalytics(app);
-console.log(1, analytics);
+
 export const googleProvider = new GoogleAuthProvider();
 export const facebookProvider = new FacebookAuthProvider();
