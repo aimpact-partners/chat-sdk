@@ -31,7 +31,7 @@ export /*bundle*/ function Chat(): JSX.Element {
 
 	if (!store.messages.length) {
 		const Control = empty ? empty : <>No hay contenido</>;
-
+		//@ts-ignore
 		return <Control />;
 	}
 

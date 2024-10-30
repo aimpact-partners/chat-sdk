@@ -20,7 +20,10 @@ export /*bundle*/ const AgentsChatInput = ({
 	const { store, recorder } = useChatContext();
 	const { text, setText, onSubmit, fetching, recording, setRecording, setFetching } = useInputForm();
 
-	useBinder([store], () => setWaiting(store.waitingResponse));
+	useBinder([store], () => {
+		console.log(2);
+		setWaiting(store.waitingResponse);
+	});
 
 	const isFetching = fetching || recording || waiting || isWaiting;
 
@@ -57,7 +60,7 @@ export /*bundle*/ const AgentsChatInput = ({
 			<Form onSubmit={onSubmit} {...controlAttrs}>
 				<div {...containerAttrs}>
 					<div>
-						<AppIconButton className="chat-input__icon" icon="attachFile" />
+						<AppIconButton disabled className="chat-input__icon" icon="attachFile" />
 					</div>
 					<TextInput
 						text={text}

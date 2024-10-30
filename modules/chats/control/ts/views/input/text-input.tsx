@@ -13,12 +13,11 @@ export function TextInput({ setFetching, setText, handleSend, fetching, text, di
 	}, [text]);
 
 	useBinder(
-		[store],
+		[store.chat],
 		() => {
-			globalThis.setTimeout(() => textAreaRef.current.focus(), 300);
-			setFetching(false);
+			globalThis.setTimeout(() => textAreaRef.current.focus(), 0);
 		},
-		'chat.available'
+		'response.finished'
 	);
 
 	const disabledTextarea = { disabled: fetching || disabled };

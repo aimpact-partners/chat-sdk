@@ -42,4 +42,8 @@ export class Messages extends ReactiveModel<Messages> {
 	getData() {
 		return this.#items.map(item => item.getProperties());
 	}
+
+	has(id: string) {
+		return this.#map.has(id);
+	}
 }

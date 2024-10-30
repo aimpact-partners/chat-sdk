@@ -64,6 +64,9 @@ export /*bundle*/ class Chat extends Item<IChat> {
 						const action = JSON.parse(data);
 						if (action.type === 'transcription') {
 							this.#currentMessage.set({ content: action.data.transcription, streaming: false });
+							//once the transcription is received, we add the system message to the chat
+							if (this.#response && !this.#messages.has(this.#response.id))
+								this.messages.add(this.#response);
 						}
 					});
 				}
@@ -93,6 +96,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	};
 
 	#onListen = () => {
+		// console.log('llega info', this.#response);
 		if (!this.#response) return;
 		this.#response.content = this.#api.streamResponse;
 
@@ -158,7 +162,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const onFinish = async response => {
 				await this.#response.set({ streaming: false });
 				this.trigger('response.finished');
-				this.#response = undefined;
+				// this.#response = undefined;
 				promise.resolve(item);
 				this.saveLocally(this.getData());
 				// this.#offEvents();
@@ -168,7 +172,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			};
 			this.messages.add(item);
 			this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
-			this.messages.add(this.#response);
+			// this.messages.add(this.#response);
 			this.#api
 				.bearer(token)
 				.stream(uri, { ...item.getProperties(), multipart: true })
