@@ -83,7 +83,7 @@
 				}
 			},
 			{
-				"name": "web-quality",
+				"name": "web-beta",
 				"environment": "quality",
 				"platform": "web"
 			},

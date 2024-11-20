@@ -25,7 +25,7 @@ export /*bundle*/ const AgentsChatInput = ({
 		setWaiting(store.waitingResponse);
 	});
 
-	const isFetching = fetching || recording || waiting || isWaiting;
+	const isFetching = fetching || waiting || isWaiting;
 
 	const isDisabled = store.disabled || disabled;
 	const contextValue = {

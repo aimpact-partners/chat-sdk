@@ -63,6 +63,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 					this.#api.actions.forEach(data => {
 						const action = JSON.parse(data);
 						if (action.type === 'transcription') {
+							console.log(11, 'transcription', action.data.transcription);
 							this.#currentMessage.set({ content: action.data.transcription, streaming: false });
 							//once the transcription is received, we add the system message to the chat
 							if (this.#response && !this.#messages.has(this.#response.id))
@@ -126,7 +127,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				this.#response = undefined;
 
 				promise.resolve(item);
-				this.saveLocally(this.getData());
+
 				// this.#offEvents();
 			};
 			const onError = e => {
@@ -157,14 +158,14 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const token = await sessionWrapper.user.firebaseToken;
 			const uri = `/chats/${this.id}/messages/audio`;
 			const promise = new PendingPromise<Message>();
-			const item = new Message({ chatId: this.id, audio: message, streaming: true });
+			const item = new Message({ chatId: this.id, audio: message, role: 'user', streaming: true });
 			this.#currentMessage = item;
 			const onFinish = async response => {
 				await this.#response.set({ streaming: false });
 				this.trigger('response.finished');
 				// this.#response = undefined;
 				promise.resolve(item);
-				this.saveLocally(this.getData());
+
 				// this.#offEvents();
 			};
 			const onError = e => {
@@ -181,6 +182,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			globalThis.setTimeout(() => onFinish({}), 3000); // TODO: remove this
 			return promise;
 		} catch (e) {
+			throw new Error(e);
 			console.error(e);
 		} finally {
 			this.fetching = false;
@@ -209,20 +211,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			status: true,
 			data
 		};
-	}
-
-	async saveLocally(data: any) {
-		try {
-			return null;
-			const existingData = await DBManager.db.table('Chat').get(data.id);
-			if (existingData) {
-				await DBManager.db.table('Chat').update(data.id, data);
-			} else {
-				await DBManager.db.table('Chat').put(data);
-			}
-		} catch (error) {
-			console.error('Error saving locally:', error);
-		}
 	}
 
 	async loadLocally(chatId: string): Promise<any> {

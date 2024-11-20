@@ -111,8 +111,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		this.#id = id;
 		this.reactiveProps(['waitingResponse', 'autoplay']);
 		this.autoplay = true;
-		globalThis.store = this;
-		// attrs.on('change', () => this.checkAttributes(attrs));
+
 		this.load(this.#id);
 	}
 
