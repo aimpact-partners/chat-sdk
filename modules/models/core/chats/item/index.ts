@@ -63,7 +63,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 					this.#api.actions.forEach(data => {
 						const action = JSON.parse(data);
 						if (action.type === 'transcription') {
-							console.log(11, 'transcription', action.data.transcription);
 							this.#currentMessage.set({ content: action.data.transcription, streaming: false });
 							//once the transcription is received, we add the system message to the chat
 							if (this.#response && !this.#messages.has(this.#response.id))

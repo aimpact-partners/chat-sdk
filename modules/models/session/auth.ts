@@ -118,6 +118,7 @@ export class Auth extends ReactiveModel<Auth> {
 		const model = await this.getUserModel(specs);
 
 		const logInValidation = couldLog => {
+			console.log(2, 'llego aca', couldLog);
 			if (!couldLog) {
 				console.error('Could not login', couldLog);
 			}
@@ -139,7 +140,6 @@ export class Auth extends ReactiveModel<Auth> {
 			return { status: false, error: error.message };
 		}
 	};
-	0;
 
 	signInWithGoogle = async () => {
 		try {
