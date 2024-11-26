@@ -10,14 +10,21 @@ import {
 	getRedirectResult,
 	verifyPasswordResetCode,
 	confirmPasswordReset,
-	onAuthStateChanged
+	onAuthStateChanged,
+	UserCredential,
+	User as GoogleUser
 } from 'firebase/auth';
 import { ReactiveModel } from '@beyond-js/reactive/model';
+import { CustomError } from './error';
 
 export class Auth extends ReactiveModel<Auth> {
 	#uid: string;
 	#pendingLogin;
 	#user: User;
+	/**
+	 * Defines if the object is being initialized when the page is loaded
+	 */
+	#initializing = true;
 	get user() {
 		return this.#user;
 	}
@@ -42,17 +49,27 @@ export class Auth extends ReactiveModel<Auth> {
 		if (!data && this.#user) {
 			this.#user = undefined;
 			this.signOut();
+			this.ready = true;
+			this.#initializing = false;
+			this.trigger('ready');
+			return;
 		}
 
 		if (data) {
-			if (this.#user && this.#user.id === data.uid) return;
+			if (this.#user && this.#user.id === data.uid) {
+				console.warn('debug: same user', data.uid, this.#user.id);
+				return;
+			}
 
 			const user = await this.getUserModel({ id: data.uid });
 
 			user.setFirebaseUser(data);
 			// await user.login(data.accessToken);
+			if (this.#initializing) {
+				await this.appLogin(data);
+				this.#initializing = false;
+			}
 
-			await this.appLogin(data);
 			/* TODO Review */
 			this.#user = user;
 		}
@@ -97,17 +114,17 @@ export class Auth extends ReactiveModel<Auth> {
 		return this.#user;
 	}
 
-	appLogin = async (user: any) => {
+	appLogin = async (user: GoogleUser) => {
 		if (this.#pendingLogin) {
 			return this.#pendingLogin;
 		}
 
 		if (!user?.uid) {
-			return { status: false, error: 'INVALID_USER' };
+			console.log('INVALID_USER', 'No user id found in response');
+			throw new CustomError(1001, 'INVALID_USER');
 		}
 
 		this.#uid = user.uid;
-
 		this.#pendingLogin = new PendingPromise();
 
 		const { displayName, photoURL, email, phoneNumber, uid } = user;
@@ -118,7 +135,6 @@ export class Auth extends ReactiveModel<Auth> {
 		const model = await this.getUserModel(specs);
 
 		const logInValidation = couldLog => {
-			console.log(2, 'llego aca', couldLog);
 			if (!couldLog) {
 				console.error('Could not login', couldLog);
 			}
@@ -127,72 +143,61 @@ export class Auth extends ReactiveModel<Auth> {
 			this.#pendingLogin.resolve({ status: true, model });
 		};
 
-		model.login(firebaseToken).then(logInValidation);
+		model
+			.login(firebaseToken)
+			.then(logInValidation)
+			.catch(e => {
+				throw new CustomError(1002, 'LOGIN_ERROR');
+			});
 		return this.#pendingLogin;
 	};
 
 	login = async (email: string, password: string) => {
-		try {
-			const response = await signInWithEmailAndPassword(auth, email, password);
+		const response = await signInWithEmailAndPassword(auth, email, password);
 
-			return await this.appLogin(response);
-		} catch (error) {
-			return { status: false, error: error.message };
-		}
+		return await this.appLogin(response.user);
 	};
 
-	signInWithGoogle = async () => {
+	async signInWithGoogle(): Promise<void> {
 		try {
-			const response = await signInWithPopup(auth, googleProvider);
-			//const response = await signInWithRedirect(auth, googleProvider);
+			const response: UserCredential = await signInWithPopup(auth, googleProvider);
+
 			return await this.appLogin(response.user);
-		} catch (error) {
-			const errors = {
+		} catch (error: any) {
+			const errorMappings = {
 				'auth/account-exists-with-different-credential': 'ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL',
 				'auth/popup-closed-by-user': 'POPUP_CLOSED_BY_USER'
 			};
 
-			return { status: false, error: errors[error.code] || 'CANNOT' };
+			// Known error, throw a custom exception
+			if (error.code in errorMappings) {
+				throw new CustomError(1003, errorMappings[error.code]);
+			}
+
+			// Unexpected error, rethrow for logging/debugging
+			throw new Error(`Unexpected error during Google sign-in: ${error.message}`);
 		}
-	};
+	}
 
 	registerWithEmail = async (email: string, password: string, username: string) => {
-		try {
-			const response = await createUserWithEmailAndPassword(auth, email, password);
-			const userWithDisplayName = { ...response.user, displayName: username };
-
-			return await this.appLogin({ ...response, user: userWithDisplayName });
-		} catch (error) {
-			return { status: false, error: error.message };
-		}
+		const response = await createUserWithEmailAndPassword(auth, email, password);
+		return await this.appLogin(response.user);
 	};
 
 	resetPassword = async (email: string) => {
-		try {
-			await sendPasswordResetEmail(auth, email);
-			return { status: true };
-		} catch (error) {
-			return { status: false, error: error.message };
-		}
+		await sendPasswordResetEmail(auth, email);
+		return { status: true };
 	};
 
 	confirmPasswordReset = async (code: string, newPassword: string) => {
-		try {
-			await verifyPasswordResetCode(auth, code);
-			await confirmPasswordReset(auth, code, newPassword);
-			return { status: true };
-		} catch (error) {
-			return { status: false, error: error.message };
-		}
+		await verifyPasswordResetCode(auth, code);
+		await confirmPasswordReset(auth, code, newPassword);
+		return { status: true };
 	};
 
 	signOut = async () => {
-		try {
-			this.#pendingLogin = undefined;
-			await signOut(auth);
-		} catch (error) {
-			console.error(error);
-		}
+		this.#pendingLogin = undefined;
+		await signOut(auth);
 	};
 	logout = this.signOut;
 }

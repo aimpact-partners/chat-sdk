@@ -52,14 +52,10 @@ class SessionManager extends ReactiveModel<ISession> {
 	}
 
 	async registerWithEmail({ email, password, username }) {
-		try {
-			const response = await this.#auth.registerWithEmail(email, password, username);
-			if (!response.status) return { status: false, error: response.error };
+		const response = await this.#auth.registerWithEmail(email, password, username);
+		if (!response.status) return { status: false, error: response.error };
 
-			return response;
-		} catch (e) {
-			return { status: false, error: 'CANNOT' };
-		}
+		return response;
 	}
 
 	async logout() {
