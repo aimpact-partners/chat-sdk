@@ -31,6 +31,7 @@ class SessionManager extends ReactiveModel<ISession> {
 	get auth() {
 		return this.#auth;
 	}
+
 	constructor() {
 		super();
 		this.#promise = new PendingPromise();

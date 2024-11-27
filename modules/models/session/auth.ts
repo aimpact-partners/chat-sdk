@@ -17,6 +17,7 @@ import {
 import { ReactiveModel } from '@beyond-js/reactive/model';
 import { CustomError } from './error';
 
+globalThis.totalAuthStateChanged = 0;
 export class Auth extends ReactiveModel<Auth> {
 	#uid: string;
 	#pendingLogin;
@@ -45,8 +46,8 @@ export class Auth extends ReactiveModel<Auth> {
 		if (!data) return;
 		this.onAuthStateChanged(data);
 	}
-	async onAuthStateChanged(data) {
-		if (!data && this.#user) {
+	onAuthStateChanged(user) {
+		if (!user) {
 			this.#user = undefined;
 			this.signOut();
 			this.ready = true;
@@ -55,29 +56,26 @@ export class Auth extends ReactiveModel<Auth> {
 			return;
 		}
 
-		if (data) {
-			if (this.#user && this.#user.id === data.uid) {
-				console.warn('debug: same user', data.uid, this.#user.id);
-				return;
-			}
-
-			const user = await this.getUserModel({ id: data.uid });
-
-			user.setFirebaseUser(data);
-			// await user.login(data.accessToken);
-			if (this.#initializing) {
-				await this.appLogin(data);
+		this.appLogin(user)
+			.then(() => {
 				this.#initializing = false;
-			}
-
-			/* TODO Review */
-			this.#user = user;
-		}
-
-		this.ready = true;
-		this.trigger('ready');
+			})
+			.catch(error => {
+				console.error('Error onAuthStateChanged', error);
+			});
 	}
+	async getUserModel(specs): Promise<User> {
+		if (this.#user && this.#user.id === specs.id) {
+			await this.#user.set(specs);
+			return this.#user;
+		}
+		if (this.#user) this.#user = undefined;
 
+		this.#user = await User.getModel(specs);
+		await this.#user.initialize(specs);
+
+		return this.#user;
+	}
 	async setUser(data) {
 		if (!data && this.#user) {
 			this.#user = undefined;
@@ -101,34 +99,26 @@ export class Auth extends ReactiveModel<Auth> {
 		this.triggerEvent('change');
 	}
 
-	async getUserModel(specs): Promise<User> {
-		if (this.#user && this.#user.id === specs.id) {
-			await this.#user.set(specs);
-			return this.#user;
-		}
-		if (this.#user) this.#user = undefined;
-
-		this.#user = await User.getModel(specs);
-		await this.#user.initialize(specs);
-
-		return this.#user;
-	}
-
-	appLogin = async (user: GoogleUser) => {
+	appLogin = async (googleUser: GoogleUser) => {
 		if (this.#pendingLogin) {
 			return this.#pendingLogin;
 		}
 
-		if (!user?.uid) {
-			console.log('INVALID_USER', 'No user id found in response');
+		if (!googleUser?.uid) {
+			console.log('INVALID_USER', 'No user id found in response', googleUser);
 			throw new CustomError(1001, 'INVALID_USER');
 		}
 
+		const user = await this.getUserModel({ id: googleUser.uid });
+		user.set(googleUser);
+
+		await user.setFirebaseUser(googleUser);
+		this.#user = user;
 		this.#uid = user.uid;
 		this.#pendingLogin = new PendingPromise();
 
-		const { displayName, photoURL, email, phoneNumber, uid } = user;
-		const firebaseToken = await user.getIdToken();
+		const { displayName, photoURL, email, phoneNumber, uid } = googleUser;
+		const firebaseToken = await googleUser.getIdToken();
 
 		const specs = { id: uid, displayName, photoURL, email, phoneNumber, firebaseToken };
 		// const user = new User(specs);
@@ -139,6 +129,8 @@ export class Auth extends ReactiveModel<Auth> {
 				console.error('Could not login', couldLog);
 			}
 
+			this.ready = true;
+			this.trigger('ready');
 			this.trigger('login');
 			this.#pendingLogin.resolve({ status: true, model });
 		};
@@ -149,19 +141,18 @@ export class Auth extends ReactiveModel<Auth> {
 			.catch(e => {
 				throw new CustomError(1002, 'LOGIN_ERROR');
 			});
+
 		return this.#pendingLogin;
 	};
 
 	login = async (email: string, password: string) => {
 		const response = await signInWithEmailAndPassword(auth, email, password);
-
 		return await this.appLogin(response.user);
 	};
 
 	async signInWithGoogle(): Promise<void> {
 		try {
 			const response: UserCredential = await signInWithPopup(auth, googleProvider);
-
 			return await this.appLogin(response.user);
 		} catch (error: any) {
 			const errorMappings = {
