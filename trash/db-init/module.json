@@ -1,8 +1,0 @@
-{
-	"name": "initialize",
-	"platforms": ["web", "android", "ios"],
-
-	"ts": {
-		"files": ["*"]
-	}
-}

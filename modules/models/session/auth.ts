@@ -1,81 +1,144 @@
 import { auth, googleProvider } from './firebase/config';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { User } from '@aimpact/chat-sdk/users';
+import { ReactiveModel } from '@aimpact/chat-sdk/reactive/model';
+import { CustomError } from './error';
 import {
 	signOut,
 	signInWithPopup,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	sendPasswordResetEmail,
-	getRedirectResult,
 	verifyPasswordResetCode,
 	confirmPasswordReset,
 	onAuthStateChanged,
 	UserCredential,
 	User as GoogleUser
 } from 'firebase/auth';
-import { ReactiveModel } from '@beyond-js/reactive/model';
-import { CustomError } from './error';
+import { FirebaseProvider } from './firebase/provider';
+import { IUserData } from './types';
 
 globalThis.totalAuthStateChanged = 0;
 export class Auth extends ReactiveModel<Auth> {
-	#uid: string;
 	#pendingLogin;
 	#user: User;
-	/**
-	 * Defines if the object is being initialized when the page is loaded
-	 */
-	#initializing = true;
+
 	get user() {
 		return this.#user;
 	}
 
-	#getUserPromise: PendingPromise<User>;
 	#session;
+	#provider: FirebaseProvider;
+
 	get session() {
 		return this.#session;
 	}
 	constructor(session) {
 		super();
 		this.#session = session;
+		this.#provider = new FirebaseProvider({
+			onAuthStateChanged: this.onAuthStateChanged.bind(this)
+		});
+	}
 
-		getRedirectResult(auth).then(this.onRedirectResult.bind(this));
-		onAuthStateChanged(auth, this.onAuthStateChanged.bind(this));
+	#setReady() {
+		this.ready = true;
+		this.trigger('ready');
 	}
-	async onRedirectResult(data) {
-		if (!data) return;
-		this.onAuthStateChanged(data);
-	}
-	onAuthStateChanged(user) {
+
+	onAuthStateChanged(user: IUserData) {
 		if (!user) {
-			this.#user = undefined;
-			this.signOut();
-			this.ready = true;
-			this.#initializing = false;
-			this.trigger('ready');
+			this.#setReady();
 			return;
 		}
+		/**
+		 * this code only must be executed when the page is laoded
+		 */
 
-		this.appLogin(user)
-			.then(() => {
-				this.#initializing = false;
-			})
-			.catch(error => {
-				console.error('Error onAuthStateChanged', error);
-			});
+		if (!this.ready) {
+			this.appLogin(user);
+		}
 	}
-	async getUserModel(specs): Promise<User> {
+
+	appLogin = (data: IUserData) => {
+		if (this.#pendingLogin) {
+			return this.#pendingLogin;
+		}
+
+		if (!data?.uid) {
+			console.trace('INVALID_USER', 'No user id found in response', data);
+			throw new CustomError(1001, 'INVALID_USER');
+		}
+
+		// this.#provider.getCurrentToken().then(token=>{})
+		this.#pendingLogin = new PendingPromise();
+
+		// const firebaseToken = await this.#provider.getCurrentToken();
+		this.#provider.getCurrentToken().then(firebaseToken => {
+			const specs = { ...data, firebaseToken };
+			const model = this.getUserModel(specs);
+			this.#user = model;
+			const logInValidation = couldLog => {
+				if (!couldLog) {
+					console.error('Could not login', couldLog);
+				}
+				this.ready = true;
+				this.trigger('ready');
+				this.trigger('login');
+				this.#pendingLogin.resolve({ status: true, model });
+			};
+
+			model
+				.login(firebaseToken)
+				.then(logInValidation)
+				.catch(e => {
+					console.log(100, 'fallamos');
+					throw new CustomError(1002, 'LOGIN_ERROR');
+				});
+		});
+
+		return this.#pendingLogin;
+	};
+
+	async loginWith(provider) {
+		try {
+			if (provider !== 'google') {
+				console.log('Provider not supported');
+				return;
+			}
+
+			const userData = await this.#provider.signInWithGoogle();
+			return this.appLogin(userData);
+			console.log('sesion iniciada', userData);
+		} catch (error: any) {
+			const errorMappings = {
+				'auth/account-exists-with-different-credential': 'ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL',
+				'auth/popup-closed-by-user': 'POPUP_CLOSED_BY_USER'
+			};
+
+			// Known error, throw a custom exception
+			if (error.code in errorMappings) {
+				throw new CustomError(1003, errorMappings[error.code]);
+			}
+
+			// Unexpected error, rethrow for logging/debugging
+			throw new Error(`Unexpected error during Google sign-in: ${error.message}`);
+		}
+	}
+	getUserModel(specs): User {
 		if (this.#user && this.#user.id === specs.id) {
-			await this.#user.set(specs);
+			this.#user.set(specs);
 			return this.#user;
 		}
 		if (this.#user) this.#user = undefined;
-
-		this.#user = await User.getModel(specs);
-		await this.#user.initialize(specs);
+		//@ts-ignore
+		this.#user = User.getModel(specs);
+		this.#user.setFirebaseProvider(this.#provider);
+		this.#user.initialize(specs);
 
 		return this.#user;
 	}
+
 	async setUser(data) {
 		if (!data && this.#user) {
 			this.#user = undefined;
@@ -99,95 +162,9 @@ export class Auth extends ReactiveModel<Auth> {
 		this.triggerEvent('change');
 	}
 
-	appLogin = async (googleUser: GoogleUser) => {
-		if (this.#pendingLogin) {
-			return this.#pendingLogin;
-		}
-
-		if (!googleUser?.uid) {
-			console.log('INVALID_USER', 'No user id found in response', googleUser);
-			throw new CustomError(1001, 'INVALID_USER');
-		}
-
-		const user = await this.getUserModel({ id: googleUser.uid });
-		user.set(googleUser);
-
-		await user.setFirebaseUser(googleUser);
-		this.#user = user;
-		this.#uid = user.uid;
-		this.#pendingLogin = new PendingPromise();
-
-		const { displayName, photoURL, email, phoneNumber, uid } = googleUser;
-		const firebaseToken = await googleUser.getIdToken();
-
-		const specs = { id: uid, displayName, photoURL, email, phoneNumber, firebaseToken };
-		// const user = new User(specs);
-		const model = await this.getUserModel(specs);
-
-		const logInValidation = couldLog => {
-			if (!couldLog) {
-				console.error('Could not login', couldLog);
-			}
-
-			this.ready = true;
-			this.trigger('ready');
-			this.trigger('login');
-			this.#pendingLogin.resolve({ status: true, model });
-		};
-
-		model
-			.login(firebaseToken)
-			.then(logInValidation)
-			.catch(e => {
-				throw new CustomError(1002, 'LOGIN_ERROR');
-			});
-
-		return this.#pendingLogin;
-	};
-
-	login = async (email: string, password: string) => {
-		const response = await signInWithEmailAndPassword(auth, email, password);
-		return await this.appLogin(response.user);
-	};
-
-	async signInWithGoogle(): Promise<void> {
-		try {
-			const response: UserCredential = await signInWithPopup(auth, googleProvider);
-			return await this.appLogin(response.user);
-		} catch (error: any) {
-			const errorMappings = {
-				'auth/account-exists-with-different-credential': 'ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL',
-				'auth/popup-closed-by-user': 'POPUP_CLOSED_BY_USER'
-			};
-
-			// Known error, throw a custom exception
-			if (error.code in errorMappings) {
-				throw new CustomError(1003, errorMappings[error.code]);
-			}
-
-			// Unexpected error, rethrow for logging/debugging
-			throw new Error(`Unexpected error during Google sign-in: ${error.message}`);
-		}
-	}
-
-	registerWithEmail = async (email: string, password: string, username: string) => {
-		const response = await createUserWithEmailAndPassword(auth, email, password);
-		return await this.appLogin(response.user);
-	};
-
-	resetPassword = async (email: string) => {
-		await sendPasswordResetEmail(auth, email);
-		return { status: true };
-	};
-
-	confirmPasswordReset = async (code: string, newPassword: string) => {
-		await verifyPasswordResetCode(auth, code);
-		await confirmPasswordReset(auth, code, newPassword);
-		return { status: true };
-	};
-
 	signOut = async () => {
 		this.#pendingLogin = undefined;
+		this.#user = undefined;
 		await signOut(auth);
 	};
 	logout = this.signOut;

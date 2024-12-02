@@ -1,0 +1,7 @@
+{
+	"name": "reactive/model",
+	"description": "Reactive Model",
+	"platforms": "*",
+	"bundle": "ts",
+	"files": "*"
+}

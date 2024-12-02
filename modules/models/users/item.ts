@@ -1,11 +1,11 @@
 // AudioItem
-import { Item } from '@beyond-js/reactive/entities';
+import { Item } from '@aimpact/chat-sdk/reactive/entities/item';
 import { UserProvider } from './provider';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import firebaseAuth from 'firebase/auth';
 import { IChatUser } from './interface';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';
-export /*bundle*/ class User extends Item<IChatUser> {
+export /*bundle*/ class User extends Item<User> {
 	protected properties = ['displayName', 'id', 'email', 'photoURL', 'phoneNumber', 'token'];
 	#logged;
 	declare token;
@@ -16,8 +16,9 @@ export /*bundle*/ class User extends Item<IChatUser> {
 		return this.#logged;
 	}
 
+	#firebaseProvider: any;
 	get firebaseToken() {
-		return this.#firebaseUser ? this.#firebaseUser.getIdToken() : null;
+		return this.#firebaseProvider?.getCurrentToken();
 	}
 
 	/**
@@ -26,19 +27,19 @@ export /*bundle*/ class User extends Item<IChatUser> {
 	 */
 	constructor(specs) {
 		//@ts-ignore
-		super({ id: specs.id, db: 'chat-api', storeName: 'User', provider: UserProvider });
+		super({ id: specs.id, entity: 'User', provider: UserProvider, properties: specs.properties ?? [] });
 
 		// this.initialize(specs);
 	}
 
+	setFirebaseProvider(provider) {
+		this.#firebaseProvider = provider;
+	}
 	initialize = async specs => {
-		super.initialise();
-
 		if (this.#promiseInit) return this.#promiseInit;
 		this.#promiseInit = new PendingPromise();
-		await this.isReady;
 
-		await this.set(specs);
+		this.set(specs);
 		// await this.login(this.firebaseToken);
 		this.#promiseInit.resolve();
 		this.loaded = true;
@@ -51,7 +52,6 @@ export /*bundle*/ class User extends Item<IChatUser> {
 	};
 
 	async login(firebaseToken) {
-		await this.isReady;
 		if (this.#logged) return;
 
 		const specs = { ...this.getProperties(), id: this.id, firebaseToken };
@@ -61,7 +61,7 @@ export /*bundle*/ class User extends Item<IChatUser> {
 		if (!response.status) {
 			throw new Error(response.error as string);
 		}
-		await this.set(response.data, true);
+		this.set(response.data);
 
 		// this.localUpdate(response.data.user);
 		this.#logged = true;
@@ -69,7 +69,7 @@ export /*bundle*/ class User extends Item<IChatUser> {
 		return true;
 	}
 
-	static async getModel(specs) {
+	static getModel(specs) {
 		if (sdkConfig.userModel) return new sdkConfig.userModel(specs);
 		return new User(specs);
 	}

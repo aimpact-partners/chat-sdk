@@ -1,6 +1,6 @@
 import { auth } from './firebase/config';
 import type { User } from '@aimpact/chat-sdk/users';
-import { ReactiveModel } from '@beyond-js/reactive/model';
+import { ReactiveModel } from '@aimpact/chat-sdk/reactive/model';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { Auth } from './auth';
 
@@ -9,8 +9,6 @@ interface ISession {
 }
 
 class SessionManager extends ReactiveModel<ISession> {
-	declare triggerEvent: (event: string) => void;
-
 	get user(): User {
 		return this.#auth.user;
 	}
@@ -37,26 +35,14 @@ class SessionManager extends ReactiveModel<ISession> {
 		this.#promise = new PendingPromise();
 
 		this.#auth = new Auth(this);
-		this.#auth.on('login', () => this.trigger('login'));
 		this.#auth.on('ready', this.listenReady.bind(this));
+		this.ready = true;
 	}
 
 	listenReady() {
 		this.ready = true;
 		this.#promise.resolve(this.ready);
 		this.triggerEvent('change');
-	}
-
-	async signInWithGoogle() {
-		return this.#auth.signInWithGoogle();
-		// console.log(-5, 'response', response);
-	}
-
-	async registerWithEmail({ email, password, username }) {
-		const response = await this.#auth.registerWithEmail(email, password, username);
-		if (!response.status) return { status: false, error: response.error };
-
-		return response;
 	}
 
 	async logout() {
@@ -73,6 +59,7 @@ class SessionManager extends ReactiveModel<ISession> {
 			}
 			clear(['ailearn.home.tour']);
 			this.triggerEvent('logout');
+			console.log('limpiada');
 
 			return true;
 		} catch (e) {
