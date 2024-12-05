@@ -1,8 +1,8 @@
-import { RegistryData } from './registry/types/index';
-import { ReactiveModel, ReactiveProps, SetPropertiesResult } from '@aimpact/ailearn-sdk/reactive/model';
-import { IItemProps, IEntityProvider } from './types';
-import { RegistryFactory } from './registry/factory';
+import { ReactiveModel, ReactiveProps, SetPropertiesResult } from '@aimpact/reactive/model';
 import { Registry } from './registry';
+import { RegistryFactory } from './registry/factory';
+import { RegistryData } from './registry/types/index';
+import { IEntityProvider, IItemProps } from './types';
 
 export /*bundle*/ class Item<P extends IEntityProvider = IEntityProvider> extends ReactiveModel<RegistryData> {
 	#factory: RegistryFactory<RegistryData>;
@@ -130,7 +130,7 @@ export /*bundle*/ class Item<P extends IEntityProvider = IEntityProvider> extend
 
 		this.set({ ...this.getProperties(), ...data });
 
-		super.save();
+		super.saveChanges();
 		if (this.provider && typeof this.provider.publish === 'function') {
 			const updated = await this.provider.publish(data);
 

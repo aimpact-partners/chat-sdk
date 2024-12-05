@@ -1,5 +1,5 @@
 import type { Collection } from './';
-import { Item, ItemId, IEntityProvider } from '@aimpact/chat-sdk/reactive/entities/item';
+import { Item, ItemId, IEntityProvider } from '@aimpact/reactive/entities/item';
 
 export interface ICollectionProviderResponse<T> {
 	status: number;

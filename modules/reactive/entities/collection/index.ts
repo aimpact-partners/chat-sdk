@@ -1,5 +1,5 @@
-import { Item, ItemId, IEntityProvider, RegistryFactory } from '@aimpact/chat-sdk/reactive/entities/item';
-import { ReactiveModel } from '@aimpact/chat-sdk/reactive/model';
+import { Item, ItemId, IEntityProvider, RegistryFactory } from '@aimpact/reactive/entities/item';
+import { ReactiveModel } from '@aimpact/reactive/model';
 import { ICollectionOptions, ICollectionProvider, ILoadSpecs } from './types';
 
 export /*bundle*/ class Collection<T extends Item, P extends IEntityProvider = IEntityProvider> extends ReactiveModel<

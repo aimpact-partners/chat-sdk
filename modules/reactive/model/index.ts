@@ -277,7 +277,7 @@ export /*bundle */ class ReactiveModel<T> extends ProxyBase<T> {
 		this.set(this.initialValues);
 	}
 
-	save() {
+	saveChanges() {
 		this.#initialValues = this.getProperties();
 		this.#isDraft = false;
 	}

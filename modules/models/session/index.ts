@@ -1,6 +1,6 @@
 import { auth } from './firebase/config';
 import type { User } from '@aimpact/chat-sdk/users';
-import { ReactiveModel } from '@aimpact/chat-sdk/reactive/model';
+import { ReactiveModel } from '@aimpact/reactive/model';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { Auth } from './auth';
 

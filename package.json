@@ -20,7 +20,8 @@
 	"libraries": {
 		"imports": [
 			"@beyond-js/reactive",
-			"@aimpact/http-suite"
+			"@aimpact/http-suite",
+			"@aimpact/reactive"
 		]
 	},
 	"params": {

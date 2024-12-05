@@ -1,5 +1,5 @@
 // AudioItem
-import { Item } from '@aimpact/chat-sdk/reactive/entities/item';
+import { Item } from '@aimpact/reactive/entities/item';
 import { UserProvider } from './provider';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import firebaseAuth from 'firebase/auth';

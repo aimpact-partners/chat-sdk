@@ -1,4 +1,4 @@
-import { ReactiveProps } from '@aimpact/chat-sdk/reactive/model';
+import { ReactiveProps } from '@aimpact/reactive/model';
 import type { Item } from './index';
 export /*bundle*/ type ItemId = string | number;
 export /*bundle*/ interface IItemProps<P extends IEntityProvider> {

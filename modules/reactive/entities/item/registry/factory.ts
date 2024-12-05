@@ -1,4 +1,4 @@
-import { ReactiveModel } from '@aimpact/chat-sdk/reactive/model';
+import { ReactiveModel } from '@aimpact/reactive/model';
 import { RegistryData, RegistryId } from './types';
 import { Registry } from './';
 import { IRecordProps } from '../types';

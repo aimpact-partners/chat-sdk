@@ -1,20 +1,9 @@
-import { auth, googleProvider } from './firebase/config';
-import { PendingPromise } from '@beyond-js/kernel/core';
+import { ReactiveModel } from '@aimpact/reactive/model';
 import { User } from '@aimpact/chat-sdk/users';
-import { ReactiveModel } from '@aimpact/chat-sdk/reactive/model';
+import { PendingPromise } from '@beyond-js/kernel/core';
+import { signOut } from 'firebase/auth';
 import { CustomError } from './error';
-import {
-	signOut,
-	signInWithPopup,
-	createUserWithEmailAndPassword,
-	signInWithEmailAndPassword,
-	sendPasswordResetEmail,
-	verifyPasswordResetCode,
-	confirmPasswordReset,
-	onAuthStateChanged,
-	UserCredential,
-	User as GoogleUser
-} from 'firebase/auth';
+import { auth } from './firebase/config';
 import { FirebaseProvider } from './firebase/provider';
 import { IUserData } from './types';
 
