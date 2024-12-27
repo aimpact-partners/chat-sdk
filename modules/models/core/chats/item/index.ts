@@ -1,7 +1,7 @@
-import { DBManager } from '@beyond-js/reactive/database';
+import { Item } from '@aimpact/reactive/entities/item';
 import { PendingPromise } from '@beyond-js/kernel/core';
 // ChatItem
-import { Item } from '@beyond-js/reactive/entities';
+
 import { Api } from '@aimpact/http-suite/api';
 import { Message } from '../messages/item';
 import { Messages } from '../messages';
@@ -10,28 +10,14 @@ import { IChat } from '../interfaces/chat';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';
 import { ChatProvider } from './provider';
 import { v4 as uuid } from 'uuid';
+
 export /*bundle*/ class Chat extends Item<IChat> {
 	declare id: string;
 	#api: Api;
 	get api() {
 		return this.#api;
 	}
-	protected properties = [
-		'id',
-		'autoplay',
-		'name',
-		'userId',
-		'system',
-		'parent',
-		'category',
-		'language',
-		'usage',
-		'children',
-		'knowledgeBoxId',
-		'user',
-		'metadata'
-	];
-	localdb = false;
+
 	declare fetching: boolean;
 	declare triggerEvent: () => void;
 
@@ -44,10 +30,31 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	}
 
 	constructor({ id = undefined } = {}) {
-		super({ id, db: 'chat-api', storeName: 'Chat', provider: ChatProvider, localdb: false });
+		super({
+			id,
+			entity: 'Chat',
+			properties: [
+				'id',
+				'autoplay',
+				'name',
+				'userId',
+				'system',
+				'parent',
+				'category',
+				'language',
+				'usage',
+				'children',
+				'knowledgeBoxId',
+				'user',
+				'metadata'
+			],
+
+			provider: ChatProvider
+		});
 		this.#api = new Api(sdkConfig.api);
 		this.#messages = new Messages();
-		this.#messages.on('new.message', () => this.triggerEvent('new.message'));
+
+		this.#messages.on('new.message', () => this.trigger('new.message'));
 		globalThis.chat = this;
 		if (!id) this.id = uuid();
 		this.#listen();
@@ -82,8 +89,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	};
 
 	loadAll = async specs => {
-		await this.isReady;
-
 		const response = await this.load(specs);
 		const collection = this.#messages;
 		collection.on('change', this.triggerEvent);
@@ -210,15 +215,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			status: true,
 			data
 		};
-	}
-
-	async loadLocally(chatId: string): Promise<any> {
-		try {
-			const data = await DBManager.db.table('Chat').get(chatId);
-			return data;
-		} catch (error) {
-			console.error('Error loading locally:', error);
-		}
 	}
 
 	async create() {

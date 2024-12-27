@@ -1,4 +1,4 @@
-import { ReactiveModel } from '@beyond-js/reactive/model';
+import { ReactiveModel } from '@aimpact/reactive/model';
 import { Chat, Messages } from '@aimpact/chat-sdk/core';
 import { AppWrapper } from '@aimpact/chat-sdk/wrapper';
 import { AudioManager } from './audio';

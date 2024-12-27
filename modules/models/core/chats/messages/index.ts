@@ -1,11 +1,6 @@
-import { Collection } from '@beyond-js/reactive/entities';
 // import { MessageProvider } from '@aimpact/chat-api/provider';
+import { ReactiveModel } from '@aimpact/reactive/model';
 import { Message } from './item';
-import { ReactiveModel } from '@beyond-js/reactive/model';
-
-interface IMessages {
-	items: Message[];
-}
 
 export class Messages extends ReactiveModel<Messages> {
 	item = Message;

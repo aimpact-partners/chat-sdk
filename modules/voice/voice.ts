@@ -1,5 +1,5 @@
 import { Events } from '@beyond-js/kernel/core';
-import { ReactiveModel } from '@beyond-js/reactive/model';
+import { ReactiveModel } from '@aimpact/reactive/model';
 import { languages } from '@beyond-js/kernel/core';
 export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 	#speaking = false;

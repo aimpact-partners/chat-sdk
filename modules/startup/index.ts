@@ -1,5 +1,5 @@
-import { ReactiveModel } from '@beyond-js/reactive/model';
-import { localdb as localDBInitializer } from './localdb';
+import { ReactiveModel } from '@aimpact/reactive/model';
+
 import { ISDKSettings } from './types';
 import { ENDPOINTS } from './endpoints';
 
@@ -30,10 +30,6 @@ class SDKInitializer extends ReactiveModel<SDKInitializer> {
 		this.#environment = environment;
 		this.#userModel = userModel;
 		// const model = new this.#userModel();
-
-		if (localdb) {
-			return localDBInitializer();
-		}
 	}
 }
 

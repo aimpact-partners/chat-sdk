@@ -1,5 +1,5 @@
 import { PendingPromise } from '@beyond-js/kernel/core';
-import { ReactiveModel } from '@beyond-js/reactive/model';
+import { ReactiveModel } from '@aimpact/reactive/model';
 import { IRecorderSpecs } from './interface';
 
 export /*bundle */

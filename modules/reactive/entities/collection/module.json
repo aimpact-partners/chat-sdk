@@ -1,5 +1,0 @@
-{
-	"name": "reactive/entities/collection",
-	"bundle": "ts",
-	"files": ["*"]
-}

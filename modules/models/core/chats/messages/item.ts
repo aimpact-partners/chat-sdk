@@ -1,12 +1,13 @@
 // ChatItem
-import { ReactiveModel } from '@beyond-js/reactive/model';
+import { ReactiveModel } from '@aimpact/reactive/model';
 import { v4 as uuid } from 'uuid';
 import { Api } from '@aimpact/http-suite/api';
-import { IMessage, IMessageConstructorSpecs } from '../interfaces/message';
+import { IMessage, IMessageConstructorSpecs, IMessageSpecs } from '../interfaces/message';
 import type { Chat } from '../item';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';
+import type { Messages } from './';
 
-export /*bundle*/ class Message extends ReactiveModel<IMessage> {
+export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Partial<IMessage> {
 	declare autoplay: boolean;
 
 	declare id: string;
@@ -15,6 +16,8 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> {
 	#response: string = '';
 	//#endregion
 	#chat: Chat;
+	declare content: string;
+	declare messages: Messages;
 	localFields = ['audio'];
 	declare audio: Blob;
 	#parsedContent: { value: string; data: any[] };
@@ -28,11 +31,10 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> {
 		return this.#type;
 	}
 
-	constructor({ id = undefined, chat, ...specs }: IMessageConstructorSpecs) {
+	constructor({ id = undefined, chat, ...specs }: Partial<IMessageSpecs>) {
 		super({
 			id,
 			...specs,
-
 			properties: [
 				'id',
 				'chatId',
@@ -50,6 +52,7 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> {
 		if (!id) this.id = uuid();
 		const api = new Api(sdkConfig.api);
 		this.#api = api;
+
 		this.#type = specs.type ?? 'message';
 
 		this.reactiveProps(['autoplay']);

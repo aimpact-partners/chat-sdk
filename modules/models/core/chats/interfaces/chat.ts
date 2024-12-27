@@ -16,6 +16,7 @@ export /*bundle */ interface IChat {
 	system: string;
 	parent: string;
 	knowledgeBoxId: string;
+	messages: any;
 	usage: {
 		completionTokens: number;
 		promptTokens: number;

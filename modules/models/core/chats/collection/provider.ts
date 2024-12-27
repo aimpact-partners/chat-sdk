@@ -1,10 +1,10 @@
 import { Api } from '@aimpact/http-suite/api';
 
-import { IProvider } from '@beyond-js/reactive/entities';
+import { ICollectionProvider } from '@aimpact/reactive/entities/collection';
 import type { Chats } from './index';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';
-export class ChatCollectionProvider implements IProvider {
+export class ChatCollectionProvider implements Partial<ICollectionProvider> {
 	#api: Api;
 	#parent: Chats;
 

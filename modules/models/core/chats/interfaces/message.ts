@@ -11,6 +11,8 @@ export interface IMessage {
 	actions?: any[];
 	language?: string;
 	format?: 'audio' | 'text';
+	userId: string;
+	type: 'message' | 'answer';
 	usage?: {
 		completionTokens: number;
 		promptTokens: number;
@@ -22,11 +24,14 @@ export interface IMessageSpecs {
 	chatId: string;
 	systemId?: string;
 	id: string;
+	chat?: Chat;
 	timestamp?: number;
 	role: string;
 	content?: string;
 	multipart?: boolean;
 	audio?: Blob;
+	streaming: boolean;
+	type: 'message' | 'answer';
 }
 
 /**

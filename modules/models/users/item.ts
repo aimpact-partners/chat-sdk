@@ -1,12 +1,10 @@
 // AudioItem
+import { sdkConfig } from '@aimpact/chat-sdk/startup';
 import { Item } from '@aimpact/reactive/entities/item';
-import { UserProvider } from './provider';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import firebaseAuth from 'firebase/auth';
-import { IChatUser } from './interface';
-import { sdkConfig } from '@aimpact/chat-sdk/startup';
+import { UserProvider } from './provider';
 export /*bundle*/ class User extends Item<User> {
-	protected properties = ['displayName', 'id', 'email', 'photoURL', 'phoneNumber', 'token'];
 	#logged;
 	declare token;
 
@@ -25,9 +23,14 @@ export /*bundle*/ class User extends Item<User> {
 	 * todo: @carlos implement http request to get user data
 	 * @param specs
 	 */
-	constructor(specs) {
+	constructor({ properties = [], ...specs } = { properties: [], id: undefined }) {
 		//@ts-ignore
-		super({ id: specs.id, entity: 'User', provider: UserProvider, properties: specs.properties ?? [] });
+		super({
+			id: specs.id,
+			properties: [...properties, 'displayName', 'id', 'email', 'photoURL', 'phoneNumber', 'token'],
+			entity: 'User',
+			provider: UserProvider
+		});
 
 		// this.initialize(specs);
 	}
