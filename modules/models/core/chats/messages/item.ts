@@ -41,6 +41,7 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Parti
 				'audio',
 				'userId',
 				'role',
+
 				'content',
 				'usage',
 				'timestamp',
@@ -48,6 +49,7 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Parti
 				'actions'
 			]
 		});
+
 		this.#chat = chat;
 		if (!id) this.id = uuid();
 		const api = new Api(sdkConfig.api);

@@ -63,26 +63,24 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 		pr: 'pt-BR'
 	};
 	constructor({ language, rate }: { language?: string; rate?: number } = { rate: 1.25 }) {
-		super();
+		super({
+			lang: language,
+			rate: rate
+		});
 		if (!language) language = languages.current;
 		this.reactiveProps(['positionToCut', 'textId', 'playing']);
 		this.positionToCut = 0;
 
 		this.lang = language;
 		this.rate = rate;
-
-		this.initialValues({
-			lang: language,
-			rate: rate
-		});
 	}
 
-	set({ language, rate }: { language?: string; rate?: number }) {
-		if (language) {
-			this.lang = language;
-		}
-		if (rate) this.rate = rate;
-	}
+	// set({ language, rate }: { language?: string; rate?: number }) {
+	// 	if (language) {
+	// 		this.lang = language;
+	// 	}
+	// 	if (rate) this.rate = rate;
+	// }
 	_web() {
 		if (this.#speaking) {
 			speechSynthesis.cancel();

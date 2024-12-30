@@ -29,10 +29,11 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		return this.#messages;
 	}
 
-	constructor({ id = undefined } = {}) {
+	constructor({ id = undefined, ...specs } = {}) {
 		super({
 			id,
 			entity: 'Chat',
+			...specs,
 			properties: [
 				'id',
 				'autoplay',
@@ -43,14 +44,16 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				'category',
 				'language',
 				'usage',
+				'user',
 				'children',
 				'knowledgeBoxId',
-				'user',
+
 				'metadata'
 			],
 
 			provider: ChatProvider
 		});
+
 		this.#api = new Api(sdkConfig.api);
 		this.#messages = new Messages();
 
