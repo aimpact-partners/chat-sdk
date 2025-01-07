@@ -4,10 +4,16 @@ import { Item } from '@aimpact/reactive/entities/item';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import firebaseAuth from 'firebase/auth';
 import { UserProvider } from './provider';
-export /*bundle*/ class User extends Item<User> {
+import { IChatUser } from './interface';
+export /*bundle*/ class User extends Item<IChatUser, UserProvider> {
 	#logged;
-	declare token;
 
+	declare id: string;
+	declare displayName: string;
+	declare email: string;
+	declare photoURL: string;
+	declare phoneNumber: string;
+	declare token: string;
 	#promiseInit: PendingPromise<boolean>;
 	#firebaseUser: firebaseAuth.User;
 	get logged() {
@@ -55,21 +61,22 @@ export /*bundle*/ class User extends Item<User> {
 	};
 
 	async login(firebaseToken) {
-		if (this.#logged) return;
+		try {
+			if (this.#logged) return;
 
-		const specs = { ...this.getProperties(), id: this.id, firebaseToken };
+			const specs = { ...this.getProperties(), id: this.getProperty('id'), firebaseToken } as IChatUser;
 
-		const response = await this.provider.load(specs);
+			const response = await this.provider.load(specs);
 
-		if (!response.status) {
-			throw new Error(response.error as string);
+			this.set(response.data);
+
+			// this.localUpdate(response.data.user);
+			this.#logged = true;
+			this.trigger('login');
+			return true;
+		} catch (e) {
+			throw new Error(e);
 		}
-		this.set(response.data);
-
-		// this.localUpdate(response.data.user);
-		this.#logged = true;
-		this.trigger('login');
-		return true;
 	}
 
 	static getModel(specs) {

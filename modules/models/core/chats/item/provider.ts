@@ -24,6 +24,6 @@ export class ChatProvider implements IEntityProvider {
 			throw new Error('error loading chat');
 		}
 
-		return { status, data };
+		return data;
 	}
 }

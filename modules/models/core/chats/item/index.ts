@@ -96,8 +96,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		const collection = this.#messages;
 		collection.on('change', this.triggerEvent);
 
-		if (response.data.messages?.length) {
-			await collection.setEntries(response.data.messages);
+		if (response.messages?.length) {
+			await collection.setEntries(response.messages);
 		}
 
 		this.#messages = collection;
