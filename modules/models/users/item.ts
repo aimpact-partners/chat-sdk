@@ -14,6 +14,7 @@ export /*bundle*/ class User extends Item<IChatUser, UserProvider> {
 	declare photoURL: string;
 	declare phoneNumber: string;
 	declare token: string;
+	declare roles: string[];
 	#promiseInit: PendingPromise<boolean>;
 	#firebaseUser: firebaseAuth.User;
 	get logged() {

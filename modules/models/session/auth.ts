@@ -7,7 +7,6 @@ import { auth } from './firebase/config';
 import { FirebaseProvider } from './firebase/provider';
 import { IUserData } from './types';
 
-globalThis.totalAuthStateChanged = 0;
 export class Auth extends ReactiveModel<Auth> {
 	#pendingLogin;
 	#user: User;
@@ -98,7 +97,6 @@ export class Auth extends ReactiveModel<Auth> {
 
 			const userData = await this.#provider.signInWithGoogle();
 			return this.appLogin(userData);
-			console.log('sesion iniciada', userData);
 		} catch (error: any) {
 			const errorMappings = {
 				'auth/account-exists-with-different-credential': 'ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL',
