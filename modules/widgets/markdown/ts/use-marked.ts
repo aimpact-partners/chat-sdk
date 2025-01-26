@@ -17,7 +17,7 @@ interface ExtendedMarkedOptions extends MarkedOptions {
 	highlight?: (code: string, lang: string) => string;
 }
 
-export function useMarked(content: string) {
+export /*bundle*/ function useMarked(content: string) {
 	const [output, setOutput] = React.useState<string>('');
 
 	async function render(content) {

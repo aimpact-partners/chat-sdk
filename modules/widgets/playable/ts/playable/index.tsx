@@ -1,7 +1,7 @@
 import React from 'react';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 import { useBoundary } from '../use-boundary';
-import { parseText } from '../parse-content';
+import { parseText } from '../parse-text';
 import { PlayableItem } from './item';
 import { IPlayableProps } from './interfaces/playable-props';
 

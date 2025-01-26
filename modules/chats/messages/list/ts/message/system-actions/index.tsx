@@ -3,18 +3,18 @@ import { Action } from './action';
 import { CollapsibleContainer, CollapsibleContent } from 'pragmate-ui/collapsible';
 import { useChatMessagesContext } from '../../context';
 
-export function SystemActions({ actions, message }) {
+export function SystemActions({ actions }) {
 	if (!actions?.length) return null;
 
 	const { texts } = useChatMessagesContext();
 	const last = actions[actions.length - 1];
 
 	return (
-		<section className='message-actions__container'>
+		<section className="message-actions__container">
 			<CollapsibleContainer>
 				<Action data={last} last texts={texts} />
 				<CollapsibleContent>
-					<section className='actions__log'>
+					<section className="actions__log">
 						{actions.map((action, i) => (
 							<Action texts={texts} key={`action-${i}`} data={action} />
 						))}

@@ -13,7 +13,7 @@ import { CollapsibleHeader } from 'pragmate-ui/collapsible';
 
 interface IProps {
 	last?: boolean;
-	texts: Record<string, string>;
+	texts: Record<string, any>;
 	data: {
 		type: string;
 		data: any;
@@ -21,7 +21,7 @@ interface IProps {
 	className?: string;
 }
 export function Action({ last = false, texts, data: { type, data } }: IProps) {
-	const mark = useMarked();
+	const mark = useMarked;
 
 	const { systemActions: actionsTexts } = texts;
 	const Container = ({ title, children }: { title: string; children?: React.ReactNode }) => {
@@ -33,7 +33,7 @@ export function Action({ last = false, texts, data: { type, data } }: IProps) {
 					<header>
 						<h4>{title}</h4>
 					</header>
-					<section className='detail__content'>{children}</section>
+					<section className="detail__content">{children}</section>
 				</Container>
 			</div>
 		);

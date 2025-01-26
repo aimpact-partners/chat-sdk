@@ -2,7 +2,15 @@ import React from 'react';
 import { useManager } from './use-manager';
 import { ChatContext } from './context';
 import { StoreManager } from '../store';
-export /*bundle */ function AgentsChatContainer({ children, icon, users, autoplay, empty, player, ...props }) {
+import { IAgentsContainerProps } from './types';
+export /*bundle */ function AgentsChatContainer({
+	children,
+	icon,
+	autoplay,
+	empty,
+	player,
+	...props
+}: Partial<IAgentsContainerProps>) {
 	const [scrollPosition, setScrollPosition] = React.useState('top');
 	const { ready, store } = useManager(props.id);
 	const obj = store ? store : ({} as StoreManager);

@@ -18,5 +18,5 @@ interface IChatContext {
 	ready: boolean;
 	empty: React.ElementType;
 }
-export /*bundle */ const ChatContext = React.createContext({} as IChatContext);
+export /*bundle */ const ChatContext = React.createContext({} as Partial<IChatContext>);
 export /*bundle */ const useChatContext = () => React.useContext(ChatContext);

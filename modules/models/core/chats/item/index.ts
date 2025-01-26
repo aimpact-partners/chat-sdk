@@ -13,13 +13,23 @@ import { v4 as uuid } from 'uuid';
 
 export /*bundle*/ class Chat extends Item<IChat> {
 	declare id: string;
+	declare fetching: boolean;
+	declare triggerEvent: () => void;
+	declare language: any;
+	declare audioplay: boolean;
+	declare userId: string;
+	declare system: any;
+	declare parent: any;
+	declare category: any;
+	declare usage: any;
+	declare children: any;
+	declare user: any;
+	declare knowledgeBoxId: string;
+	declare metadata: any;
 	#api: Api;
 	get api() {
 		return this.#api;
 	}
-
-	declare fetching: boolean;
-	declare triggerEvent: () => void;
 
 	#currentMessage: Message;
 	#response: Message;

@@ -1,8 +1,7 @@
-import React from 'react';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
+import React from 'react';
 import { useChatMessagesContext } from '../../context';
 import { Player } from './audio-player';
-import { MessageContent } from './message';
 
 export function MessageText({ message, playable, fetching, autoplay = false }) {
 	const ref = React.useRef(null);

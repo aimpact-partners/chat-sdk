@@ -4,7 +4,7 @@ import { MessageItemContainer } from './message';
 import { Empty } from 'pragmate-ui/empty';
 import { ChatMessagesContext } from './context';
 
-export /*bundle */ function Messages({ chat, player, messages, texts, current, systemIcon, users }) {
+export /*bundle */ function Messages({ chat, player, messages, texts, current, systemIcon }) {
 	const [currentMessage, setCurrentMessage] = React.useState(current);
 	1;
 	const totalMessages = messages.length;

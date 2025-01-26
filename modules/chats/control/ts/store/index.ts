@@ -1,5 +1,6 @@
 import { ReactiveModel } from '@aimpact/reactive/model';
 import { Chat, Messages } from '@aimpact/chat-sdk/core';
+
 import { AppWrapper } from '@aimpact/chat-sdk/wrapper';
 import { AudioManager } from './audio';
 
@@ -146,6 +147,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		}
 
 		const language = chat.language?.default ?? AppWrapper.language;
+
 		this.audioManager.player.set({ language });
 
 		/* usar propiedad role para identificar owner del mensaje*/

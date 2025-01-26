@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Playable } from '@aimpact/chat-sdk/widgets/playable';
 import { Voice, VoiceLab } from '@aimpact/chat-sdk/voice';
 const text = `
-# Hola como te va ? 
+# Hola como te va ?
 
-## pensamientos 
+## pensamientos
 
 yo pensaba que esto era una prueba pero no lo es`;
 
@@ -29,7 +29,7 @@ function View() {
 			<h1>Playable component</h1>
 			{/* <Playable content={text2} id='id' player={voice} playable={playable} onClickWord={onClickWord} /> */}
 			<h2>Content with markdown</h2>
-			<Playable content={markdowntext} id='id2' player={voice} playable={playable} onClickWord={onClickWord} />
+			<Playable content={markdowntext} id="id2" player={voice} playable={playable} onClickWord={onClickWord} />
 		</div>
 	);
 }

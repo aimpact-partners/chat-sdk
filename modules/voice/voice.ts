@@ -1,7 +1,13 @@
 import { Events } from '@beyond-js/kernel/core';
 import { ReactiveModel } from '@aimpact/reactive/model';
 import { languages } from '@beyond-js/kernel/core';
-export /*bundle*/ class Voice extends ReactiveModel<Voice> {
+
+export interface IVoice {
+	language: any;
+	lang: any;
+	rate: any;
+}
+export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 	#speaking = false;
 	get speaking() {
 		return this.#speaking;
@@ -126,7 +132,7 @@ export /*bundle*/ class Voice extends ReactiveModel<Voice> {
 		if (text) this.#text = text;
 
 		this.#id = id;
-		globalThis.cordova ? this._mobile() : this._web();
+		this._web();
 	}
 
 	stop() {

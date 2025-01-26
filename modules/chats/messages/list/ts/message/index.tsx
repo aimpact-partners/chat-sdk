@@ -17,8 +17,9 @@ export function MessageItemContainer({ message }) {
 		<div className={cls} data-id={message.id}>
 			<ProfileIcon role={message.role} />
 			<section className="message__content">
-				<SystemActions actions={actions} message={message} />
-				<Message message={message} fetching={fetching} />
+				<SystemActions actions={actions} />
+
+				<Message message={message} />
 				<section className="message__actions">
 					<MessageActions
 						play={!message.audio}

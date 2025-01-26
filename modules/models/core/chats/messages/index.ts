@@ -2,7 +2,7 @@
 import { ReactiveModel } from '@aimpact/reactive/model';
 import { Message } from './item';
 
-export class Messages extends ReactiveModel<Messages> {
+export /*bundle*/ class Messages extends ReactiveModel<Messages> {
 	item = Message;
 
 	#items: Message[] = [];

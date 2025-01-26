@@ -10,7 +10,7 @@ import { IPlayableItemProps } from './interfaces/playable-props';
  *
  */
 export const PlayableItem = function ({ block, text, id, index, playable, player, onClickWord }: IPlayableItemProps) {
-	const marked = useMarked();
+	const marked = useMarked(text);
 	const onClick = event => {
 		event.preventDefault();
 		event.stopPropagation();
@@ -52,7 +52,7 @@ export const PlayableItem = function ({ block, text, id, index, playable, player
 		});
 	}
 
-	const markedText = marked(block.content);
+	const markedText = marked.output;
 	//@ts-ignore
 	const content = markedText.split(' ').map(wrapTextWithSpan).join(' ');
 

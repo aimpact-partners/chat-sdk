@@ -1,6 +1,5 @@
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { ReactiveModel } from '@aimpact/reactive/model';
-import { IRecorderSpecs } from './interface';
 
 export /*bundle */
 
@@ -167,7 +166,7 @@ class Recorder extends ReactiveModel<Recorder> {
 
 		return this.#initPromise;
 	}
-	record(specs: IRecorderSpecs = { analyser: true }) {
+	record(specs = { analyser: true }) {
 		try {
 			if (this.#recordingPromise) return this.#recordingPromise;
 			this.#recordingPromise = new PendingPromise<void>();

@@ -42,7 +42,6 @@ export /*bundle*/ function Chat(): JSX.Element {
 					chat={store.chat}
 					player={store.audioManager.player}
 					current={store.currentMessage}
-					store={store}
 					systemIcon={systemIcon}
 					messages={store?.messages ?? []}
 					texts={texts}
