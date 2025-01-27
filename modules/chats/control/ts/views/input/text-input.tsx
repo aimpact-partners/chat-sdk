@@ -8,7 +8,9 @@ export function TextInput({ setFetching, setText, handleSend, fetching, text, di
 	React.useEffect(() => {
 		const target = textAreaRef.current;
 		target.style.height = 'auto';
-		target.style.height = text.length == 1 ? 'auto' : target.scrollHeight + 'px';
+		target.style.height =
+			text.length == 1 ? 'auto' : (target.scrollHeight === 0 ? '16' : target.scrollHeight) + 'px';
+
 		if (['undefined', undefined].includes(text.replaceAll('\n', ''))) return;
 	}, [text]);
 

@@ -1,6 +1,7 @@
 .messages__list {
 	padding: 1rem 0;
-	display: block;
+	display: flex;
+	flex-direction: column;
 	overflow-y: auto;
 	height: 100%;
 	max-width: 100%;

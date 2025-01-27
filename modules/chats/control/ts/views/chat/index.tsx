@@ -10,7 +10,7 @@ export /*bundle*/ function Chat(): JSX.Element {
 	const { store, texts, systemIcon, empty } = useChatContext();
 	const { messages } = store;
 	const [, setMessages] = React.useState<number>(messages?.length ?? [].length);
-	let cls = `chat-control__container${reader ? ' reader__container' : ''}`;
+	let cls = `chat-control__container${reader ? 'chat-control__container  chat-control__container--reader' : ''}`;
 	const onNewMessage = () => {
 		setMessages(store.messages.length);
 
@@ -25,6 +25,7 @@ export /*bundle*/ function Chat(): JSX.Element {
 			separator.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
 		}, 100);
 	}, []);
+
 	useBinder([store.chat], onNewMessage, 'new.message');
 
 	let clsContent = `chat__content`;
@@ -32,7 +33,12 @@ export /*bundle*/ function Chat(): JSX.Element {
 	if (!store.messages.length) {
 		const Control = empty ? empty : <>No hay contenido</>;
 		//@ts-ignore
-		return <Control />;
+		return (
+			<div className={cls}>
+				{/*@ts-ignore*/}
+				<Control />
+			</div>
+		);
 	}
 
 	return (

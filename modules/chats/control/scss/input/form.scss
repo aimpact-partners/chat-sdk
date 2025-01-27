@@ -3,6 +3,8 @@
 	// --border-radius-sm: 2.5rem;
 	display: flex;
 	position: relative;
+	gap: 0.5rem;
+	min-height: 53px;
 	align-items: center;
 	max-height: 200px;
 	width: calc(100%);
@@ -38,6 +40,7 @@
 		background: transparent;
 		outline: none;
 		width: 100%;
+		height: 100%;
 		color: var(--text-color);
 		line-height: 1;
 		font-size: 1rem;
