@@ -6,6 +6,7 @@ export /*bundle*/ interface IAgentsContainerProps {
 	icon: string;
 	autoplay: boolean;
 	empty: React.ComponentType;
+	skeleton: React.ComponentType;
 	player: any;
 	attributes: any;
 }

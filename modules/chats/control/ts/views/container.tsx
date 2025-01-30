@@ -7,14 +7,18 @@ export /*bundle */ function AgentsChatContainer({
 	children,
 	icon,
 	autoplay,
+	skeleton,
 	empty,
 	player,
+
 	...props
 }: Partial<IAgentsContainerProps>) {
 	const [scrollPosition, setScrollPosition] = React.useState('top');
 	const { ready, store } = useManager(props.id);
 	const obj = store ? store : ({} as StoreManager);
 
+	const SkeletonControl = skeleton;
+	if (!ready && skeleton) return <SkeletonControl />;
 	if (!ready) return null;
 	const { messages, texts } = obj;
 	const contextValue = {
@@ -30,6 +34,7 @@ export /*bundle */ function AgentsChatContainer({
 		autoplay,
 		systemIcon: icon,
 		empty,
+		skeleton,
 		messages,
 		player,
 		attributes: props.attributes

@@ -16,6 +16,7 @@ interface IChatContext {
 	scrollPosition: string;
 	systemIcon: string;
 	ready: boolean;
+	skeleton: React.ElementType;
 	empty: React.ElementType;
 }
 export /*bundle */ const ChatContext = React.createContext({} as Partial<IChatContext>);
