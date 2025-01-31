@@ -59,9 +59,9 @@ export /*bundle*/ const AgentsChatInput = ({
 		<InputContext.Provider value={contextValue}>
 			<Form onSubmit={onSubmit} {...controlAttrs}>
 				<div {...containerAttrs}>
-					<div>
+					{/* <div>
 						<AppIconButton disabled className="chat-input__icon" icon="attachFile" />
-					</div>
+					</div> */}
 					<TextInput
 						text={text}
 						setFetching={setFetching}

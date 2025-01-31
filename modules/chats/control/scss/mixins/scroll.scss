@@ -1,0 +1,19 @@
+@mixin set-scroll() {
+	// Webkit browsers (Chrome, Edge, Safari)
+	&::-webkit-scrollbar {
+		width: 10px; // Ancho del scroll vertical
+		height: 10px; // Altura del scroll horizontal
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: var(--outline);
+		border-radius: 5px; // Bordes redondeados
+		border: 2px solid transparent; // Espacio entre la barra y el track
+		background-clip: padding-box; // Mejora visual
+	}
+
+	&::-webkit-scrollbar-track {
+		background-color: var(--default-border);
+		border-radius: 5px;
+	}
+}

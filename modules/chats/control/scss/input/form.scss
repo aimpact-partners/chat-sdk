@@ -1,3 +1,5 @@
+@use '../mixins/scroll';
+
 .chat-input-container {
 	--on-surface: var(--text-color);
 	// --border-radius-sm: 2.5rem;
@@ -13,7 +15,8 @@
 	border: 1px solid var(--chat-input-border-color);
 	border-radius: var(--chat-input-border-radius, var(--border-radius-sm));
 	align-items: stretch;
-
+	overflow-y: auto;
+	@include scroll.set-scroll();
 	padding: 0.5rem 1rem;
 
 	&.is-disabled {
