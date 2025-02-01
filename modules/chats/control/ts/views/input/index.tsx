@@ -8,6 +8,7 @@ import { useChatContext } from '../context';
 import { AppIconButton } from '@aimpact/chat-sdk/components/icons';
 import { IAgentsInputProps } from './types/agents-input';
 import { useInputForm } from './hooks/use-input-form';
+import { IconButton } from 'pragmate-ui/icons';
 
 export /*bundle*/ const AgentsChatInput = ({
 	isWaiting = false,
@@ -70,8 +71,10 @@ export /*bundle*/ const AgentsChatInput = ({
 						handleSend={onSubmit}
 						disabled={isDisabled}
 					/>
-
-					<InputActionButton buttonIsDisabled={buttonIsDisabled} />
+					<div className="input-chat__actions">
+						<IconButton icon="speech" />
+						<InputActionButton buttonIsDisabled={buttonIsDisabled} />
+					</div>
 				</div>
 			</Form>
 		</InputContext.Provider>

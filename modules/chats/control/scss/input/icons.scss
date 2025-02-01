@@ -1,4 +1,3 @@
-
 .chat-input-container {
 	.pui-icon-button.chat-input__icon {
 		svg.pui-icon {
@@ -9,5 +8,21 @@
 	.recording-button__container {
 		height: 40px;
 		width: 40px;
+	}
+}
+.input-chat__actions {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	.pui-icon-button,
+	.pui-button {
+		border: 1px solid red;
+		border-radius: 50%;
+		height: 35px;
+		width: 35px;
+	}
+
+	.pui-button {
+		padding-inline: 0.5rem;
 	}
 }

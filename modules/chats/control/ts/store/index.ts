@@ -3,7 +3,8 @@ import { Chat, Messages } from '@aimpact/chat-sdk/core';
 
 import { AppWrapper } from '@aimpact/chat-sdk/wrapper';
 import { AudioManager } from './audio';
-
+// import { ClientSession } from '@aimpact/agents-api/realtime/client';
+// import { Conversation } from '@aimpact/agents-api/realtime/client/conversation';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { CurrentTexts } from '@beyond-js/kernel/texts';
 import { module } from 'beyond_context';

@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"module": "es2020",
 		"target": "es2018",
-
+		"lib": ["ES2021", "DOM"],
 		"experimentalDecorators": true,
 		"allowSyntheticDefaultImports": true,
 		"moduleResolution": "Node",
