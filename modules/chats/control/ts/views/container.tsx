@@ -3,6 +3,7 @@ import { useManager } from './use-manager';
 import { ChatContext } from './context';
 import { StoreManager } from '../store';
 import { IAgentsContainerProps } from './types';
+import { RealtimePanel } from './realtime/container';
 export /*bundle */ function AgentsChatContainer({
 	children,
 	icon,
@@ -14,7 +15,8 @@ export /*bundle */ function AgentsChatContainer({
 	...props
 }: Partial<IAgentsContainerProps>) {
 	const [scrollPosition, setScrollPosition] = React.useState('top');
-	const { ready, store } = useManager(props.id);
+	const [showRealtime, setShowRealtime] = React.useState(false);
+	const { ready, store } = useManager(props.id, props.realtime);
 	const obj = store ? store : ({} as StoreManager);
 
 	const SkeletonControl = skeleton;
@@ -34,11 +36,17 @@ export /*bundle */ function AgentsChatContainer({
 		autoplay,
 		systemIcon: icon,
 		empty,
+		setShowRealtime,
 		skeleton,
 		messages,
 		player,
 		attributes: props.attributes
 	};
 
-	return <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>;
+	return (
+		<ChatContext.Provider value={contextValue}>
+			{children}
+			<RealtimePanel isVisible={showRealtime} />
+		</ChatContext.Provider>
+	);
 }

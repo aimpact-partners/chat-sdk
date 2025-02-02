@@ -3,12 +3,11 @@ import { Chat, Messages } from '@aimpact/chat-sdk/core';
 
 import { AppWrapper } from '@aimpact/chat-sdk/wrapper';
 import { AudioManager } from './audio';
-// import { ClientSession } from '@aimpact/agents-api/realtime/client';
-// import { Conversation } from '@aimpact/agents-api/realtime/client/conversation';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { CurrentTexts } from '@beyond-js/kernel/texts';
 import { module } from 'beyond_context';
 import { IStore } from './types';
+import { RealtimeStore } from './realtime';
 
 export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	declare waitingResponse: boolean;
@@ -104,16 +103,21 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	#id: string;
 
 	get ready() {
-		return super.ready && this.#texts.ready;
+		return super.ready && this.#texts.ready && this.#realtime?.ready;
 	}
 
-	constructor(id) {
+	#realtime: RealtimeStore;
+	get realtime() {
+		return this.#realtime;
+	}
+	constructor(id, realtime = false) {
 		super();
 		this.#texts.on('change', this.triggerEvent);
 		this.#id = id;
 		this.reactiveProps(['waitingResponse', 'autoplay']);
 		this.autoplay = true;
-
+		this.#realtime = new RealtimeStore(realtime);
+		this.#realtime.on('change', this.triggerEvent);
 		this.load(this.#id);
 	}
 
@@ -133,10 +137,12 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		this.fetching = true;
 
 		const chat = new Chat({ id });
+		this.#realtime;
 		this.#chat = chat;
 		globalThis.chat = chat;
 		this.#messages = chat.messages;
 		await chat.loadAll({ id });
+		this.#realtime.chatId = id;
 		globalThis.chat = chat;
 		AppWrapper.currentChat = chat;
 

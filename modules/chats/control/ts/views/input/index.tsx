@@ -18,7 +18,7 @@ export /*bundle*/ const AgentsChatInput = ({
 }: Partial<IAgentsInputProps>) => {
 	const [waiting, setWaiting] = React.useState<boolean>(false);
 
-	const { store, recorder } = useChatContext();
+	const { store, recorder, setShowRealtime } = useChatContext();
 	const { text, setText, onSubmit, fetching, recording, setRecording, setFetching } = useInputForm();
 
 	useBinder([store], () => {
@@ -56,6 +56,10 @@ export /*bundle*/ const AgentsChatInput = ({
 
 	if (['', undefined, null].includes(text.replaceAll('\n', '')) || !text.trim().length) attrs.disabled = true;
 
+	const onClickSpeech = () => {
+		setShowRealtime(true);
+		store.realtime.client.connect();
+	};
 	return (
 		<InputContext.Provider value={contextValue}>
 			<Form onSubmit={onSubmit} {...controlAttrs}>
@@ -72,7 +76,7 @@ export /*bundle*/ const AgentsChatInput = ({
 						disabled={isDisabled}
 					/>
 					<div className="input-chat__actions">
-						<IconButton icon="speech" />
+						<IconButton icon="speech" onClick={onClickSpeech} />
 						<InputActionButton buttonIsDisabled={buttonIsDisabled} />
 					</div>
 				</div>

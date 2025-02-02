@@ -1,0 +1,39 @@
+.realtime-panel {
+	position: fixed;
+	z-index: 100;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: var(--primary-dark);
+
+	display: grid;
+	place-items: center;
+
+	.realtime-actions__container {
+		display: flex;
+
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+
+		.realtime-actions__title {
+			font-size: 1.5rem;
+			color: var(--white);
+		}
+
+		.realtime-actions__button {
+			padding: 0.5rem 1rem;
+			border-radius: 0.5rem;
+			background: var(--primary);
+			color: var(--white);
+			font-size: 1rem;
+			cursor: pointer;
+			transition: background 0.3s;
+
+			&:hover {
+				background: var(--primary-light);
+			}
+		}
+	}
+}
