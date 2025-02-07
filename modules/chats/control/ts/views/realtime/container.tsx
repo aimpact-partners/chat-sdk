@@ -4,18 +4,19 @@ import { MicIcon, PhoneIcon, SpeakerIcon } from './icons';
 import { useChatContext } from '../context';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 import { IconButton } from 'pragmate-ui/icons';
+import { Image } from 'pragmate-ui/image';
+import { RealtimeStatus } from './status';
 
 export function RealtimePanel({ isVisible }: { isVisible: boolean }) {
-	const { store } = useChatContext();
-	const { status, valid } = store.realtime.client;
-	const active = ['connecting', 'open', 'created'].includes(status);
+	const { store, setShowRealtime } = useChatContext();
+	const { valid } = store.realtime.client;
+
 	const [updated, setUpdated] = React.useState({});
 	useBinder([store.realtime], () => {
 		setUpdated({});
 	});
-	const mins = Math.floor(store.realtime.duration / 60);
-	const secs = store.realtime.duration % 60;
-	const timer = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+	const callStatus = store.realtime.client.status;
 	const speakerIcon = true ? 'call' : 'callEnd';
 
 	if (!valid) {
@@ -36,6 +37,15 @@ export function RealtimePanel({ isVisible }: { isVisible: boolean }) {
 		);
 	}
 
+	const onMicClick = () => {
+		store.realtime.onmic();
+	};
+
+	const hangup = () => {
+		store.realtime.call();
+		setShowRealtime(false);
+	};
+	const micIcon = store.realtime.muted ? 'micOff' : 'mic';
 	return (
 		<AnimatePresence>
 			{isVisible && (
@@ -47,27 +57,14 @@ export function RealtimePanel({ isVisible }: { isVisible: boolean }) {
 					transition={{ duration: 0.5, ease: 'easeOut' }}
 				>
 					{/* Your content here */}
+					<Image className="app-logo" src="/assets/rvd/logo.png" />
+					<RealtimeStatus />
 
 					<div className="realtime-actions__container">
-						<button
-							onClick={() => {
-								store.realtime.onmic();
-							}}
-						>
-							<MicIcon isMuted={store.realtime.muted} />
-						</button>
-						<IconButton icon={speakerIcon} />
+						<IconButton disabled={callStatus !== 'created'} icon={micIcon} onClick={onMicClick} />
+						<IconButton className="call-icon" icon={speakerIcon} onClick={hangup} />
 						{/* <PhoneIcon isOff={true} /> */}
-						<SpeakerIcon isOff={true} />
-					</div>
-					<div className="text-center mb-8">
-						<p className="text-gray-500">
-							{status === 'closed' && 'Ready to call'}
-							{status === 'connecting' && 'Calling.'}
-							{status === 'open' && 'Calling...'}
-							{status === 'closing' && 'Hunging up'}
-							{status === 'created' && timer}
-						</p>
+						{/* <SpeakerIcon isOff={true} /> */}
 					</div>
 				</motion.div>
 			)}

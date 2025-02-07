@@ -10,9 +10,14 @@
 	display: grid;
 	place-items: center;
 
+	.app-logo {
+		max-width: 120px;
+	}
+	.realtime__status {
+		color: var(--on-primary);
+	}
 	.realtime-actions__container {
 		display: flex;
-
 		align-items: center;
 		justify-content: center;
 		gap: 1rem;
@@ -22,17 +27,19 @@
 			color: var(--white);
 		}
 
-		.realtime-actions__button {
-			padding: 0.5rem 1rem;
-			border-radius: 0.5rem;
-			background: var(--primary);
-			color: var(--white);
-			font-size: 1rem;
-			cursor: pointer;
-			transition: background 0.3s;
-
-			&:hover {
-				background: var(--primary-light);
+		.pui-icon-button {
+			height: 4rem;
+			width: 4rem;
+			border-radius: 50%;
+			.pui-icon {
+				height: 2rem;
+				width: 2rem;
+			}
+			&.call-icon {
+				background: var(--error);
+				.pui-icon {
+					fill: var(--on-primary);
+				}
 			}
 		}
 	}

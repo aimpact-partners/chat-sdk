@@ -22,7 +22,6 @@ export /*bundle*/ const AgentsChatInput = ({
 	const { text, setText, onSubmit, fetching, recording, setRecording, setFetching } = useInputForm();
 
 	useBinder([store], () => {
-		console.log(2);
 		setWaiting(store.waitingResponse);
 	});
 
@@ -58,7 +57,7 @@ export /*bundle*/ const AgentsChatInput = ({
 
 	const onClickSpeech = () => {
 		setShowRealtime(true);
-		store.realtime.client.connect();
+		store.realtime.call();
 	};
 	return (
 		<InputContext.Provider value={contextValue}>

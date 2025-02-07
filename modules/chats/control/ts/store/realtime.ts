@@ -80,6 +80,7 @@ export class RealtimeStore extends ReactiveModel<IRealtimeStore> implements IWid
 			return;
 		}
 		this.#client.update({ conversation: { id: this.chatId }, token });
+		this.onmic();
 		this.#interval = setInterval(() => this.duration++, 1000);
 	};
 
@@ -118,7 +119,7 @@ export class RealtimeStore extends ReactiveModel<IRealtimeStore> implements IWid
 	onmic = () => {
 		this.muted = !this.muted;
 		// values.muted = muted;
-		console.log(2, this.muted, this.#client.recorder);
+		// console.log(2, this.muted, this.#client.recorder);
 		this.muted ? this.#client.recorder.stop() : this.#client.recorder.record();
 	};
 }

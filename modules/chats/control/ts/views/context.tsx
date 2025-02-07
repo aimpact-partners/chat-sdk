@@ -13,6 +13,8 @@ interface IChatContext {
 	texts: any;
 	attributes: Map<string, any>;
 	setScrollPosition: (position: string) => void;
+	setShowRealtime: (show: boolean) => void;
+	showRealtime: boolean;
 	scrollPosition: string;
 	systemIcon: string;
 	ready: boolean;
