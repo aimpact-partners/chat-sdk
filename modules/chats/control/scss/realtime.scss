@@ -1,12 +1,12 @@
 .realtime-panel {
-	position: fixed;
+	position: absolute;
 	z-index: 100;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
 	background: var(--primary-dark);
-
+	border-radius: var(--border-radius-base);
 	display: grid;
 	place-items: center;
 
