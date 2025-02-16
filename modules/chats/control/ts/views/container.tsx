@@ -36,6 +36,7 @@ export /*bundle */ function AgentsChatContainer({
 		autoplay,
 		systemIcon: icon,
 		empty,
+		realtime: props.realtime,
 		setShowRealtime,
 		skeleton,
 		messages,

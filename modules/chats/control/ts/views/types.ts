@@ -9,4 +9,5 @@ export /*bundle*/ interface IAgentsContainerProps {
 	skeleton: React.ComponentType;
 	player: any;
 	attributes: any;
+	realtime: boolean;
 }

@@ -18,7 +18,7 @@ export /*bundle*/ const AgentsChatInput = ({
 }: Partial<IAgentsInputProps>) => {
 	const [waiting, setWaiting] = React.useState<boolean>(false);
 
-	const { store, recorder, setShowRealtime } = useChatContext();
+	const { store, recorder, setShowRealtime, realtime } = useChatContext();
 	const { text, setText, onSubmit, fetching, recording, setRecording, setFetching } = useInputForm();
 
 	useBinder([store], () => {
@@ -75,7 +75,7 @@ export /*bundle*/ const AgentsChatInput = ({
 						disabled={isDisabled}
 					/>
 					<div className="input-chat__actions">
-						<IconButton icon="speech" onClick={onClickSpeech} />
+						{realtime && <IconButton icon="speech" onClick={onClickSpeech} />}
 						<InputActionButton buttonIsDisabled={buttonIsDisabled} />
 					</div>
 				</div>

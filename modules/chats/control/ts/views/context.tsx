@@ -18,6 +18,7 @@ interface IChatContext {
 	scrollPosition: string;
 	systemIcon: string;
 	ready: boolean;
+	realtime: boolean;
 	skeleton: React.ElementType;
 	empty: React.ElementType;
 }
