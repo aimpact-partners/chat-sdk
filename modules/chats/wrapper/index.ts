@@ -26,9 +26,10 @@ export /*bundle*/ class Wrapper extends ReactiveModel<IWrapper> {
 		this.triggerEvent('app.settings.change');
 	}
 
-	#audioSpeed: number = localStorage.getItem('aimpact.audio.speed')
-		? parseInt(localStorage.getItem('aimpact.audio.speed'))
-		: 1;
+	#audioSpeed: number =
+		localStorage.getItem('aimpact.audio.speed') && !isNaN(parseInt(localStorage.getItem('aimpact.audio.speed')))
+			? parseInt(localStorage.getItem('aimpact.audio.speed'))
+			: 1;
 	get audioSpeed() {
 		return this.#audioSpeed;
 	}

@@ -12,7 +12,7 @@ export function MessageItemContainer({ message }) {
 	const messageTokens = message.role === 'assistant' ? message.usage?.totalTokens : null;
 	const ACTIONS = ['transcription', 'fetching-tool-data', 'kb-processed-response', 'function', 'kb-response'];
 	const [, playableContent, actions] = parseText(message.id, message.content, ACTIONS);
-	console.log(0.1, message);
+	
 	return (
 		<div className={cls} data-id={message.id}>
 			<ProfileIcon role={message.role} />

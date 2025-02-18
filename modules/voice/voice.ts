@@ -1,4 +1,4 @@
-import { Events } from '@beyond-js/kernel/core';
+import { Events, languages } from '@beyond-js/kernel/core';
 import { ReactiveModel } from '@aimpact/reactive/model';
 import { languages } from '@beyond-js/kernel/core';
 
@@ -68,6 +68,9 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 		es: 'es-MX',
 		pr: 'pt-BR'
 	};
+	get languages() {
+		return this.#languages;
+	}
 	constructor({ language, rate }: { language?: string; rate?: number } = { rate: 1.25 }) {
 		super({
 			lang: language,
@@ -76,7 +79,7 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 		if (!language) language = languages.current;
 		this.reactiveProps(['positionToCut', 'textId', 'playing']);
 		this.positionToCut = 0;
-
+		globalThis._voice = this;
 		this.lang = language;
 		this.rate = rate;
 	}
