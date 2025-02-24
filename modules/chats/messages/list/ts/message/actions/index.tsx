@@ -6,11 +6,15 @@ import { useChatMessagesContext } from '../../context';
 export function MessageActions({ text, message, messageTokens, play = true }) {
 	const { player, currentMessage, setCurrentMessage } = useChatMessagesContext();
 
+	const [content, setContent] = React.useState(message.content ?? '');
+
 	const [action, setAction] = React.useState('stop');
 	const [processing, setProcessing] = React.useState(false);
 
 	useBinder([player], () => setProcessing(player.speaking));
-
+	useBinder([message], () => {
+		setContent(message.content ?? '');
+	});
 	const onChange = () => {
 		setProcessing(false);
 		setAction('');
@@ -20,10 +24,12 @@ export function MessageActions({ text, message, messageTokens, play = true }) {
 	const onPlay = async event => {
 		event.stopPropagation();
 
-		setCurrentMessage(message);
+		setAction('play');
+		setCurrentMessage(content);
 		player.positionToCut = 0;
 		player.textId = message.id;
-		const parsedText = text.replaceAll(/[-\\*_#]+/g, '').trim();
+		const parsedText = content.replaceAll(/[-\\*_#]+/g, '').trim();
+
 		await player.play(parsedText, message.id);
 	};
 	const onPause = async ({ listen }) => {
@@ -44,11 +50,11 @@ export function MessageActions({ text, message, messageTokens, play = true }) {
 
 	return (
 		<div>
-			<div className='audio__actions'>
-				<IconButton onClick={copyMessage} icon='copy' />
-				{play && <IconButton onClick={onClick} data-listen='api' icon={icon} />}
+			<div className="audio__actions">
+				<IconButton onClick={copyMessage} icon="copy" />
+				{play && <IconButton onClick={onClick} data-listen="api" icon={icon} />}
 			</div>
-			{messageTokens && <div className='tokens overline'>{messageTokens} TOKENS</div>}
+			{messageTokens && <div className="tokens overline">{messageTokens} TOKENS</div>}
 		</div>
 	);
 }

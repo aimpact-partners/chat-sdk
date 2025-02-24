@@ -40,7 +40,7 @@ export const Player = () => {
 			setFetching(true);
 			if (autoTranscribe) return transcribe();
 			const audio = await recorder.stop();
-			console.log('audio', audio);
+
 			store.sendAudio(audio);
 			setRecording(false);
 			setFetching(false);

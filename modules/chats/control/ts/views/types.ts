@@ -5,6 +5,7 @@ export /*bundle*/ interface IAgentsContainerProps {
 	children: React.ReactNode;
 	icon: string;
 	autoplay: boolean;
+	language: string;
 	empty: React.ComponentType;
 	skeleton: React.ComponentType;
 	player: any;

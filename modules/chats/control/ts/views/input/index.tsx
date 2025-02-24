@@ -42,6 +42,10 @@ export /*bundle*/ const AgentsChatInput = ({
 		disabled: isDisabled
 	};
 
+	React.useEffect(()=>{
+		
+	},[fetching]);
+
 	const attrs = { disabled: disabled || store.disabled };
 	const buttonIsDisabled = attrs.disabled || store.waitingResponse || recording;
 	let cls = `chat-input-container ${isFetching ? 'is-fetching' : ''} ${isDisabled ? 'is-disabled' : ''}`;

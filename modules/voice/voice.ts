@@ -76,8 +76,12 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 			lang: language,
 			rate: rate
 		});
-		if (!language) language = languages.current;
+		const LANGS = {
+			en: 'en-US',
+			es: 'es-MX'
+		};
 
+		// if (!language) language = LANGS[languages.current];
 		this.reactiveProps(['positionToCut', 'textId', 'playing']);
 		this.positionToCut = 0;
 		globalThis._voice = this;
@@ -101,19 +105,20 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 		const utterance = new SpeechSynthesisUtterance(text);
 
 		utterance.rate = this.rate;
+		utterance.lang = this.lang;
 
 		const selectedVoice = speechSynthesis
 			.getVoices()
-			.find(voice => voice.name.includes('Google español') && voice.lang === 'es-ES');
+			.find(voice => voice.name.includes('Google') && voice.lang.startsWith(this.lang));
+
+		console.log(20, selectedVoice, this.lang, this.#languages[this.lang], utterance.lang);
 		if (selectedVoice) {
 			utterance.voice = selectedVoice;
-			utterance.lang = 'es-ES';
+			utterance.lang = selectedVoice.lang;
 		} else {
 			utterance.lang = this.#languages[this.lang];
 		}
 
-		utterance.rate = 1.0;
-		speechSynthesis.speak(utterance);
 		utterance.onstart = () => {
 			this.#speaking = true;
 			this.trigger('change');

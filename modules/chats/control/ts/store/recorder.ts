@@ -92,7 +92,7 @@ class Recorder extends ReactiveModel<Recorder> {
 	}
 
 	getSpeechRecognition() {
-		console.log('getSpeechRecognition');
+		// console.log('getSpeechRecognition');
 		//@ts-ignore
 		this.#speechRecognition = new webkitSpeechRecognition();
 		this.#speechRecognition.lang = 'es-ES';
@@ -152,7 +152,6 @@ class Recorder extends ReactiveModel<Recorder> {
 		globalThis?.navigator.mediaDevices
 			.getUserMedia({ audio: true })
 			.then(stream => {
-				console.log('stream', stream);
 				this.#startRecording(stream, specs);
 			})
 			.catch(error => {
@@ -204,7 +203,7 @@ class Recorder extends ReactiveModel<Recorder> {
 			.getTracks() //get all tracks from the stream
 			.forEach((track) /*of type MediaStreamTrack*/ => {
 				track.stop();
-				console.log('track stopped', track.kind, 'aja');
+				// console.log('track stopped', track.kind, 'aja');
 			}); //stop each one
 
 		// Close the AudioContext if it exists
@@ -215,7 +214,6 @@ class Recorder extends ReactiveModel<Recorder> {
 			this.#audioContext
 				.close()
 				.then(() => {
-					console.log('AudioContext closed');
 					this.#audioContext = undefined;
 				})
 				.catch(error => {

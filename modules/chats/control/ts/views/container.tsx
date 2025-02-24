@@ -9,6 +9,7 @@ export /*bundle */ function AgentsChatContainer({
 	icon,
 	autoplay,
 	skeleton,
+	language,
 	empty,
 	player,
 
@@ -16,7 +17,8 @@ export /*bundle */ function AgentsChatContainer({
 }: Partial<IAgentsContainerProps>) {
 	const [scrollPosition, setScrollPosition] = React.useState('top');
 	const [showRealtime, setShowRealtime] = React.useState(false);
-	const { ready, store } = useManager(props.id, props.realtime);
+
+	const { ready, store } = useManager(props.id, language, props.realtime);
 	const obj = store ? store : ({} as StoreManager);
 
 	const SkeletonControl = skeleton;

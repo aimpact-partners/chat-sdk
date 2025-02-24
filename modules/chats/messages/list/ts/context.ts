@@ -6,6 +6,7 @@ interface IChatMessagesContext {
 	messages: any[];
 	texts: Record<string, any>;
 	currentMessage: any;
+	setUpdateScroll: (value: number) => void;
 	setCurrentMessage: (message: any) => void;
 	systemIcon: string;
 }

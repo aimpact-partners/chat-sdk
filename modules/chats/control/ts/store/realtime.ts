@@ -73,7 +73,6 @@ export class RealtimeStore extends ReactiveModel<IRealtimeStore> implements IWid
 		this.#client.recorder.device = device;
 	}
 	initiate = async () => {
-		console.log('client.update... send: conversation and firebaseToken');
 		const token = await sessionWrapper.user.firebaseToken;
 		if (!this.chatId) {
 			console.error('Chat id is not set');

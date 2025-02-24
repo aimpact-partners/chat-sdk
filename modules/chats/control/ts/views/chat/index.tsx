@@ -10,6 +10,7 @@ export /*bundle*/ function Chat(): JSX.Element {
 	const { store, texts, systemIcon, empty } = useChatContext();
 	const { messages } = store;
 	const [, setMessages] = React.useState<number>(messages?.length ?? [].length);
+	const [updateScroll, setUpdateScroll] = React.useState(performance.now());
 	let cls = `chat-control__container${reader ? 'chat-control__container  chat-control__container--reader' : ''}`;
 	const onNewMessage = () => {
 		setMessages(store.messages.length);
@@ -24,9 +25,9 @@ export /*bundle*/ function Chat(): JSX.Element {
 		globalThis.setTimeout(() => {
 			separator.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
 		}, 100);
-	}, []);
+	}, [updateScroll]);
 
-	useBinder([store.chat], onNewMessage, 'new.message');
+	useBinder([store.chat], onNewMessage, ['new.message', 'response.finished']);
 
 	let clsContent = `chat__content`;
 
@@ -46,6 +47,7 @@ export /*bundle*/ function Chat(): JSX.Element {
 			<section className={clsContent}>
 				<Messages
 					chat={store.chat}
+					setUpdateScroll={setUpdateScroll}
 					player={store.audioManager.player}
 					current={store.currentMessage}
 					systemIcon={systemIcon}

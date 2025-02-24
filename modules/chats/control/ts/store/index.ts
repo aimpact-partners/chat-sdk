@@ -13,6 +13,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	declare waitingResponse: boolean;
 	declare autoplay: boolean;
 	declare fetching: boolean;
+	declare language: string;
 
 	#EXTENSIONS = ['chat-intro'];
 	#messages: Messages;
@@ -50,7 +51,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	get texts() {
 		return this.#texts?.value;
 	}
-	#audio: AudioManager = new AudioManager(this);
+	#audio: AudioManager;
 	get audioManager(): AudioManager {
 		return this.#audio;
 	}
@@ -110,12 +111,14 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	get realtime() {
 		return this.#realtime;
 	}
-	constructor(id, realtime = false) {
+	constructor(id, language, realtime = false) {
 		super();
 		this.#texts.on('change', this.triggerEvent);
 		this.#id = id;
-		this.reactiveProps(['waitingResponse', 'autoplay']);
+		this.reactiveProps(['waitingResponse', 'autoplay', 'language']);
 		this.autoplay = true;
+		this.language = language;
+		this.#audio = new AudioManager(this, language);
 		this.#realtime = new RealtimeStore(realtime);
 		this.#realtime.on('change', this.triggerEvent);
 		this.load(this.#id);
@@ -153,9 +156,13 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 			return;
 		}
 
-		const language = chat.language?.default ?? AppWrapper.language;
+		const language = this.language ?? AppWrapper.language;
 
-		this.audioManager.player.set({ language });
+		const languages = {
+			en: 'en-US',
+			es: 'es-MX'
+		};
+		this.audioManager.player.set({ language: languages[language] });
 
 		/* usar propiedad role para identificar owner del mensaje*/
 		// chat.on('change', () => this.triggerEvent('new.message'));

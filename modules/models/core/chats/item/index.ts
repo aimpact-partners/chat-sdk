@@ -92,7 +92,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				}
 				// const action = JSON.parse(this.#api.actions);
 			} catch (e) {
-				console.log('no ta listo', e);
+				console.error(e);
 			}
 		});
 	};

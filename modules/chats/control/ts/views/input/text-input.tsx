@@ -17,7 +17,7 @@ export function TextInput({ setFetching, setText, handleSend, fetching, text, di
 	useBinder(
 		[store.chat],
 		() => {
-			globalThis.setTimeout(() => textAreaRef.current.focus(), 0);
+			globalThis.setTimeout(() => textAreaRef.current.focus(), 200);
 		},
 		'response.finished'
 	);

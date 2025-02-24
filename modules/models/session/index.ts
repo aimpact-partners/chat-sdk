@@ -59,7 +59,6 @@ class SessionManager extends ReactiveModel<ISession> {
 			}
 			clear(['ailearn.home.tour']);
 			this.triggerEvent('logout');
-			console.log('limpiada');
 
 			return true;
 		} catch (e) {
