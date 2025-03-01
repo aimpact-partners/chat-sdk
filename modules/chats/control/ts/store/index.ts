@@ -111,7 +111,9 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	get realtime() {
 		return this.#realtime;
 	}
-	constructor(id, language, realtime = false) {
+
+	#model: Chat;
+	constructor({ id, language, realtime = false, model }) {
 		super();
 		this.#texts.on('change', this.triggerEvent);
 		this.#id = id;
@@ -121,9 +123,38 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		this.#audio = new AudioManager(this, language);
 		this.#realtime = new RealtimeStore(realtime);
 		this.#realtime.on('change', this.triggerEvent);
-		this.load(this.#id);
+		this.#model = model;
+		if (!model) {
+			this.load(this.#id);
+		} else {
+			this.processModel();
+		}
 	}
 
+	processModel() {
+		this.#chat = this.#model;
+		chat.on('change', this.triggerEvent);
+		this.#messages = this.#chat.messages;
+		this.#realtime.chatId = this.#model.id;
+		AppWrapper.currentChat = this.#model;
+
+		const language = this.language ?? AppWrapper.language;
+
+		const languages = {
+			en: 'en-US',
+			es: 'es-MX'
+		};
+		this.audioManager.player.set({ language: languages[language] });
+
+		/* usar propiedad role para identificar owner del mensaje*/
+		// chat.on('change', () => this.triggerEvent('new.message'));
+
+		this.fetching = false;
+		super.ready = true;
+		this.notFound = false;
+
+		this.trigger('change');
+	}
 	load = async (id: string) => {
 		if (!id) {
 			console.warn(`you're tring to load a chat without an id`);
@@ -140,6 +171,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		this.fetching = true;
 
 		const chat = new Chat({ id });
+		chat.on('change', this.triggerEvent);
 		this.#realtime;
 		this.#chat = chat;
 		globalThis.chat = chat;

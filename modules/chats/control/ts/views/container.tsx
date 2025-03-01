@@ -11,6 +11,7 @@ export /*bundle */ function AgentsChatContainer({
 	skeleton,
 	language,
 	empty,
+	model,
 	player,
 
 	...props
@@ -18,7 +19,12 @@ export /*bundle */ function AgentsChatContainer({
 	const [scrollPosition, setScrollPosition] = React.useState('top');
 	const [showRealtime, setShowRealtime] = React.useState(false);
 
-	const { ready, store } = useManager(props.id, language, props.realtime);
+	const { ready, store } = useManager({
+		id: props.id,
+		language,
+		realtime: props.realtime,
+		model
+	});
 	const obj = store ? store : ({} as StoreManager);
 
 	const SkeletonControl = skeleton;
