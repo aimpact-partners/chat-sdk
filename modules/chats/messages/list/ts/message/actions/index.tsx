@@ -5,9 +5,7 @@ import { toast } from 'pragmate-ui/toast';
 import { useChatMessagesContext } from '../../context';
 export function MessageActions({ text, message, messageTokens, play = true }) {
 	const { player, currentMessage, setCurrentMessage } = useChatMessagesContext();
-
 	const [content, setContent] = React.useState(message.content ?? '');
-
 	const [action, setAction] = React.useState('stop');
 	const [processing, setProcessing] = React.useState(false);
 
@@ -16,8 +14,10 @@ export function MessageActions({ text, message, messageTokens, play = true }) {
 		setContent(message.content ?? '');
 	});
 	const onChange = () => {
+		if (player.textId !== message.id) return;
+
 		setProcessing(false);
-		setAction('');
+		setAction('stop');
 	};
 	useBinder([player], onChange, 'on.finish');
 
@@ -45,8 +45,8 @@ export function MessageActions({ text, message, messageTokens, play = true }) {
 
 	const apply = currentMessage?.id === message?.id && processing;
 
-	const icon = apply || action === 'play' ? 'stop' : 'play';
-	const onClick = apply || action === 'play' ? onPause : onPlay;
+	const icon = action === 'play' ? 'stop' : 'play';
+	const onClick = action === 'play' ? onPause : onPlay;
 
 	return (
 		<div>

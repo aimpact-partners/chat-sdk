@@ -13,10 +13,10 @@ export /*bundle*/ const PermissionsModal = ({ show, onClose, onConfirm }) => {
 		<>
 			<AlertModal onClose={onClose} centered onConfirm={onConfirm}>
 				<div className="permissions__modal-container">
-					<div className="title-intro__modal-container">
-						<span className="intro__modal-text p2">{texts.permissions.intro}</span>
+					<header className="title-intro__modal-container">
 						<h3>{subtitle}</h3>
-					</div>
+						<span className="intro__modal-text p2">{texts.permissions.intro}</span>
+					</header>
 					<Icon className="mic__modal-icon lg my-10" icon="mic" />
 					<p className="description__modal-text">{description}</p>
 				</div>

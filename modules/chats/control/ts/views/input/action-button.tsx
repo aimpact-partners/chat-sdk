@@ -7,6 +7,7 @@ import { useInputContext } from './context';
 export function InputActionButton({ buttonIsDisabled }) {
 	const { onSubmit, text } = useInputContext();
 
+	
 	if (!!text.length) {
 		return (
 			<span className="input__icon  input__icon--right">
@@ -20,7 +21,7 @@ export function InputActionButton({ buttonIsDisabled }) {
 			</span>
 		);
 	}
-
+	
 	return (
 		<span className="input__icon  input__icon--right">
 			<RecordingButton />

@@ -1,6 +1,5 @@
-import { Events, languages } from '@beyond-js/kernel/core';
+import { Events, languages, PendingPromise } from '@beyond-js/kernel/core';
 import { ReactiveModel } from '@aimpact/reactive/model';
-import { languages } from '@beyond-js/kernel/core';
 
 export interface IVoice {
 	language: any;
@@ -95,7 +94,8 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 	// 	}
 	// 	if (rate) this.rate = rate;
 	// }
-	_web() {
+	#selectedVoice;
+	async _web() {
 		if (this.#speaking) {
 			speechSynthesis.cancel();
 			this.trigger('on.finish');
@@ -107,11 +107,37 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 		utterance.rate = this.rate;
 		utterance.lang = this.lang;
 
-		const selectedVoice = speechSynthesis
-			.getVoices()
-			.find(voice => voice.name.includes('Google') && voice.lang.startsWith(this.lang));
+		function getSelectedVoice(lang: string): SpeechSynthesisVoice | undefined {
+			return speechSynthesis
+				.getVoices()
+				.find(voice => voice.name.includes('Google') && voice.lang.startsWith(lang));
+		}
 
-		console.log(20, selectedVoice, this.lang, this.#languages[this.lang], utterance.lang);
+		let promise;
+		function initializeVoices(lang: string): Promise<any> {
+			if (promise) return promise;
+			promise = new PendingPromise();
+
+			if (speechSynthesis.getVoices().length > 0) {
+				// Si las voces ya están disponibles, selecciona la voz directamente
+				promise.resolve(getSelectedVoice(lang));
+				promise = undefined;
+			} else {
+				// Esperar a que las voces estén listas
+				speechSynthesis.addEventListener('voiceschanged', () => {
+					promise.resolve(getSelectedVoice(lang));
+					promise = undefined;
+				});
+			}
+			return promise;
+		}
+
+		if (!this.#selectedVoice) {
+			const selectedVoice = await initializeVoices(this.lang);
+			this.#selectedVoice = selectedVoice;
+		}
+		const selectedVoice = this.#selectedVoice;
+
 		if (selectedVoice) {
 			utterance.voice = selectedVoice;
 			utterance.lang = selectedVoice.lang;
@@ -142,7 +168,7 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 		utterance.onend = () => {
 			this.#speaking = false;
 			this.#currentWord = -1;
-			this.trigger('change');
+
 			this.trigger('on.finish');
 		};
 
@@ -157,6 +183,16 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 	}
 
 	stop() {
+		console.log('llegamos aca');
 		speechSynthesis.cancel();
+
+		// Simular el evento 'onend' manualmente
+		setTimeout(() => {
+			if (this.#speaking) {
+				this.#speaking = false;
+				this.#currentWord = -1;
+				this.trigger('on.finish'); // Disparar el evento manualmente
+			}
+		}, 100); // Pequeña demora para asegurarse de que la cancelación se ha procesado
 	}
 }

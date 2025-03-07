@@ -9,13 +9,13 @@ import { RealtimeStatus } from './status';
 
 export function RealtimePanel({ isVisible }: { isVisible: boolean }) {
 	const { store, setShowRealtime } = useChatContext();
-	const { valid } = store.realtime.client;
 
 	const [updated, setUpdated] = React.useState({});
 	useBinder([store.realtime], () => {
 		setUpdated({});
 	});
-
+	if (!store.realtime.available) return null;
+	const { valid } = store.realtime?.client;
 	const callStatus = store.realtime.client.status;
 	const speakerIcon = true ? 'call' : 'callEnd';
 

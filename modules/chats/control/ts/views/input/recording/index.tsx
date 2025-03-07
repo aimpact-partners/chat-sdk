@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 
 import { Button } from 'pragmate-ui/components';
-
+import { IconButton } from 'pragmate-ui/icons';
 import { Player } from './player';
 import { useInputContext } from '../context';
 import { PermissionsModal } from './modal';
 import { PermissionsErrorModal } from './error-modal';
+
 export /*bundle*/ const RecordingButton = ({ disabled = false }) => {
 	const { recorder, recording, setRecording } = useInputContext();
 	const [fetching, setFetching] = useState(false);
@@ -63,7 +64,7 @@ export /*bundle*/ const RecordingButton = ({ disabled = false }) => {
 
 	return (
 		<>
-			<Button icon="mic" fetching={fetching} onClick={playAction} disabled={isDisabled} />
+			<IconButton icon="mic" onClick={playAction} disabled={isDisabled} />
 			<PermissionsModal show={showModal} onClose={onClose} onConfirm={getUserMedia} />
 			<PermissionsErrorModal show={error} onClose={onCloseError} />
 		</>
