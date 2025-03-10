@@ -88,12 +88,6 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 		this.rate = rate;
 	}
 
-	// set({ language, rate }: { language?: string; rate?: number }) {
-	// 	if (language) {
-	// 		this.lang = language;
-	// 	}
-	// 	if (rate) this.rate = rate;
-	// }
 	#selectedVoice;
 	async _web() {
 		if (this.#speaking) {
@@ -103,8 +97,10 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 
 		const text = this.#text;
 		const utterance = new SpeechSynthesisUtterance(text);
-
-		utterance.rate = this.rate;
+		const rate = localStorage.getItem('aimpact.audio.speed')
+			? parseFloat(localStorage.getItem('aimpact.audio.speed'))
+			: this.rate;
+		utterance.rate = rate;
 		utterance.lang = this.lang;
 
 		function getSelectedVoice(lang: string): SpeechSynthesisVoice | undefined {

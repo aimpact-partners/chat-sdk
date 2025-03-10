@@ -1,12 +1,12 @@
 import React from 'react';
 import { StoreManager } from '../store';
 
-export function useManager({ id, language = 'en', realtime = true, model }) {
+export function useManager({ id, language = 'en', realtime = true, model, onListenChat }) {
 	const [ready, setReady] = React.useState(false);
 	const [store, setStore] = React.useState<StoreManager>({} as StoreManager);
 	const [state, setState] = React.useState({});
 	const callback = () => {
-		const manager = new StoreManager({ id, language, realtime, model });
+		const manager = new StoreManager({ id, language, realtime, model, onListenChat });
 		const onChange = () => {
 			setState({ ...manager.getProperties() });
 			setReady(manager.ready);

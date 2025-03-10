@@ -180,7 +180,7 @@ class Recorder extends ReactiveModel<Recorder> {
 				this.#startRecording(stream, specs);
 				this.#recordingPromise.resolve();
 				this.#initialised = true;
-				this.#mediaRecorder?.start();
+				this.#mediaRecorder?.start(); // hack for safari.
 			};
 			const onError = error => {
 				console.error(error);

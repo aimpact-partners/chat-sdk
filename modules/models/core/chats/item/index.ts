@@ -77,7 +77,15 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 	#listen = () => {
 		this.#api.on('stream.response', this.#onListen);
-		this.#api.on('action.received', () => {
+		this.#api.on('action.received', data => {
+			if (data) {
+				try {
+					const parsed = JSON.parse(data);
+					this.trigger('action.received', parsed.metadata);
+				} catch (e) {
+					console.warn('the data coudnt be parsed', data);
+				}
+			}
 			try {
 				if (this.#api.actions) {
 					this.#api.actions.forEach(data => {
@@ -115,7 +123,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	};
 
 	#onListen = () => {
-		// console.log('llega info', this.#response);
 		if (!this.#response) return;
 		this.#response.content = this.#api.streamResponse;
 

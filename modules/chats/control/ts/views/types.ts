@@ -11,6 +11,7 @@ export /*bundle*/ interface IAgentsContainerProps {
 	skeleton: React.ComponentType;
 	player: any;
 	model: Chat;
+	onListenChat: (data: any) => void;
 	attributes: any;
 	realtime: boolean;
 }

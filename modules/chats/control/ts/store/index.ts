@@ -111,9 +111,9 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	get realtime() {
 		return this.#realtime;
 	}
-
+	#onListenChat: (data: any) => void;
 	#model: Chat;
-	constructor({ id, language, realtime = false, model }) {
+	constructor({ id, language, realtime = false, model, onListenChat }) {
 		super();
 		this.#texts.on('change', this.triggerEvent);
 		this.#id = id;
@@ -123,6 +123,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		this.#audio = new AudioManager(this, language);
 		this.#realtime = new RealtimeStore(realtime);
 		this.#realtime.on('change', this.triggerEvent);
+		this.#onListenChat = onListenChat;
 		this.#model = model;
 		if (!model) {
 			this.load(this.#id);
@@ -171,6 +172,9 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		this.fetching = true;
 
 		const chat = new Chat({ id });
+		if (this.#onListenChat) {
+			chat.on('action.received', this.#onListenChat);
+		}
 		chat.on('change', this.triggerEvent);
 		this.#realtime;
 		this.#chat = chat;

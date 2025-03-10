@@ -13,7 +13,7 @@ export /*bundle */ function AgentsChatContainer({
 	empty,
 	model,
 	player,
-
+	onListenChat,
 	...props
 }: Partial<IAgentsContainerProps>) {
 	const [scrollPosition, setScrollPosition] = React.useState('top');
@@ -22,6 +22,7 @@ export /*bundle */ function AgentsChatContainer({
 	const { ready, store } = useManager({
 		id: props.id,
 		language,
+		onListenChat,
 		realtime: props.realtime,
 		model
 	});
