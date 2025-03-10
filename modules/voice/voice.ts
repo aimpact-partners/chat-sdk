@@ -100,7 +100,8 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 		const rate = localStorage.getItem('aimpact.audio.speed')
 			? parseFloat(localStorage.getItem('aimpact.audio.speed'))
 			: this.rate;
-		utterance.rate = rate;
+
+		utterance.rate = isNaN(rate) ? this.rate : rate;
 		utterance.lang = this.lang;
 
 		function getSelectedVoice(lang: string): SpeechSynthesisVoice | undefined {
