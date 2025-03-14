@@ -198,12 +198,13 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			};
 			this.messages.add(item);
 			this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
-			// this.messages.add(this.#response);
-			this.#api
-				.bearer(token)
-				.stream(uri, { ...item.getProperties(), multipart: true })
-				.then(onFinish)
-				.catch(onError);
+			const specs = {
+				...item.getProperties(),
+				audio: new File([item.audio], 'audio.mp4', { type: 'audio/mp4' }),
+				multipart: true
+			};
+
+			this.#api.bearer(token).stream(uri, specs).then(onFinish).catch(onError);
 			globalThis.setTimeout(() => onFinish({}), 3000); // TODO: remove this
 			return promise;
 		} catch (e) {

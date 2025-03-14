@@ -40,64 +40,44 @@ export class Recorder extends ReactiveModel<Recorder> {
 	}
 
 	async init() {
-		if (this.#initialised) return;
+		if (this.#initialised && this.#stream?.active) return;
 		try {
-			this.#initPromise = new PendingPromise<void>();
-
-			// Obtener permisos y stream de audio
-			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-			this.#stream = stream;
-
-			// Asegurar que el formato es compatible con Safari
-			const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
-
-			this.#mediaRecorder = new MediaRecorder(this.#stream, { mimeType });
-
-			// Enlazar evento de captura de datos antes de iniciar la grabación
-			this.#mediaRecorder.addEventListener('dataavailable', event => {
-				if (event.data.size > 0) {
-					this.#chunks.push(event.data);
-				}
-			});
-
-			this.#mediaRecorder.addEventListener('stop', () => {
-				this.#audio = new Blob(this.#chunks, { type: 'audio/webm' });
-				console.log(2, this.#audio, this.#audio.size);
-				this.#stopPromise?.resolve(this.#audio);
-				this.#recording = false;
-				this.#chunks = [];
-				this.trigger('change');
-			});
-
+			this.#stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 			this.#initialised = true;
-			this.#initPromise.resolve();
 		} catch (error) {
 			this.#error = error.message;
-			this.#initPromise.reject();
+			throw error;
 		}
 	}
 
 	async record() {
-		if (!this.#initialised) {
-			await this.init();
-		}
-
 		if (this.#recording) {
 			throw new Error('Wait for recorder to stop before starting again.');
 		}
 
-		this.#recordingPromise = new PendingPromise<void>();
+		// Siempre inicializa un nuevo stream
+		await this.init();
+
+		const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
+		this.#mediaRecorder = new MediaRecorder(this.#stream, { mimeType });
+		this.#chunks = [];
+
+		this.#mediaRecorder.ondataavailable = event => {
+			if (event.data.size > 0) this.#chunks.push(event.data);
+		};
+
+		this.#stopPromise = new PendingPromise<Blob>();
+
+		this.#mediaRecorder.onstop = () => {
+			this.#audio = new Blob(this.#chunks, { type: mimeType });
+			this.#stopPromise.resolve(this.#audio);
+			this.#recording = false;
+			this.trigger('change');
+		};
+
+		this.#mediaRecorder.start(this.isSafari ? 1000 : undefined);
 		this.#recording = true;
 		this.trigger('change');
-
-		// Safari requiere un intervalo de 1000ms
-		const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-		setTimeout(() => {
-			this.#mediaRecorder.start(isSafari ? 1000 : undefined);
-			this.#recordingPromise.resolve();
-		}, 10);
-
-		return this.#recordingPromise;
 	}
 
 	async stop(): Promise<Blob> {
@@ -105,13 +85,11 @@ export class Recorder extends ReactiveModel<Recorder> {
 			throw new Error('Recorder is not currently recording.');
 		}
 
-		this.#stopPromise = new PendingPromise<Blob>();
-
-		// Detener la grabación
 		this.#mediaRecorder.stop();
 
-		// Liberar la transmisión de audio
+		// Limpieza segura del stream después de detener la grabación
 		this.#stream.getTracks().forEach(track => track.stop());
+		this.#initialised = false; // Forzar re-obtención del stream en la próxima grabación
 
 		return this.#stopPromise;
 	}

@@ -125,6 +125,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		this.#realtime.on('change', this.triggerEvent);
 		this.#onListenChat = onListenChat;
 		this.#model = model;
+		globalThis.chatStore = this;
 		if (!model) {
 			this.load(this.#id);
 		} else {

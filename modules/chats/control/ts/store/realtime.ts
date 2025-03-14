@@ -49,6 +49,7 @@ export class RealtimeStore extends ReactiveModel<IRealtimeStore> implements IWid
 		this.#client = new ClientSession({ vad: null });
 		this.#client.conversation.set(this.#conversation);
 		this.muted = true;
+		this.available = true;
 		this.init();
 	}
 
