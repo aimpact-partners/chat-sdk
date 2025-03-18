@@ -81,6 +81,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			if (data) {
 				try {
 					const parsed = JSON.parse(data);
+
 					this.trigger('action.received', parsed.metadata);
 				} catch (e) {
 					console.warn('the data coudnt be parsed', data);

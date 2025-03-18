@@ -131,7 +131,7 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 
 		if (!this.#selectedVoice) {
 			const selectedVoice = await initializeVoices(this.lang);
-			console.log(1, selectedVoice);
+
 			this.#selectedVoice = selectedVoice;
 		}
 		const selectedVoice = this.#selectedVoice;
@@ -181,7 +181,6 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 	}
 
 	stop() {
-		console.log('llegamos aca');
 		speechSynthesis.cancel();
 
 		// Simular el evento 'onend' manualmente

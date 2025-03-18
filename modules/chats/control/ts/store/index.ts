@@ -131,7 +131,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		} else {
 			this.processModel();
 		}
-	}
+	}	
 
 	processModel() {
 		this.#chat = this.#model;
