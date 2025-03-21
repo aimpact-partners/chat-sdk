@@ -1,5 +1,5 @@
 import { ReactiveModel } from '@aimpact/reactive/model';
-import { Api } from '@aimpact/http-suite/api';
+import { Api } from '@beyond-js/http-suite/api';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';
 export /*bundle*/ class Chats extends ReactiveModel<Chats> {

@@ -20,7 +20,7 @@
 	"libraries": {
 		"imports": [
 			"@beyond-js/reactive",
-			"@aimpact/http-suite",
+			"@beyond-js/http-suite",
 			"@aimpact/reactive",
 			"@aimpact/agents-api"
 		]

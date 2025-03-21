@@ -1,4 +1,4 @@
-import { Api } from '@aimpact/http-suite/api';
+import { Api } from '@beyond-js/http-suite/api';
 
 import { ICollectionProvider } from '@aimpact/reactive/entities/collection';
 import type { Chats } from './index';

@@ -26,6 +26,9 @@ export /*bundle*/ class Wrapper extends ReactiveModel<IWrapper> {
 		this.triggerEvent('app.settings.change');
 	}
 
+	get languages() {
+		return languages;
+	}
 	#audioSpeed: number =
 		localStorage.getItem('aimpact.audio.speed') && !isNaN(parseInt(localStorage.getItem('aimpact.audio.speed')))
 			? parseInt(localStorage.getItem('aimpact.audio.speed'))
