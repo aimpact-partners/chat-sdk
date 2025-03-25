@@ -1,6 +1,6 @@
 {
 	"name": "@aimpact/chat-sdk",
-	"version": "1.4.1",
+	"version": "1.4.3",
 	"title": "Aimpact Chat SDK Client library",
 	"description": " comprehensive and versatile JavaScript SDK designed to enrich your applications with powerful chat functionalities. It enables seamless management of Knowledge Boxes, Chats, Audio, Users, and more. With built-in IndexedDB connection handling, this SDK ensures efficient data storage and retrieval, empowering developers to create robust, high-performance chat features with ease",
 	"license": "ISC",
