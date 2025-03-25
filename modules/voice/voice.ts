@@ -1,5 +1,6 @@
 import { Events, languages, PendingPromise } from '@beyond-js/kernel/core';
 import { ReactiveModel } from '@aimpact/reactive/model';
+import { voiceManager } from './manager';
 
 export interface IVoice {
 	language: any;
@@ -104,38 +105,11 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 		utterance.rate = isNaN(rate) ? this.rate : rate;
 		utterance.lang = this.lang;
 
-		function getSelectedVoice(lang: string): SpeechSynthesisVoice | undefined {
-			return speechSynthesis
-				.getVoices()
-				.find(voice => voice.name.includes('Google') && voice.lang.startsWith(lang));
-		}
+		// Esperar a que el voiceManager esté listo
+		await voiceManager.ready();
 
-		let promise;
-		function initializeVoices(lang: string): Promise<any> {
-			if (promise) return promise;
-			promise = new PendingPromise();
-
-			if (speechSynthesis.getVoices().length > 0) {
-				// Si las voces ya están disponibles, selecciona la voz directamente
-				promise.resolve(getSelectedVoice(lang));
-				promise = undefined;
-			} else {
-				// Esperar a que las voces estén listas
-				speechSynthesis.addEventListener('voiceschanged', () => {
-					promise.resolve(getSelectedVoice(lang));
-					promise = undefined;
-				});
-			}
-			return promise;
-		}
-
-		if (!this.#selectedVoice) {
-			const selectedVoice = await initializeVoices(this.lang);
-
-			this.#selectedVoice = selectedVoice;
-		}
-		const selectedVoice = this.#selectedVoice;
-
+		// Obtener la voz seleccionada o por defecto
+		const selectedVoice = voiceManager.getVoice(this.lang);
 		if (selectedVoice) {
 			utterance.voice = selectedVoice;
 			utterance.lang = selectedVoice.lang;
