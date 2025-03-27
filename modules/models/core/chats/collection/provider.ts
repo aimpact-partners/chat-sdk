@@ -1,6 +1,6 @@
 import { Api } from '@beyond-js/http-suite/api';
 
-import { ICollectionProvider } from '@aimpact/reactive/entities/collection';
+import { ICollectionProvider } from '@beyond-js/reactive/entities/collection';
 import type { Chats } from './index';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';

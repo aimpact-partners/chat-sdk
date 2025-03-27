@@ -21,7 +21,7 @@
 		"imports": [
 			"@beyond-js/reactive",
 			"@beyond-js/http-suite",
-			"@aimpact/reactive",
+			"@beyond-js/reactive",
 			"@aimpact/agents-api"
 		]
 	},
