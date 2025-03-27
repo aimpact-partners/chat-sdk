@@ -1,4 +1,4 @@
-import { ReactiveModel } from '@aimpact/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 import { Voice, VoiceLab } from '@aimpact/chat-sdk/voice';
 import { AppWrapper } from '@aimpact/chat-sdk/wrapper';
 

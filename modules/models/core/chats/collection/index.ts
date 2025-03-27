@@ -1,4 +1,4 @@
-import { ReactiveModel } from '@aimpact/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 import { Api } from '@beyond-js/http-suite/api';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';

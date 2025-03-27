@@ -1,6 +1,6 @@
 import { Chats, Chat } from '@aimpact/chat-sdk/core';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
-import { ReactiveModel } from '@aimpact/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { languages } from '@beyond-js/kernel/core';
 interface IWrapper {

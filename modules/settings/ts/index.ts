@@ -1,5 +1,5 @@
 import { User } from '@aimpact/chat-sdk/users';
-import { ReactiveModel } from '@aimpact/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 
 class ChatSDKSettings extends ReactiveModel<ChatSDKSettings> {
 	#userModel = User;

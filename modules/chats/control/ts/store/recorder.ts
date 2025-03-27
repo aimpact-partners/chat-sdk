@@ -1,5 +1,5 @@
 import { PendingPromise } from '@beyond-js/kernel/core';
-import { ReactiveModel } from '@aimpact/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 
 export class Recorder extends ReactiveModel<Recorder> {
 	#initialised = false;

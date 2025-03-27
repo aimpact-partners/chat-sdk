@@ -1,4 +1,4 @@
-import { ReactiveModel } from '@aimpact/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 import { Chat, Messages } from '@aimpact/chat-sdk/core';
 
 import { AppWrapper } from '@aimpact/chat-sdk/wrapper';
@@ -131,7 +131,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		} else {
 			this.processModel();
 		}
-	}	
+	}
 
 	processModel() {
 		this.#chat = this.#model;

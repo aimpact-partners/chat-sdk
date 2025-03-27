@@ -1,4 +1,4 @@
-import { ReactiveModel } from '@aimpact/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 import { User } from '@aimpact/chat-sdk/users';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { signOut } from 'firebase/auth';

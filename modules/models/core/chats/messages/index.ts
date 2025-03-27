@@ -1,5 +1,5 @@
 // import { MessageProvider } from '@aimpact/chat-api/provider';
-import { ReactiveModel } from '@aimpact/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 import { Message } from './item';
 
 export /*bundle*/ class Messages extends ReactiveModel<Messages> {

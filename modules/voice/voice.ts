@@ -1,5 +1,5 @@
 import { Events, languages, PendingPromise } from '@beyond-js/kernel/core';
-import { ReactiveModel } from '@aimpact/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 import { voiceManager } from './manager';
 
 export interface IVoice {

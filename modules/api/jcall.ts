@@ -1,4 +1,4 @@
-import { ReactiveModel } from '@aimpact/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { Stream } from './stream';
 interface headers {

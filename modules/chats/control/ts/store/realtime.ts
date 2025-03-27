@@ -1,4 +1,4 @@
-import { ReactiveModel } from '@aimpact/reactive/model';
+import { ReactiveModel } from '@beyond-js/reactive/model';
 import type { IWidgetStore } from '@beyond-js/widgets/controller';
 import { ClientSession } from '@aimpact/agents-api/realtime/client';
 import { Conversation } from '@aimpact/agents-api/realtime/client/conversation';
