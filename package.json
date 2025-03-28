@@ -14,6 +14,9 @@
 			"pr"
 		]
 	},
+	"overrides": {
+		"@beyond-js/kernel": "~0.1.12"
+	},
 	"modules": {
 		"path": "modules"
 	},
@@ -99,9 +102,10 @@
 	"dependencies": {
 		"@beyond-js/backend": "^0.1.8",
 		"@beyond-js/events": "^0.0.7",
-		"@beyond-js/kernel": "~0.1.8",
-		"@beyond-js/react-18-widgets": "~0.0.1",
-		"@beyond-js/widgets": "^1.1.0",
+		"@beyond-js/kernel": "~0.1.12",
+		"@beyond-js/pending-promise": "^0.0.5",
+		"@beyond-js/react-18-widgets": "^1.1.4",
+		"@beyond-js/widgets": "^1.1.2",
 		"@google-cloud/storage": "^7.15.0",
 		"dompurify": "^3.1.6",
 		"firebase": "^10.14.1",
