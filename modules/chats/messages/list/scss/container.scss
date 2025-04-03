@@ -5,31 +5,6 @@
 	overflow-y: auto;
 	height: 100%;
 	max-width: 100%;
+	gap: 0.5rem;
 	// padding-bottom: 100px;
-
-	.message__container {
-		width: 100%;
-		align-items: start;
-		gap: 0.5rem;
-		padding: 1rem;
-		border-radius: var(--border-radius-base);
-
-		box-sizing: border-box;
-		display: grid;
-		grid-template-columns: auto 1fr;
-
-		p {
-			&::first-letter {
-				text-transform: uppercase;
-			}
-		}
-
-		/**
-		Prevent overflow of the message content when code is present.
-		**/
-		.message__content {
-			display: block;
-			overflow-x: auto;
-		}
-	}
 }

@@ -7,7 +7,7 @@ import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 export /*bundle*/ function Chat(): JSX.Element {
 	const [reader] = React.useState(false);
 	const separator = React.useRef(null);
-	const { store, texts, systemIcon, empty } = useChatContext();
+	const { store, texts, systemIcon, empty, showAvatar } = useChatContext();
 	const { messages } = store;
 	const [, setMessages] = React.useState<number>(messages?.length ?? [].length);
 	const [updateScroll, setUpdateScroll] = React.useState(performance.now());
@@ -47,6 +47,7 @@ export /*bundle*/ function Chat(): JSX.Element {
 			<section className={clsContent}>
 				<Messages
 					chat={store.chat}
+					showAvatar={showAvatar}
 					setUpdateScroll={setUpdateScroll}
 					player={store.audioManager.player}
 					current={store.currentMessage}

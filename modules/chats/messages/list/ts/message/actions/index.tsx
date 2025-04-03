@@ -44,10 +44,9 @@ export function MessageActions({ text, message, messageTokens, play = true }) {
 	};
 
 	const apply = currentMessage?.id === message?.id && processing;
-
 	const icon = action === 'play' ? 'stop' : 'play';
 	const onClick = action === 'play' ? onPause : onPlay;
-
+	if (message.streaming) return null;
 	return (
 		<div>
 			<div className="audio__actions">

@@ -13,6 +13,7 @@ export /*bundle */ function AgentsChatContainer({
 	empty,
 	model,
 	player,
+	showAvatar = false,
 	onListenChat,
 	...props
 }: Partial<IAgentsContainerProps>) {
@@ -47,6 +48,7 @@ export /*bundle */ function AgentsChatContainer({
 		empty,
 		realtime: props.realtime,
 		setShowRealtime,
+		showAvatar,
 		skeleton,
 		messages,
 		player,

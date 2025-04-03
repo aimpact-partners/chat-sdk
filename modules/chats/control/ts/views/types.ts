@@ -12,6 +12,8 @@ export /*bundle*/ interface IAgentsContainerProps {
 	player: any;
 	model: Chat;
 	onListenChat: (data: any) => void;
+	showAvatar: boolean;
+
 	attributes: any;
 	realtime: boolean;
 }

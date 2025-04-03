@@ -11,8 +11,10 @@ export /*bundle*/ class Messages extends ReactiveModel<Messages> {
 		return this.#items;
 	}
 
-	constructor() {
+	#id: string;
+	constructor({ chatId }) {
 		super();
+		this.#id = chatId;
 	}
 
 	setEntries(data) {
@@ -30,8 +32,30 @@ export /*bundle*/ class Messages extends ReactiveModel<Messages> {
 	add(item) {
 		this.#items.push(item);
 		this.#map.set(item.id, item);
-
 		this.trigger('new.message');
+	}
+
+	addTestMessage() {
+		const message = new Message({ chatId: this.#id, role: 'system', streaming: true });
+		this.add(message);
+
+		const baseText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ';
+		const repeatedText = baseText.repeat(5);
+		const words = repeatedText.split(' ');
+		let currentContent = '';
+		let index = 0;
+
+		const interval = setInterval(() => {
+			if (index >= words.length) {
+				clearInterval(interval);
+				return;
+			}
+
+			currentContent += words[index] + ' ';
+
+			message.set({ content: currentContent });
+			index++;
+		}, 100); // Add a new word every 100ms
 	}
 
 	getData() {

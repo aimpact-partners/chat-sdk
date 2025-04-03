@@ -20,6 +20,7 @@ interface IChatContext {
 	ready: boolean;
 	realtime: boolean;
 	skeleton: React.ElementType;
+	showAvatar: boolean;
 	empty: React.ElementType;
 }
 export /*bundle */ const ChatContext = React.createContext({} as Partial<IChatContext>);

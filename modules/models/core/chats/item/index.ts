@@ -65,13 +65,15 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		});
 
 		this.#api = new Api(sdkConfig.api);
-		this.#messages = new Messages();
 
-		this.#messages.on('new.message', () => this.trigger('new.message'));
 		globalThis.chat = this;
 		if (!id) this.id = uuid();
 		this.#listen();
 		globalThis.chat = this;
+		this.#messages = new Messages({ chatId: this.id });
+		this.#messages.on('new.message', () => {
+			this.trigger('new.message');
+		});
 		// console.log(`chat is being exposed in console as chat`, id);
 	}
 

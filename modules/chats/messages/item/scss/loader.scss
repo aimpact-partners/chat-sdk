@@ -1,14 +1,16 @@
 /* HTML: <div class="loader"></div> */
 .loader {
-	--toneA: var(--text-color);
+	--toneA: var(--primary-dark);
 	--toneB: var(--text-color);
-	width: 15px;
+
+	width: 10px;
 	aspect-ratio: 1;
 	--_g: no-repeat radial-gradient(farthest-side, var(--toneA) 94%, var(--toneB));
 	background: var(--_g) 0 0, var(--_g) 100% 0, var(--_g) 100% 100%, var(--_g) 0 100%;
 	background-size: 40% 40%;
 	animation: l38 0.5s infinite;
 	display: inline-flex;
+	opacity: 0.7;
 }
 @keyframes l38 {
 	100% {

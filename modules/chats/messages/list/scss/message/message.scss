@@ -1,0 +1,61 @@
+$gradient-width: 2px;
+
+.messages__list .message__container {
+	width: 100%;
+	align-items: start;
+	gap: 0.5rem;
+	padding-block: 0.5rem; // it does 1rem with the .messages_list gap.
+	// border: 1px solid red;
+	padding-inline: 0.5rem;
+	border-radius: var(--border-radius-base);
+	box-sizing: border-box;
+	display: grid;
+
+	&.has-avatar {
+		grid-template-columns: auto 1fr;
+	}
+
+	p {
+		margin-block: 0.5rem;
+		&::first-letter {
+			text-transform: uppercase;
+		}
+	}
+
+	/**
+	Prevent overflow of the message content when code is present.
+	**/
+	.message__content {
+		display: block;
+		overflow-x: auto;
+	}
+
+	.player__container {
+		display: flex;
+	}
+
+	.tokens {
+		white-space: nowrap;
+		margin-top: 1rem;
+	}
+
+	&:nth-last-child(2) {
+		animation: dash 0.2s;
+	}
+
+	.message__actions {
+		display: flex;
+
+		flex-flow: column wrap;
+		justify-content: flex-end;
+	}
+
+	.audio__actions {
+		display: flex;
+		gap: 0.5rem;
+		justify-content: flex-end;
+		.pui-icon-button {
+			padding: 0;
+		}
+	}
+}

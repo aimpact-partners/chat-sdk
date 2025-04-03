@@ -8,6 +8,7 @@ interface IChatMessagesContext {
 	currentMessage: any;
 	setUpdateScroll: (value: number) => void;
 	setCurrentMessage: (message: any) => void;
+	showAvatar: boolean;
 	systemIcon: string;
 }
 export const ChatMessagesContext = React.createContext({} as IChatMessagesContext);

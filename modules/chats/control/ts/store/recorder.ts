@@ -42,6 +42,12 @@ export class Recorder extends ReactiveModel<Recorder> {
 	async init() {
 		if (this.#initialised && this.#stream?.active) return;
 		try {
+			// Check permissions first
+			const hasPermission = await this.hasPermissions();
+			if (!hasPermission) {
+				throw new Error('Microphone permission denied');
+			}
+
 			this.#stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 			this.#initialised = true;
 		} catch (error) {
@@ -55,8 +61,13 @@ export class Recorder extends ReactiveModel<Recorder> {
 			throw new Error('Wait for recorder to stop before starting again.');
 		}
 
-		// Siempre inicializa un nuevo stream
-		await this.init();
+		// Always get a fresh stream for recording
+		try {
+			this.#stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+		} catch (error) {
+			this.#error = error.message;
+			throw error;
+		}
 
 		const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
 		this.#mediaRecorder = new MediaRecorder(this.#stream, { mimeType });
