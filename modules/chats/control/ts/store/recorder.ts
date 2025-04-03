@@ -48,7 +48,7 @@ export class Recorder extends ReactiveModel<Recorder> {
 				throw new Error('Microphone permission denied');
 			}
 
-			this.#stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			// this.#stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 			this.#initialised = true;
 		} catch (error) {
 			this.#error = error.message;
