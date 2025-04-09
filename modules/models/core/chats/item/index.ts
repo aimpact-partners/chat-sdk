@@ -6,7 +6,7 @@ import { Api } from '@beyond-js/http-suite/api';
 import { Message } from '../messages/item';
 import { Messages } from '../messages';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
-import { IChat } from '../interfaces/chat';
+import { IChat, IChatUsage } from '../interfaces/chat';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';
 import { ChatProvider } from './provider';
 import { v4 as uuid } from 'uuid';
@@ -18,10 +18,10 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	declare language: any;
 	declare audioplay: boolean;
 	declare userId: string;
-	declare system: any;
-	declare parent: any;
+	declare system: string;
+	declare parent: string;
 	declare category: any;
-	declare usage: any;
+	declare usage: IChatUsage;
 	declare children: any;
 	declare user: any;
 	declare knowledgeBoxId: string;
@@ -57,7 +57,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				'user',
 				'children',
 				'knowledgeBoxId',
-
 				'metadata'
 			],
 

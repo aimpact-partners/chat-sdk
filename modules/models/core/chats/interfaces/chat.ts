@@ -8,6 +8,11 @@ export /*bundle */ interface IChatProperties {
 	};
 	knowledgeBoxId?: string;
 }
+export interface IChatUsage {
+	completionTokens: number;
+	promptTokens: number;
+	totalTokens: number;
+}
 export /*bundle */ interface IChat {
 	id: string;
 	name: string;
@@ -17,11 +22,7 @@ export /*bundle */ interface IChat {
 	parent: string;
 	knowledgeBoxId: string;
 	messages: any;
-	usage: {
-		completionTokens: number;
-		promptTokens: number;
-		totalTokens: number;
-	};
+	usage: IChatUsage;
 	metadata: {};
 }
 

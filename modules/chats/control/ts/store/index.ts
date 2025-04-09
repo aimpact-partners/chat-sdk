@@ -15,7 +15,6 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	declare fetching: boolean;
 	declare language: string;
 
-	#EXTENSIONS = ['chat-intro'];
 	#messages: Messages;
 	get messages() {
 		return this.#messages?.items;
@@ -59,14 +58,6 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	#processTranscription = false;
 	get proccessTranscription() {
 		return this.#processTranscription;
-	}
-
-	#selectedModel = 'GPT 4';
-	get selectedModel() {
-		return this.#selectedModel;
-	}
-	set selectedModel(model) {
-		this.#selectedModel = model;
 	}
 
 	#notFound: boolean;
@@ -135,7 +126,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 
 	processModel() {
 		this.#chat = this.#model;
-		chat.on('change', this.triggerEvent);
+		this.#chat.on('change', this.triggerEvent);
 		this.#messages = this.#chat.messages;
 		this.#realtime.chatId = this.#model.id;
 		AppWrapper.currentChat = this.#model;
