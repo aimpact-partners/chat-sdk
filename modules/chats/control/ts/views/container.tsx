@@ -32,7 +32,7 @@ export /*bundle */ function AgentsChatContainer({
 	const SkeletonControl = skeleton;
 	if (!ready && skeleton) return <SkeletonControl />;
 	if (!ready) return null;
-	const { messages, texts } = obj;
+	const { messages } = obj;
 	const contextValue = {
 		setScrollPosition: value => {
 			if (!value) console.trace('setScrollPosition called with no value');

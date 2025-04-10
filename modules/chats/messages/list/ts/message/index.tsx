@@ -1,11 +1,10 @@
-import React from 'react';
+import { Message } from '@aimpact/chat-sdk/chat/messages/item';
 import { parseText } from '@aimpact/chat-sdk/widgets/playable';
+import React from 'react';
+import { useChatMessagesContext } from '../context';
 import { MessageActions } from './actions';
 import { ProfileIcon } from './components/profile-icon';
 import { SystemActions } from './system-actions';
-import { useMessage } from './use-message';
-import { Message } from '@aimpact/chat-sdk/chat/messages/item';
-import { useChatMessagesContext } from '../context';
 
 export function MessageItemContainer({ message, setUpdateScroll }) {
 	// const { fetching } = useMessage(message);

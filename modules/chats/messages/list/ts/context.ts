@@ -1,15 +1,15 @@
 import React from 'react';
-
+import type { Chat, Messages as MessagesCollection, Message } from '@aimpact/chat-sdk/core';
 interface IChatMessagesContext {
+	chat: Chat;
 	player: any;
-	chat: any;
-	messages: any[];
-	texts: Record<string, any>;
-	currentMessage: any;
-	setUpdateScroll: (value: number) => void;
-	setCurrentMessage: (message: any) => void;
 	showAvatar: boolean;
+	messages: MessagesCollection['items'];
+	texts: Record<string, any>;
+	currentMessage: Message;
+	setCurrentMessage: (message: any) => void;
 	systemIcon: string;
+	setUpdateScroll: (value: number) => void;
 }
 export const ChatMessagesContext = React.createContext({} as IChatMessagesContext);
 export const useChatMessagesContext = () => React.useContext(ChatMessagesContext);

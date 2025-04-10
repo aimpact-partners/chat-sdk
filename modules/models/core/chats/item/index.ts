@@ -107,10 +107,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		});
 	};
 
-	#offEvents = () => {
-		this.#api.off('stream.response', this.#onListen);
-	};
-
 	loadAll = async specs => {
 		const response = await this.load(specs);
 		const collection = this.#messages;

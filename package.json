@@ -100,7 +100,7 @@
 		"@beyond-js/kernel": "~0.1.12",
 		"@beyond-js/pending-promise": "^0.0.5",
 		"@beyond-js/react-18-widgets": "^1.1.4",
-		"@beyond-js/reactive": "^2.0.4",
+		"@beyond-js/reactive": "^2.0.5",
 		"@beyond-js/widgets": "^1.1.2",
 		"@firebase/auth": "^1.10.0",
 		"@google-cloud/storage": "^7.15.0",

@@ -30,14 +30,14 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Parti
 	get type() {
 		return this.#type;
 	}
-	
+
 	#previous;
 	get previous() {
 		return this.#previous;
 	}
 
 	set previous(value) {
-		if(value === this.#previous) return;
+		if (value === this.#previous) return;
 		this.#previous = value;
 		this.trigger('previous.changed');
 	}
@@ -52,7 +52,6 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Parti
 				'audio',
 				'userId',
 				'role',
-
 				'content',
 				'usage',
 				'timestamp',

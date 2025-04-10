@@ -17,7 +17,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 
 	#messages: Messages;
 	get messages() {
-		return this.#messages?.items;
+		return this.#messages?.items?.length ? this.#messages?.items : [];
 	}
 
 	#name: string;

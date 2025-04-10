@@ -26,7 +26,7 @@ export interface IMessageSpecs {
 	id: string;
 	chat?: Chat;
 	timestamp?: number;
-	role: string;
+	role?: 'user' | 'system';
 	content?: string;
 	multipart?: boolean;
 	audio?: Blob;

@@ -4,6 +4,12 @@ import { useChatContext } from '../context';
 import { Messages } from '@aimpact/chat-sdk/messages';
 import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 
+function getChatContainerClass(reader: boolean): string {
+	return `chat-control__container${reader ? ' chat-control__container--reader' : ''}`;
+}
+
+type IEmptyComponent = () => JSX.Element;
+
 export /*bundle*/ function Chat(): JSX.Element {
 	const [reader] = React.useState(false);
 	const separator = React.useRef(null);
@@ -11,7 +17,7 @@ export /*bundle*/ function Chat(): JSX.Element {
 	const { messages } = store;
 	const [, setMessages] = React.useState<number>(messages?.length ?? [].length);
 	const [updateScroll, setUpdateScroll] = React.useState(performance.now());
-	let cls = `chat-control__container${reader ? 'chat-control__container  chat-control__container--reader' : ''}`;
+	const cls = getChatContainerClass(reader);
 	const onNewMessage = () => {
 		setMessages(store.messages.length);
 
@@ -32,14 +38,8 @@ export /*bundle*/ function Chat(): JSX.Element {
 	let clsContent = `chat__content`;
 
 	if (!store.messages.length) {
-		const Control = empty ? empty : <>No hay contenido</>;
-		//@ts-ignore
-		return (
-			<div className={cls}>
-				{/*@ts-ignore*/}
-				<Control />
-			</div>
-		);
+		const Control = empty ? empty : () => <>No hay contenido</>;
+		return <div className={cls}>{React.isValidElement(Control) ? Control : <Control />}</div>;
 	}
 
 	return (

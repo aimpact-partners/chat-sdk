@@ -9,6 +9,7 @@ import { AppIconButton } from '@aimpact/chat-sdk/components/icons';
 import { IAgentsInputProps } from './types/agents-input';
 import { useInputForm } from './hooks/use-input-form';
 import { IconButton } from 'pragmate-ui/icons';
+import { useStore } from '../hooks/use-store';
 
 export /*bundle*/ const AgentsChatInput = ({
 	isWaiting = false,
@@ -16,17 +17,9 @@ export /*bundle*/ const AgentsChatInput = ({
 	disabled = false,
 	onClick
 }: Partial<IAgentsInputProps>) => {
-	const [waiting, setWaiting] = React.useState<boolean>(false);
-
 	const { store, recorder, setShowRealtime, realtime } = useChatContext();
 	const { text, setText, onSubmit, fetching, recording, setRecording, setFetching } = useInputForm();
-
-	useBinder([store], () => {
-		setWaiting(store.waitingResponse);
-	});
-
-	const isFetching = fetching || waiting || isWaiting;
-
+	const isFetching = fetching || store.waitingResponse || isWaiting;
 	const isDisabled = store.disabled || disabled;
 	const contextValue = {
 		store,
@@ -41,11 +34,7 @@ export /*bundle*/ const AgentsChatInput = ({
 		setFetching,
 		disabled: isDisabled
 	};
-
-	React.useEffect(()=>{
-		
-	},[fetching]);
-
+	useStore(store);
 	const attrs = { disabled: disabled || store.disabled };
 	const buttonIsDisabled = attrs.disabled || store.waitingResponse || recording;
 	let cls = `chat-input-container ${isFetching ? 'is-fetching' : ''} ${isDisabled ? 'is-disabled' : ''}`;

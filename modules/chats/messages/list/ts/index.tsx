@@ -1,8 +1,21 @@
 import React from 'react';
+import type { Chat, Messages as MessagesCollection, Message } from '@aimpact/chat-sdk/core';
 
 import { MessageItemContainer } from './message';
 import { Empty } from 'pragmate-ui/empty';
 import { ChatMessagesContext } from './context';
+
+export interface IMessageListProps {
+	chat: Chat;
+	player: any;
+	showAvatar: boolean;
+	messages: MessagesCollection['items'];
+	texts: Record<string, any>;
+	current: Message;
+	setCurrentMessage: (message: Message) => void;
+	systemIcon: string;
+	setUpdateScroll: (scroll: number) => void;
+}
 
 export /*bundle */ function Messages({
 	chat,
@@ -13,7 +26,7 @@ export /*bundle */ function Messages({
 	current,
 	systemIcon,
 	setUpdateScroll
-}) {
+}: IMessageListProps) {
 	const [currentMessage, setCurrentMessage] = React.useState(current);
 	1;
 	const totalMessages = messages.length;
