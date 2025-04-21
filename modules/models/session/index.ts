@@ -9,6 +9,11 @@ interface ISession {
 }
 
 class SessionManager extends ReactiveModel<ISession> {
+	#id;
+	get id() {
+		return this.#id;
+	}
+
 	get user(): User {
 		return this.#auth.user;
 	}
@@ -17,10 +22,12 @@ class SessionManager extends ReactiveModel<ISession> {
 	}
 
 	get logged() {
-		return !!this.#auth.user;
+		return !!this.#auth?.user;
 	}
 
+	#initialized: boolean = false;
 	#promise: PendingPromise<boolean>;
+
 	get isReady() {
 		return this.#promise;
 	}
@@ -32,13 +39,15 @@ class SessionManager extends ReactiveModel<ISession> {
 
 	constructor() {
 		super();
+		this.#id = Math.random().toString(36).substring(2, 15);
 		this.#promise = new PendingPromise();
-
-		this.#auth = new Auth(this);
-		this.#auth.on('ready', this.listenReady.bind(this));
-		this.ready = true;
 	}
 
+	settings(settings) {
+		this.#initialized = true;
+		this.#auth = new Auth(this, settings);
+		this.#auth.on('ready', this.listenReady.bind(this));
+	}
 	listenReady() {
 		this.ready = true;
 		this.#promise.resolve(this.ready);

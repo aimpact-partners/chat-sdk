@@ -1,5 +1,7 @@
 import { ReactiveModel } from '@beyond-js/reactive/model';
+import { initializeApp, FirebaseApp } from 'firebase/app';
 import {
+	getAuth,
 	GoogleAuthProvider,
 	User as GoogleUser,
 	onAuthStateChanged,
@@ -8,33 +10,49 @@ import {
 	Auth,
 	UserCredential
 } from 'firebase/auth';
-import { IUserData } from '../types';
-import { auth } from './config';
 
-export const googleProvider = new GoogleAuthProvider();
+import { IUserData } from '../types';
 
 export class FirebaseProvider extends ReactiveModel<FirebaseProvider> {
 	#executions = 0;
 	#auth: Auth;
-	#onAuthStateChanged: (user: IUserData) => void | undefined;
-	constructor({ onAuthStateChanged: callback }) {
+	get auth() {
+		return this.#auth;
+	}
+	#app: FirebaseApp;
+	get app() {
+		return this.#app;
+	}
+	#googleProvider = new GoogleAuthProvider();
+	#onAuthStateChanged?: (user: IUserData | null) => void;
+
+	constructor(
+		config: object,
+		{ onAuthStateChanged: callback }: { onAuthStateChanged?: (user: IUserData | null) => void }
+	) {
 		super();
-		this.#auth = auth;
+
+		// Inicializa Firebase App y Auth internamente
+		this.#app = initializeApp(config);
+		this.#auth = getAuth(this.#app);
 		this.#onAuthStateChanged = callback;
-		onAuthStateChanged(auth, this.onAuthStateChanged.bind(this));
+
+		// Observador de sesión
+		onAuthStateChanged(this.#auth, this.onAuthStateChanged.bind(this));
 	}
 
-	private onAuthStateChanged(user: GoogleUser) {
+	private onAuthStateChanged(user: GoogleUser | null) {
 		if (!this.#executions) {
 			this.trigger('ready');
 			this.#executions++;
 		}
-		const data = user ? this.getData(user) : null;
 
-		this.#onAuthStateChanged(data);
+		const data = user ? this.getData(user) : null;
+		this.#onAuthStateChanged?.(data);
 	}
+
 	async signInWithGoogle(): Promise<IUserData> {
-		const response: UserCredential = await signInWithPopup(auth, googleProvider);
+		const response: UserCredential = await signInWithPopup(this.#auth, this.#googleProvider);
 		return this.getData(response.user);
 	}
 
@@ -50,11 +68,11 @@ export class FirebaseProvider extends ReactiveModel<FirebaseProvider> {
 		}
 	}
 
-	logout() {
-		return signOut(auth);
+	logout(): Promise<void> {
+		return signOut(this.#auth);
 	}
 
-	private getData(user): IUserData {
+	private getData(user: GoogleUser): IUserData {
 		return {
 			id: user.uid,
 			uid: user.uid,

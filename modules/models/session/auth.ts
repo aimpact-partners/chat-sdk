@@ -3,7 +3,7 @@ import { User } from '@aimpact/chat-sdk/users';
 import { PendingPromise } from '@beyond-js/kernel/core';
 import { signOut } from 'firebase/auth';
 import { CustomError } from './error';
-import { auth } from './firebase/config';
+
 import { FirebaseProvider } from './firebase/provider';
 import { IUserData } from './types';
 
@@ -21,10 +21,10 @@ export class Auth extends ReactiveModel<Auth> {
 	get session() {
 		return this.#session;
 	}
-	constructor(session) {
+	constructor(session, settings) {
 		super();
 		this.#session = session;
-		this.#provider = new FirebaseProvider({
+		this.#provider = new FirebaseProvider(settings.firebase, {
 			onAuthStateChanged: this.onAuthStateChanged.bind(this)
 		});
 	}
@@ -68,7 +68,12 @@ export class Auth extends ReactiveModel<Auth> {
 			this.#user = model;
 			const logInValidation = couldLog => {
 				if (!couldLog) {
-					console.error('Could not login', couldLog);
+					// this.#user as undefined does not log in.
+					this.#user = undefined;
+					this.signOut();
+					this.trigger('ready');
+					this.ready = true;
+					return;
 				}
 				this.ready = true;
 				this.trigger('ready');
@@ -80,8 +85,10 @@ export class Auth extends ReactiveModel<Auth> {
 				.login(firebaseToken)
 				.then(logInValidation)
 				.catch(e => {
-					console.log(100, 'fallamos');
-					throw new CustomError(1002, 'LOGIN_ERROR');
+					this.#user = undefined;
+					this.signOut();
+					this.ready = true;
+					throw new Error('e');
 				});
 		});
 
@@ -152,7 +159,8 @@ export class Auth extends ReactiveModel<Auth> {
 	signOut = async () => {
 		this.#pendingLogin = undefined;
 		this.#user = undefined;
-		await signOut(auth);
+
+		await signOut(this.#provider.auth);
 	};
 	logout = this.signOut;
 }

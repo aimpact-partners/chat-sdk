@@ -62,22 +62,18 @@ export /*bundle*/ class User extends Item<IChatUser, UserProvider> {
 	};
 
 	async login(firebaseToken) {
-		try {
-			if (this.#logged) return;
+		if (this.#logged) return;
 
-			const specs = { ...this.getProperties(), id: this.getProperty('id'), firebaseToken } as IChatUser;
+		const specs = { ...this.getProperties(), id: this.getProperty('id'), firebaseToken } as IChatUser;
 
-			const response = await this.provider.load(specs);
+		const response = await this.provider.load(specs);
 
-			this.set(response.data);
+		this.set(response.data);
 
-			// this.localUpdate(response.data.user);
-			this.#logged = true;
-			this.trigger('login');
-			return true;
-		} catch (e) {
-			throw new Error(e);
-		}
+		// this.localUpdate(response.data.user);
+		this.#logged = true;
+		this.trigger('login');
+		return true;
 	}
 
 	static getModel(specs) {
