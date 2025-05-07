@@ -9,6 +9,7 @@ export class ChatProvider implements IEntityProvider {
 
 	constructor(parent: Chat) {
 		this.#api = new Api(sdkConfig.api);
+
 		this.#parent = parent;
 	}
 

@@ -13,7 +13,7 @@ export /*bundle*/ class User extends Item<IChatUser, UserProvider> {
 	declare email: string;
 	declare photoURL: string;
 	declare phoneNumber: string;
-	declare token: string;
+
 	declare roles: string[];
 	#promiseInit: PendingPromise<boolean>;
 	#firebaseUser: firebaseAuth.User;
@@ -21,27 +21,42 @@ export /*bundle*/ class User extends Item<IChatUser, UserProvider> {
 		return this.#logged;
 	}
 
+	#token: string;
+	get token() {
+		return sdkConfig.project === 'rvd' ? this.#token : this.firebaseToken;
+	}
+	set token(value) {
+		if (value === this.#token) return;
+		this.#token = value;
+		this.trigger('token.changed');
+	}
+
 	#firebaseProvider: any;
 	get firebaseToken() {
 		return this.#firebaseProvider?.getCurrentToken();
 	}
 
-	/**
-	 * todo: @carlos implement http request to get user data
-	 * @param specs
-	 */
 	constructor({ properties = [], ...specs } = { properties: [], id: undefined }) {
 		//@ts-ignore
 		super({
 			id: specs.id,
-			properties: [...properties, 'displayName', 'id', 'email', 'photoURL', 'phoneNumber', 'token'],
+			properties: [...properties, 'displayName', 'id', 'email', 'photoURL', 'phoneNumber'],
 			entity: 'User',
 			provider: UserProvider
 		});
 
 		// this.initialize(specs);
 	}
+	set(specs) {
+		const data = super.set(specs);
+		if (specs.token) this.token = specs.token;
+		return { ...data, token: this.token };
+	}
 
+	getProperties() {
+		const data = super.getProperties();
+		return { ...data, token: this.token };
+	}
 	setFirebaseProvider(provider) {
 		this.#firebaseProvider = provider;
 	}

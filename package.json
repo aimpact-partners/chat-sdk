@@ -1,6 +1,6 @@
 {
 	"name": "@aimpact/chat-sdk",
-	"version": "1.4.4",
+	"version": "1.5.4",
 	"title": "Aimpact Chat SDK Client library",
 	"description": " comprehensive and versatile JavaScript SDK designed to enrich your applications with powerful chat functionalities. It enables seamless management of Knowledge Boxes, Chats, Audio, Users, and more. With built-in IndexedDB connection handling, this SDK ensures efficient data storage and retrieval, empowering developers to create robust, high-performance chat features with ease",
 	"license": "ISC",
@@ -23,10 +23,7 @@
 		]
 	},
 	"params": {
-		"elevenlabs": {
-			"key": "ebe05ca0a4d9aafb4024d0666471a0c7",
-			"id": "pNInz6obpgDQGcFmaJgB"
-		},
+		"project": "betterMind",
 		"development": {
 			"baseUrl": "https://dev.app.rvd.ai",
 			"apis": {

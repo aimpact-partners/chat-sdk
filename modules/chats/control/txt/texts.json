@@ -25,5 +25,14 @@
 			"title": "Missão do Assistente",
 			"message": "A missão que o agente terá para interagir no chat"
 		}
+	},
+	"de": {
+		"system": {
+			"success": "System erfolgreich aktualisiert"
+		},
+		"assistant": {
+			"title": "Assistenten-Mission",
+			"message": "Die Mission, die der Agent haben wird, um im Chat zu interagieren"
+		}
 	}
 }

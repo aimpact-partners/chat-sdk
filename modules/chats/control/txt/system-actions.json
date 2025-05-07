@@ -23,13 +23,23 @@
 	},
 	"pr": {
 		"systemActions": {
-			"kb-response": "Dados obtidos da base de conhecimento:",
-
+			"kb-response": "Dados obtidos da base de conhecimento: ",
 			"fetching-tool-data": "Vou consultar os documentos da classe",
 			"kb-processed-response": "Análise sobre conteúdo finalizado",
 			"transcription": "Obtendo transcrição",
 			"functions": {
 				"kb": "Consultando a base de conhecimento sobre: "
+			}
+		}
+	},
+	"de": {
+		"systemActions": {
+			"kb-response": "Daten aus der Wissensdatenbank erhalten: ",
+			"fetching-tool-data": "Ich werde die Dokumente der Klasse abfragen",
+			"kb-processed-response": "Analyse des Inhalts abgeschlossen",
+			"transcription": "Transkription wird abgerufen",
+			"functions": {
+				"kb": "Abfrage der Wissensdatenbank über: "
 			}
 		}
 	}

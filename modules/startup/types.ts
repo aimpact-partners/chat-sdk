@@ -6,4 +6,6 @@ export interface ISDKSettings {
 	environment: Environment;
 	localdb?: boolean;
 	userModel: any;
+	api: string;
+	project?: string;
 }
