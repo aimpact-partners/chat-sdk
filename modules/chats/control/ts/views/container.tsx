@@ -4,35 +4,38 @@ import { ChatContext } from './context';
 import { StoreManager } from '../store';
 import { IAgentsContainerProps } from './types';
 import { RealtimePanel } from './realtime/container';
+
 export /*bundle */ function AgentsChatContainer({
 	children,
-	icon,
+	icon: systemIcon,
 	autoplay,
-	skeleton,
+	skeleton: SkeletonControl,
 	language,
 	empty,
 	model,
 	player,
 	showAvatar = false,
 	onListenChat,
-	...props
+	attributes,
+	realtime,
+	id,
+	...rest
 }: Partial<IAgentsContainerProps>) {
 	const [scrollPosition, setScrollPosition] = React.useState('top');
 	const [showRealtime, setShowRealtime] = React.useState(false);
 
 	const { ready, store } = useManager({
-		id: props.id,
+		id,
 		language,
 		onListenChat,
-		realtime: props.realtime,
+		realtime,
 		model
 	});
-	const obj = store ? store : ({} as StoreManager);
 
-	const SkeletonControl = skeleton;
-	if (!ready && skeleton) return <SkeletonControl />;
-	if (!ready) return null;
-	const { messages } = obj;
+	if (!ready) return SkeletonControl ? <SkeletonControl /> : null;
+
+	const { messages, ready: storeReady, texts, audioManager } = store || ({} as StoreManager);
+
 	const contextValue = {
 		setScrollPosition: value => {
 			if (!value) console.trace('setScrollPosition called with no value');
@@ -40,19 +43,20 @@ export /*bundle */ function AgentsChatContainer({
 		},
 		scrollPosition,
 		store,
-		ready: store.ready,
-		texts: store.texts,
-		recorder: store?.audioManager?.recorder,
+		ready: storeReady,
+		texts,
+		recorder: audioManager?.recorder,
 		autoplay,
-		systemIcon: icon,
+		systemIcon,
 		empty,
-		realtime: props.realtime,
+		realtime,
 		setShowRealtime,
 		showAvatar,
-		skeleton,
+		skeleton: SkeletonControl,
 		messages,
 		player,
-		attributes: props.attributes
+		attributes,
+		...rest
 	};
 
 	return (

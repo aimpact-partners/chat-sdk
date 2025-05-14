@@ -9,7 +9,7 @@ import type { Messages } from './';
 
 export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Partial<IMessage> {
 	declare autoplay: boolean;
-
+	declare error: any;
 	declare id: string;
 	declare triggerEvent: () => void;
 	#api: Api;
@@ -56,7 +56,8 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Parti
 				'usage',
 				'timestamp',
 				'streaming',
-				'actions'
+				'actions',
+				'error'
 			]
 		});
 

@@ -31,6 +31,11 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		return this.#api;
 	}
 
+	#errors: any[] = [];
+	get errors() {
+		return this.#errors;
+	}
+
 	#currentMessage: Message;
 	#response: Message;
 	#messages: Messages;
@@ -68,7 +73,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		globalThis.chat = this;
 		if (!id) this.id = uuid();
 		this.#listen();
-		globalThis.chat = this;
+
 		this.#messages = new Messages({ chatId: this.id });
 		this.#messages.on('new.message', () => {
 			this.trigger('new.message');
@@ -153,15 +158,16 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 				// this.#offEvents();
 			};
-			const onError = e => {
-				console.error(e);
-			};
 
 			this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
 			this.messages.add(item);
 			this.messages.add(this.#response);
-
-			this.#api
+			const onError = e => {
+				this.#errors.push(e);
+				this.#response.set({ error: e });
+				console.error(`onError`, e);
+			};
+			await this.#api
 				.bearer(token)
 				.stream(uri, { ...item.getProperties() })
 				.then(onFinish)
@@ -169,7 +175,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 			return promise;
 		} catch (e) {
-			console.error(e);
+			console.error(`capturamos error en el modelo`, e);
 		} finally {
 			this.fetching = false;
 		}

@@ -9,6 +9,7 @@ export interface IMessage {
 	streaming: boolean;
 	timestamp?: number;
 	actions?: any[];
+	error: any;
 	language?: string;
 	format?: 'audio' | 'text';
 	userId: string;

@@ -6,6 +6,9 @@
 		"assistant": {
 			"title": "Assistant mission",
 			"message": "La misión que tendrá el agente para interactuar en el chat"
+		},
+		"errors": {
+			"default": "Ha ocurrido un error, por favor intente nuevamente"
 		}
 	},
 	"en": {
@@ -15,6 +18,9 @@
 		"assistant": {
 			"title": "Assistant mission",
 			"message": "The mission that the agent will have to interact in the chat"
+		},
+		"errors": {
+			"default": "An error has occurred, please try again"
 		}
 	},
 	"pr": {
@@ -24,6 +30,9 @@
 		"assistant": {
 			"title": "Missão do Assistente",
 			"message": "A missão que o agente terá para interagir no chat"
+		},
+		"errors": {
+			"default": "Ocorreu um erro, por favor tente novamente"
 		}
 	},
 	"de": {
@@ -33,6 +42,9 @@
 		"assistant": {
 			"title": "Assistenten-Mission",
 			"message": "Die Mission, die der Agent haben wird, um im Chat zu interagieren"
+		},
+		"errors": {
+			"default": "Ein Fehler ist aufgetreten, bitte versuchen Sie es erneut"
 		}
 	}
 }

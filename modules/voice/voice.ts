@@ -7,6 +7,7 @@ export interface IVoice {
 	lang: any;
 	rate: any;
 }
+
 export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 	#speaking = false;
 	get speaking() {
@@ -40,12 +41,10 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 	set lang(value) {
 		if (value === this.#lang) return;
 		this.#lang = value;
-
 		this.trigger('change');
 	}
 
 	declare trigger;
-
 	#instance;
 	get instance() {
 		return this.#instance;
@@ -71,17 +70,9 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 	get languages() {
 		return this.#languages;
 	}
-	constructor({ language, rate }: { language?: string; rate?: number } = { rate: 1.25 }) {
-		super({
-			lang: language,
-			rate: rate
-		});
-		const LANGS = {
-			en: 'en-US',
-			es: 'es-MX'
-		};
 
-		// if (!language) language = LANGS[languages.current];
+	constructor({ language, rate }: { language?: string; rate?: number } = { rate: 1.25 }) {
+		super({ lang: language, rate });
 		this.reactiveProps(['positionToCut', 'textId', 'playing']);
 		this.positionToCut = 0;
 		globalThis._voice = this;
@@ -90,6 +81,7 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 	}
 
 	#selectedVoice;
+
 	async _web() {
 		if (this.#speaking) {
 			speechSynthesis.cancel();
@@ -97,73 +89,82 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 		}
 
 		const text = this.#text;
-		const utterance = new SpeechSynthesisUtterance(text);
 		const rate = localStorage.getItem('aimpact.audio.speed')
 			? parseFloat(localStorage.getItem('aimpact.audio.speed'))
 			: this.rate;
 
-		utterance.rate = isNaN(rate) ? this.rate : rate;
-		utterance.lang = this.lang;
-
-		// Esperar a que el voiceManager esté listo
+		// Wait for voiceManager to load voices
 		await voiceManager.ready();
 
-		// Obtener la voz seleccionada o por defecto
-		const selectedVoice = voiceManager.getVoice(this.lang);
-		if (selectedVoice) {
-			utterance.voice = selectedVoice;
-			utterance.lang = selectedVoice.lang;
-		} else {
-			utterance.lang = this.#languages[this.lang];
+		// Get the selected or default voice
+		const voice = voiceManager.getVoice(this.lang);
+		const chunks = this._splitText(text, 150);
+
+		this.#speaking = true;
+		this.trigger('change');
+
+		for (const chunk of chunks) {
+			await new Promise<void>(resolve => {
+				const utterance = new SpeechSynthesisUtterance(chunk);
+				utterance.rate = isNaN(rate) ? this.rate : rate;
+				utterance.lang = this.lang;
+				if (voice) utterance.voice = voice;
+
+				utterance.onstart = () => this.trigger('change');
+				utterance.onboundary = e => {
+					this.#currentWord = e.charIndex === 0 ? 0 : e.charIndex;
+					this.trigger('change');
+					this.trigger('boundary');
+				};
+				utterance.onend = () => resolve();
+
+				speechSynthesis.speak(utterance);
+			});
 		}
 
-		utterance.onstart = () => {
-			this.#speaking = true;
-			this.trigger('change');
-		};
-		globalThis.addEventListener('beforeunload', () => {
-			speechSynthesis.cancel();
-		});
-
-		utterance.onpause = () => {
-			this.trigger('change');
-		};
-		utterance.onresume = () => this.trigger('change');
-
-		utterance.onboundary = event => {
-			this.#currentWord = event.charIndex === 0 ? 0 : event.charIndex;
-
-			this.trigger('change');
-			this.trigger('boundary');
-		};
-
-		utterance.onend = () => {
-			this.#speaking = false;
-			this.#currentWord = -1;
-
-			this.trigger('on.finish');
-		};
-
-		speechSynthesis.speak(utterance);
+		this.#speaking = false;
+		this.#currentWord = -1;
+		this.trigger('on.finish');
 	}
 
-	play(text?: undefined | string, id?: undefined | string) {
-		if (text) this.#text = text;
+	_splitText(text: string, maxLength: number): string[] {
+		const chunks: string[] = [];
+		let remaining = text;
 
+		while (remaining.length > 0) {
+			if (remaining.length <= maxLength) {
+				chunks.push(remaining);
+				break;
+			}
+
+			let chunk = remaining.slice(0, maxLength + 1);
+			const splitPoint = chunk.lastIndexOf(' ');
+			if (splitPoint !== -1) {
+				chunks.push(remaining.slice(0, splitPoint));
+				remaining = remaining.slice(splitPoint + 1);
+			} else {
+				chunks.push(remaining.slice(0, maxLength));
+				remaining = remaining.slice(maxLength);
+			}
+		}
+
+		return chunks;
+	}
+
+	play(text?: string, id?: string) {
+		if (text) this.#text = text;
 		this.#id = id;
 		this._web();
 	}
 
 	stop() {
 		speechSynthesis.cancel();
-
-		// Simular el evento 'onend' manualmente
 		setTimeout(() => {
 			if (this.#speaking) {
 				this.#speaking = false;
 				this.#currentWord = -1;
-				this.trigger('on.finish'); // Disparar el evento manualmente
+				this.trigger('on.finish');
 			}
-		}, 100); // Pequeña demora para asegurarse de que la cancelación se ha procesado
+		}, 100);
 	}
 }

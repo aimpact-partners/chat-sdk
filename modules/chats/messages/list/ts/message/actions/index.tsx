@@ -43,7 +43,6 @@ export function MessageActions({ text, message, messageTokens, play = true }) {
 		toast.success('Message copied to clipboard');
 	};
 
-	const apply = currentMessage?.id === message?.id && processing;
 	const icon = action === 'play' ? 'stop' : 'play';
 	const onClick = action === 'play' ? onPause : onPlay;
 	if (message.streaming) return null;

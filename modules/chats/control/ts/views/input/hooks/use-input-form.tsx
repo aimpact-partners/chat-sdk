@@ -26,6 +26,8 @@ export function useInputForm() {
 			setFetching(false);
 		} catch (e) {
 			console.error('error', e);
+		} finally {
+			setFetching(false);
 		}
 	};
 

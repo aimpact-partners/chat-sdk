@@ -17,26 +17,21 @@ export interface IMessageListProps {
 	setUpdateScroll: (scroll: number) => void;
 }
 
-export /*bundle */ function Messages({
-	chat,
-	player,
-	showAvatar,
-	messages,
-	texts,
-	current,
-	systemIcon,
-	setUpdateScroll
-}: IMessageListProps) {
+export /*bundle*/ function Messages(props: IMessageListProps) {
+	const { chat, player, showAvatar, messages, texts, current, systemIcon, setUpdateScroll } = props;
 	const [currentMessage, setCurrentMessage] = React.useState(current);
-	1;
 	const totalMessages = messages.length;
+
+	// Show empty state if there are no messages
 	if (!totalMessages) return <Empty text={texts.empty} />;
 
-	const output = messages.map((message: any, i: number) => {
-		return <MessageItemContainer key={`message-${i}`} message={message} setUpdateScroll={setUpdateScroll} />;
-	});
+	// Render each message item
+	const messageItems = messages.map((message: Message, i: number) => (
+		<MessageItemContainer key={`message-${i}`} message={message} setUpdateScroll={setUpdateScroll} />
+	));
 
-	const value = {
+	// Context value for child components
+	const contextValue = {
 		chat,
 		player,
 		showAvatar,
@@ -47,9 +42,10 @@ export /*bundle */ function Messages({
 		systemIcon,
 		setUpdateScroll
 	};
+
 	return (
-		<ChatMessagesContext.Provider value={value}>
-			<div className="messages__list">{output}</div>
+		<ChatMessagesContext.Provider value={contextValue}>
+			<div className="messages__list">{messageItems}</div>
 		</ChatMessagesContext.Provider>
 	);
 }

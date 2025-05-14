@@ -34,6 +34,7 @@ export /* bundle */ class AudioManager extends ReactiveModel<IStore> {
 		this.#recorder = new Recorder();
 		this.#parent = parent;
 		this.reactiveProps(['autoplay']);
+
 		language = language ?? AppWrapper.language;
 
 		this.#currentPlayer = new this.#players.web({

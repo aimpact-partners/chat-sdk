@@ -106,6 +106,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	#model: Chat;
 	constructor({ id, language, realtime = false, model, onListenChat }) {
 		super();
+
 		this.#texts.on('change', this.triggerEvent);
 		this.#id = id;
 		this.reactiveProps(['waitingResponse', 'autoplay', 'language']);
@@ -135,7 +136,8 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 
 		const languages = {
 			en: 'en-US',
-			es: 'es-MX'
+			es: 'es-MX',
+			de: 'de-DE'
 		};
 		this.audioManager.player.set({ language: languages[language] });
 
@@ -188,7 +190,8 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 
 		const languages = {
 			en: 'en-US',
-			es: 'es-MX'
+			es: 'es-MX',
+			de: 'de-DE'
 		};
 		this.audioManager.player.set({ language: languages[language] });
 
@@ -214,7 +217,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 			return this.#chat.sendMessage(content);
 		} catch (e) {
 			// return http.error(400, message);
-			console.error(e);
+			console.error('capturamos error aca', e);
 		}
 	}
 

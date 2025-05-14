@@ -18,9 +18,9 @@ interface ExtendedMarkedOptions extends MarkedOptions {
 }
 
 export /*bundle*/ function useMarked(content: string) {
-	const [output, setOutput] = React.useState<string>('');
+	// const [output, setOutput] = React.useState<string>('');
 
-	async function render(content) {
+	function render(content) {
 		const options: ExtendedMarkedOptions = {
 			breaks: false // Disable line breaks for Markdown
 		};
@@ -28,7 +28,7 @@ export /*bundle*/ function useMarked(content: string) {
 		marked.setOptions(options);
 		marked.use(
 			markedHighlight({
-				async: true,
+				// async: true,
 				langPrefix: 'language-', // Default langPrefix used by highlight.js
 				highlight(code, lang) {
 					const language = hljs.getLanguage(lang) ? lang : 'plaintext';
@@ -55,22 +55,20 @@ export /*bundle*/ function useMarked(content: string) {
 		});
 
 		// 2. Pass the content through marked
-		let output = await marked(content, { breaks: false });
+		let output = marked(content, { breaks: false });
 
 		// 3. Replace placeholders with actual rendered KaTeX
 		Object.keys(mathPlaceholders).forEach(placeholder => {
-			output = output.replace(new RegExp(placeholder, 'g'), mathPlaceholders[placeholder]);
+			output = (output as string).replace(new RegExp(placeholder, 'g'), mathPlaceholders[placeholder]);
 		});
 
-		setOutput(output);
+		return output;
 	}
 
-	React.useEffect(() => {
-		render(content ?? '');
-	}, [content]);
+	// React.useEffect(() => {}, [content]);
 
 	return {
-		ready: !!output,
-		output
+		ready: !!content,
+		output: render(content ?? '')
 	};
 }

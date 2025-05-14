@@ -5,6 +5,7 @@ import { useChatMessagesContext } from '../context';
 import { MessageActions } from './actions';
 import { ProfileIcon } from './components/profile-icon';
 import { SystemActions } from './system-actions';
+import { ErrorsRenderer } from './errors-renderer';
 
 export function MessageItemContainer({ message, setUpdateScroll }) {
 	// const { fetching } = useMessage(message);
@@ -22,12 +23,13 @@ export function MessageItemContainer({ message, setUpdateScroll }) {
 				<Message message={message} setUpdateScroll={setUpdateScroll} />
 				<section className="message__actions">
 					<MessageActions
-						play={!message.audio}
+						
 						message={message}
 						text={playableContent}
 						messageTokens={messageTokens}
 					/>
 				</section>
+				<ErrorsRenderer message={message} />
 			</section>
 		</div>
 	);
