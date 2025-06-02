@@ -16,9 +16,6 @@ class SessionManager extends ReactiveModel<ISession> {
 	get user(): User {
 		return this.#auth.user;
 	}
-	get userId() {
-		return this.#auth.currentUser ? this.#auth.currentUser.uid : null;
-	}
 
 	get logged() {
 		return !!this.#auth?.user;

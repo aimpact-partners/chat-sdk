@@ -11,6 +11,7 @@ export interface IMessage {
 	actions?: any[];
 	error: any;
 	language?: string;
+	transcribing?: boolean;
 	format?: 'audio' | 'text';
 	userId: string;
 	type: 'message' | 'answer';
@@ -33,6 +34,7 @@ export interface IMessageSpecs {
 	audio?: Blob;
 	streaming: boolean;
 	type: 'message' | 'answer';
+	transcribing?: boolean;
 }
 
 /**

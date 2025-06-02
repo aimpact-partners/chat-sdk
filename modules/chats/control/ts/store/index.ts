@@ -128,6 +128,12 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	processModel() {
 		this.#chat = this.#model;
 		this.#chat.on('change', this.triggerEvent);
+		this.#chat.on('new.message', () => {
+			this.triggerEvent('new.message');
+		});
+		this.#chat.on('new.answer', () => {
+			this.triggerEvent('new.answer');
+		});
 		this.#messages = this.#chat.messages;
 		this.#realtime.chatId = this.#model.id;
 		AppWrapper.currentChat = this.#model;
@@ -170,6 +176,12 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 			chat.on('action.received', this.#onListenChat);
 		}
 		chat.on('change', this.triggerEvent);
+		chat.on('new.message', () => {
+			this.triggerEvent('new.message');
+		});
+		chat.on('new.answer', () => {
+			this.triggerEvent('new.answer');
+		});
 		this.#realtime;
 		this.#chat = chat;
 		globalThis.chat = chat;
@@ -214,6 +226,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 
 			this.fetching = true;
 			// return http.response(data);
+
 			return this.#chat.sendMessage(content);
 		} catch (e) {
 			// return http.error(400, message);

@@ -9,6 +9,9 @@
 		},
 		"errors": {
 			"default": "Ha ocurrido un error, por favor intente nuevamente"
+		},
+		"message": {
+			"transcribing": "Transcribiendo..."
 		}
 	},
 	"en": {
@@ -21,6 +24,9 @@
 		},
 		"errors": {
 			"default": "An error has occurred, please try again"
+		},
+		"message": {
+			"transcribing": "Transcribing..."
 		}
 	},
 	"pr": {
@@ -33,6 +39,9 @@
 		},
 		"errors": {
 			"default": "Ocorreu um erro, por favor tente novamente"
+		},
+		"message": {
+			"transcribing": "Transcrevendo..."
 		}
 	},
 	"de": {
@@ -45,6 +54,9 @@
 		},
 		"errors": {
 			"default": "Ein Fehler ist aufgetreten, bitte versuchen Sie es erneut"
+		},
+		"message": {
+			"transcribing": "Transkribieren..."
 		}
 	}
 }

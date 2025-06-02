@@ -26,6 +26,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	declare user: any;
 	declare knowledgeBoxId: string;
 	declare metadata: any;
+	declare transcribing: boolean;
 	#api: Api;
 	get api() {
 		return this.#api;
@@ -62,7 +63,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				'user',
 				'children',
 				'knowledgeBoxId',
-				'metadata'
+				'metadata',
+				'transcribing'
 			],
 
 			provider: ChatProvider
@@ -87,7 +89,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			if (data) {
 				try {
 					const parsed = JSON.parse(data);
-
 					this.trigger('action.received', parsed.metadata);
 				} catch (e) {
 					console.warn('the data coudnt be parsed', data);
@@ -113,7 +114,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	};
 
 	loadAll = async specs => {
-		const response = await this.load(specs);
+		const response = await super.load(specs);
 		const collection = this.#messages;
 		collection.on('change', this.triggerEvent);
 
@@ -125,6 +126,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		this.#messages = collection;
 	};
 
+	load = specs => this.loadAll(specs);
 	#onListen = () => {
 		if (!this.#response) return;
 		this.#response.content = this.#api.streamResponse;
@@ -187,10 +189,16 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const token = await sessionWrapper.user.firebaseToken;
 			const uri = `/chats/${this.id}/messages/audio`;
 			const promise = new PendingPromise<Message>();
-			const item = new Message({ chatId: this.id, audio: message, role: 'user', streaming: true });
+			const item = new Message({
+				chatId: this.id,
+				audio: message,
+				role: 'user',
+				streaming: true,
+				transcribing: true
+			});
 			this.#currentMessage = item;
 			const onFinish = async response => {
-				await this.#response.set({ streaming: false });
+				await this.#response.set({ streaming: false, transcribing: false });
 				this.trigger('response.finished');
 				// this.#response = undefined;
 				promise.resolve(item);

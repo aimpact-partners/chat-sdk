@@ -9,7 +9,7 @@ import { ErrorsRenderer } from './errors-renderer';
 
 export function MessageItemContainer({ message, setUpdateScroll }) {
 	// const { fetching } = useMessage(message);
-	const { showAvatar } = useChatMessagesContext();
+	const { showAvatar, texts } = useChatMessagesContext();
 	const cls = `message__container message__container--${message.role}${showAvatar ? `has-avatar` : ''}`;
 	const messageTokens = message.role === 'assistant' ? message.usage?.totalTokens : null;
 	const ACTIONS = ['transcription', 'fetching-tool-data', 'kb-processed-response', 'function', 'kb-response'];
@@ -20,14 +20,11 @@ export function MessageItemContainer({ message, setUpdateScroll }) {
 			{showAvatar && <ProfileIcon role={message.role} />}
 			<section className="message__content">
 				<SystemActions actions={actions} />
-				<Message message={message} setUpdateScroll={setUpdateScroll} />
+				{!message.error && (
+					<Message message={message} setUpdateScroll={setUpdateScroll} texts={texts.message} />
+				)}
 				<section className="message__actions">
-					<MessageActions
-						
-						message={message}
-						text={playableContent}
-						messageTokens={messageTokens}
-					/>
+					<MessageActions message={message} text={playableContent} messageTokens={messageTokens} />
 				</section>
 				<ErrorsRenderer message={message} />
 			</section>

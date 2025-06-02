@@ -11,6 +11,7 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Parti
 	declare autoplay: boolean;
 	declare error: any;
 	declare id: string;
+	declare transcribing: boolean;
 	declare triggerEvent: () => void;
 	#api: Api;
 	#response: string = '';
@@ -56,6 +57,7 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Parti
 				'usage',
 				'timestamp',
 				'streaming',
+				'transcribing',
 				'actions',
 				'error'
 			]

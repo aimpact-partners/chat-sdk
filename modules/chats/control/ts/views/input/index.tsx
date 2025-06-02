@@ -52,6 +52,7 @@ export /*bundle*/ const AgentsChatInput = ({
 		setShowRealtime(true);
 		store.realtime.call();
 	};
+
 	return (
 		<InputContext.Provider value={contextValue}>
 			<Form onSubmit={onSubmit} {...controlAttrs}>
