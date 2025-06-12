@@ -217,7 +217,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 		this.trigger('change');
 	};
 
-	async sendMessage(content: string) {
+	async sendMessage(content: string, files?: File[]) {
 		try {
 			performance.mark('start');
 			this.#currentMessage = undefined;
@@ -227,7 +227,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 			this.fetching = true;
 			// return http.response(data);
 
-			return this.#chat.sendMessage(content);
+			return this.#chat.sendMessage(content, files);
 		} catch (e) {
 			// return http.error(400, message);
 			console.error('capturamos error aca', e);

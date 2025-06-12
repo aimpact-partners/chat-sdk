@@ -19,7 +19,8 @@
 	},
 	"libraries": {
 		"imports": [
-			"@aimpact/agents-api"
+			"@aimpact/agents-api",
+			"@aimpact/media-manager"
 		]
 	},
 	"params": {

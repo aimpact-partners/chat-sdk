@@ -3,21 +3,80 @@
 .chat-input-container {
 	--on-surface: var(--text-color);
 	// --border-radius-sm: 2.5rem;
-	display: flex;
+
 	position: relative;
-	gap: 0.5rem;
+	display: grid;
+	background: var(--surface);
+	border-radius: var(--border-radius-base);
+	overflow-y: auto;
 	min-height: 53px;
-	align-items: center;
 	max-height: 200px;
 	width: calc(100%);
-	// border: var(--border-radius-sm);
-
 	border: 1px solid var(--chat-input-border-color);
 	border-radius: var(--chat-input-border-radius, var(--border-radius-sm));
-	align-items: stretch;
-	overflow-y: auto;
-	@include scroll.set-scroll();
-	padding: 0.5rem 1rem;
+
+	.chat-input__inner-content {
+		display: flex;
+		gap: 1rem;
+		position: relative;
+		min-height: 53px;
+		align-items: center;
+		width: 100%;
+		padding: 0.5rem 1rem;
+		justify-content: space-between;
+		overflow-y: auto;
+		@include scroll.set-scroll();
+	}
+	button.chat-input__icon {
+		border: none;
+
+		background: transparent;
+		height: 40px;
+		width: 45px;
+		margin-left: -0.5rem;
+
+		border-radius: 50%;
+		display: grid;
+		place-items: center;
+		cursor: pointer;
+		transition: 300ms background ease-in-out;
+		&:hover {
+			background: var(--primary);
+			svg {
+				fill: var(--on-primary);
+			}
+		}
+	}
+	&.files-container {
+		height: 140px;
+	}
+
+	.pui-icon-button.chat-input__icon {
+		svg.pui-icon {
+			fill: var(--text-color);
+		}
+	}
+	.input-chat__actions {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		.pui-icon-button {
+			// border: 1px solid red;
+			border-radius: 50%;
+			height: 35px;
+			width: 35px;
+		}
+
+		.pui-button {
+			padding-inline: 0.5rem;
+		}
+	}
+
+	.recording-button__container {
+		height: 40px;
+		width: 40px;
+	}
+	// border: var(--border-radius-sm);
 
 	&.is-disabled {
 		&:after {

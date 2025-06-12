@@ -1,0 +1,115 @@
+.uploaded-files-list {
+	--file-bg-pdf: #ff5a7d;
+	--file-bg-img: #6ecbff;
+	--file-bg-video: #a084ff;
+	--file-bg-audio: #ffd36e;
+	--file-bg-code: #7ee787;
+	--file-bg-doc: #b6b6b6;
+	--file-bg-csv: #7ecb7e;
+
+	border: 1px solid #e2e2e2;
+	display: flex;
+
+	gap: 0.5rem;
+	max-width: 320px;
+	height: auto;
+	min-width: 100%;
+	overflow-y: auto;
+	padding: 0.5rem;
+	border-radius: 12px;
+
+	.uploaded-file {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		max-width: 250px;
+		background: var(--file-bg-doc);
+		border-radius: 10px;
+		padding: 0.6rem 1.1rem 0.6rem 0.6rem;
+		min-width: 0;
+		box-shadow: 0 2px 8px 0 #0001;
+		position: relative;
+
+		overflow: hidden;
+	}
+
+	.uploaded-file__icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		border-radius: 8px;
+		background: inherit;
+		background-color: #fff3;
+		margin-right: 0.7rem;
+		flex-shrink: 0;
+	}
+
+	.file-icon {
+		padding: 0.5rem;
+		border-radius: var(--border-radius-sm);
+	}
+	.uploaded-file__details {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		flex: 1 1 0;
+	}
+
+	.uploaded-file__name {
+		font-weight: 600;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		font-size: 1.05rem;
+		line-height: 1.2;
+		max-width: 200px;
+	}
+
+	.uploaded-file__type {
+		font-size: 0.92rem;
+		opacity: 0.85;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		line-height: 1.2;
+		max-width: 200px;
+	}
+
+	/* Background color per file type */
+	.file-type-pdf {
+		.file-icon {
+			background: var(--file-bg-pdf);
+		}
+	}
+	.file-type-img {
+		.file-icon {
+			background: var(--file-bg-img);
+		}
+	}
+	.file-type-video {
+		.file-icon {
+			background: var(--file-bg-video);
+		}
+	}
+	.file-type-audio {
+		.file-icon {
+			background: var(--file-bg-audio);
+		}
+	}
+	.file-type-code {
+		.file-icon {
+			background: var(--file-bg-code);
+		}
+	}
+	.file-type-doc {
+		.file-icon {
+			background: var(--file-bg-doc);
+		}
+	}
+	.file-type-csv {
+		.file-icon {
+			background: var(--file-bg-csv);
+		}
+	}
+}
