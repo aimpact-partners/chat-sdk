@@ -6,6 +6,5 @@
 	"useTabs": true,
 	"trailingComma": "none",
 	"singleQuote": true,
-	"bracketSpacing": true,
-	"configPath": "${workspaceFolder}/prettier.json"
+	"bracketSpacing": true
 }

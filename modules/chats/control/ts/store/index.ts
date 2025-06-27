@@ -10,7 +10,6 @@ import { IStore } from './types';
 import { RealtimeStore } from './realtime';
 
 export class StoreManager extends ReactiveModel<IStore> implements IStore {
-	declare waitingResponse: boolean;
 	declare autoplay: boolean;
 	declare fetching: boolean;
 	declare language: string;
@@ -109,7 +108,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 
 		this.#texts.on('change', this.triggerEvent);
 		this.#id = id;
-		this.reactiveProps(['waitingResponse', 'autoplay', 'language']);
+		this.reactiveProps(['autoplay', 'language']);
 		this.autoplay = true;
 		this.language = language;
 		this.#audio = new AudioManager(this, language);
@@ -223,9 +222,6 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 			this.#currentMessage = undefined;
 
 			if (typeof content === 'string' && [undefined, '', null].includes(content)) return;
-
-			this.fetching = true;
-			// return http.response(data);
 
 			return this.#chat.sendMessage(content);
 		} catch (e) {

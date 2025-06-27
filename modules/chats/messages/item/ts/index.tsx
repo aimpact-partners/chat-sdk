@@ -10,7 +10,7 @@ export /*bundle*/ function Message({
 	setUpdateScroll: any;
 	texts: any;
 }) {
-	useStore(message, ['streaming', 'change', 'transcribing.changed']);
+	useStore(message, ['streaming', 'change', 'transcribing.changed', 'metadata.started']);
 
 	React.useEffect(() => {
 		setUpdateScroll(performance.now());
@@ -19,7 +19,7 @@ export /*bundle*/ function Message({
 	}, [message.content, setUpdateScroll]);
 
 	const renderContent = () => {
-		if (!message.streaming) {
+		if (!message.streaming || message.metaDataStarted) {
 			return <Markdown content={message.content} />;
 		}
 
@@ -30,7 +30,7 @@ export /*bundle*/ function Message({
 			if (words.length === 0) return '<span class="streaming-content">...</span>';
 
 			const lastWord = words.pop();
-			const base = words.join(' ');
+			const base = words.join(' ').trim();
 
 			return `${base ? base + ' ' : ''}<span class="streaming-content">${lastWord}...</span>`;
 		}

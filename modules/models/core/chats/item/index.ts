@@ -40,7 +40,10 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	#currentMessage: Message;
 	#response: Message;
 	#messages: Messages;
-
+	#metaDataStarted: boolean = false;
+	get metaDataStarted() {
+		return this.#metaDataStarted;
+	}
 	get messages() {
 		return this.#messages;
 	}
@@ -85,6 +88,14 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 	#listen = () => {
 		this.#api.on('stream.response', this.#onListen);
+		this.#api.on('metadata.started', () => {
+			this.#metaDataStarted = true;
+			if (this.#response) {
+				this.#response.set({ streaming: false });
+			}
+
+			this.trigger('metadata.started');
+		});
 		this.#api.on('action.received', data => {
 			if (data) {
 				try {
@@ -153,11 +164,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const onFinish = async response => {
 				this.trigger('response.finished');
 				await this.#response.set({ streaming: false });
-
 				this.#response = undefined;
-
 				promise.resolve(item);
-
 				// this.#offEvents();
 			};
 
