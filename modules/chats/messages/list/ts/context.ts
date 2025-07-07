@@ -1,8 +1,9 @@
+import type { Chat, Message, Messages as MessagesCollection } from '@aimpact/chat-sdk/core';
+import { Voice } from '@aimpact/chat-sdk/voice';
 import React from 'react';
-import type { Chat, Messages as MessagesCollection, Message } from '@aimpact/chat-sdk/core';
 interface IChatMessagesContext {
 	chat: Chat;
-	player: any;
+	player: Voice;
 	showAvatar: boolean;
 	messages: MessagesCollection['items'];
 	texts: Record<string, any>;

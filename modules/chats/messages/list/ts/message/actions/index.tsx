@@ -1,51 +1,35 @@
-import React from 'react';
+import { useStore } from '@aimpact/chat-sdk/shared/hooks';
 import { IconButton } from 'pragmate-ui/icons';
-import { useBinder } from '@beyond-js/react-18-widgets/hooks';
 import { toast } from 'pragmate-ui/toast';
+import React from 'react';
 import { useChatMessagesContext } from '../../context';
+
 export function MessageActions({ text, message, messageTokens, play = true }) {
-	const { player, currentMessage, setCurrentMessage } = useChatMessagesContext();
-	const [content, setContent] = React.useState(message.content ?? '');
-	const [action, setAction] = React.useState('stop');
-	const [processing, setProcessing] = React.useState(false);
+	const { player, setCurrentMessage } = useChatMessagesContext();
+	const processing = player.speaking && player.textId === message.id;
 
-	useBinder([player], () => setProcessing(player.speaking));
-	useBinder([message], () => {
-		setContent(message.content ?? '');
-	});
-	const onChange = () => {
-		if (player.textId !== message.id) return;
-
-		setProcessing(false);
-		setAction('stop');
-	};
-	useBinder([player], onChange, 'on.finish');
+	useStore(player, ['on.finish', 'change']);
+	useStore(message);
 
 	const onPlay = async event => {
 		event.stopPropagation();
-
-		setAction('play');
-		setCurrentMessage(content);
+		setCurrentMessage(message.content);
 		player.positionToCut = 0;
 		player.textId = message.id;
-		const parsedText = content.replaceAll(/[-\\*_#]+/g, '').trim();
-
+		const parsedText = message.content.replaceAll(/[-\\*_#]+/g, '').trim();
 		await player.play(parsedText, message.id);
 	};
-	const onPause = async ({ listen }) => {
-		await player.stop();
-		setAction('stop');
-		setProcessing(false);
-	};
 
+	const onPause = async ({ listen }) => await player.stop();
 	const copyMessage = async () => {
 		await globalThis?.navigator.clipboard.writeText(text);
 		toast.success('Message copied to clipboard');
 	};
 
-	const icon = action === 'play' ? 'stop' : 'play';
-	const onClick = action === 'play' ? onPause : onPlay;
+	const icon = processing ? 'stop' : 'play';
+	const onClick = icon === 'play' ? onPlay : onPause;
 	if (message.streaming) return null;
+
 	return (
 		<div>
 			<div className="audio__actions">

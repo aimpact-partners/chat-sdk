@@ -1,4 +1,3 @@
-import { Events, languages, PendingPromise } from '@beyond-js/kernel/core';
 import { ReactiveModel } from '@beyond-js/reactive/model';
 import { voiceManager } from './manager';
 
@@ -83,6 +82,7 @@ export /*bundle*/ class Voice extends ReactiveModel<IVoice> {
 	#selectedVoice;
 
 	async _web() {
+		
 		if (this.#speaking) {
 			speechSynthesis.cancel();
 			this.trigger('on.finish');

@@ -1,6 +1,6 @@
 {
 	"name": "@aimpact/chat-sdk",
-	"version": "1.5.4",
+	"version": "1.5.5",
 	"title": "Aimpact Chat SDK Client library",
 	"description": " comprehensive and versatile JavaScript SDK designed to enrich your applications with powerful chat functionalities. It enables seamless management of Knowledge Boxes, Chats, Audio, Users, and more. With built-in IndexedDB connection handling, this SDK ensures efficient data storage and retrieval, empowering developers to create robust, high-performance chat features with ease",
 	"license": "ISC",
@@ -91,9 +91,9 @@
 		]
 	},
 	"dependencies": {
-		"@beyond-js/backend": "^0.1.8",
+		"@beyond-js/backend": "^0.1.10",
 		"@beyond-js/events": "^0.0.7",
-		"@beyond-js/http-suite": "^0.1.0",
+		"@beyond-js/http-suite": "^0.1.1",
 		"@beyond-js/kernel": "~0.1.12",
 		"@beyond-js/pending-promise": "^0.0.5",
 		"@beyond-js/react-18-widgets": "^1.1.4",

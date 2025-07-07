@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useChatContext } from '../context';
 import { Messages } from '@aimpact/chat-sdk/messages';
-import { useBinder } from '@beyond-js/react-18-widgets/hooks';
-import { getChatContainerClass } from '../utils/get-chat-container-class';
+import { useStore } from '@aimpact/chat-sdk/shared/hooks';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { EmptyState } from '../components/empty-state';
-import { ErrorsRenderer } from '../components/errors-renderer';
+import { useChatContext } from '../context';
+import { getChatContainerClass } from '../utils/get-chat-container-class';
 
 export /*bundle*/ function Chat(): JSX.Element {
 	const [isReader] = useState(false);
@@ -29,7 +28,7 @@ export /*bundle*/ function Chat(): JSX.Element {
 	// Scroll to bottom on updateScroll change
 	useEffect(() => scrollToSeparator(), [updateScroll, scrollToSeparator]);
 	// Bind to store events
-	useBinder([store.chat], handleNewMessage, ['new.message', 'response.finished']);
+	useStore(store.chat, ['new.message', 'response.finished'], handleNewMessage);
 
 	// Early return for empty state
 	if (!store.messages.length) {

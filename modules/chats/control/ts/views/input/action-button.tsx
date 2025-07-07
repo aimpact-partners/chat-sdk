@@ -5,12 +5,12 @@ import { AppIconButton } from '@aimpact/chat-sdk/components/icons';
 import { useInputContext } from './context';
 import { useStore } from '@aimpact/chat-sdk/shared/hooks';
 import { Spinner } from 'pragmate-ui/components';
-export function InputActionButton({ buttonIsDisabled }) {
+export function InputActionButton({ buttonIsDisabled, fetching }) {
 	const { store, onSubmit, text } = useInputContext();
 
 	useStore(store.chat, ['response.finished', 'metadata.started']);
-	console.log(200, buttonIsDisabled);
-	if (buttonIsDisabled) {
+
+	if (fetching) {
 		return (
 			<span className="input__icon  input__icon--right">
 				<Spinner active />

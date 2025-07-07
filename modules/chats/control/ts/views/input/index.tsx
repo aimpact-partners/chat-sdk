@@ -19,6 +19,11 @@ export /*bundle*/ const AgentsChatInput = ({
 	const { text, setText, onSubmit, fetching, recording, setRecording, setFetching } = useInputForm();
 	const isFetching = fetching || isWaiting;
 	const isDisabled = store.disabled || disabled;
+
+	// Additional check for empty text
+	const isTextEmpty = ['', undefined, null].includes(text.replaceAll('\n', '')) || !text.trim().length;
+	const finalDisabled = isDisabled;
+
 	const contextValue = {
 		store,
 		onSubmit,
@@ -30,22 +35,18 @@ export /*bundle*/ const AgentsChatInput = ({
 		recording,
 		text,
 		setFetching,
-		disabled: isDisabled
+		disabled: finalDisabled
 	};
 	useStore(store);
 
-	const attrs = { disabled: disabled || store.disabled };
-	const buttonIsDisabled = isDisabled || attrs.disabled || recording || isFetching;
-	let cls = `chat-input-container ${isFetching ? 'is-fetching' : ''} ${isDisabled ? 'is-disabled' : ''}`;
+	let cls = `chat-input-container ${isFetching ? 'is-fetching' : ''} ${finalDisabled ? 'is-disabled' : ''}`;
 	const containerAttrs = {
 		className: cls
 	};
 	const controlAttrs = {
 		onClick,
-		className: `chat-input-form ${isDisabled ? 'is-disabled' : ''}`
+		className: `chat-input-form ${finalDisabled ? 'is-disabled' : ''}`
 	};
-
-	if (['', undefined, null].includes(text.replaceAll('\n', '')) || !text.trim().length) attrs.disabled = true;
 
 	const onClickSpeech = () => {
 		setShowRealtime(true);
@@ -65,11 +66,11 @@ export /*bundle*/ const AgentsChatInput = ({
 						fetching={isFetching}
 						setText={setText}
 						handleSend={onSubmit}
-						disabled={isDisabled}
+						disabled={finalDisabled}
 					/>
 					<div className="input-chat__actions">
 						{realtime && <IconButton icon="speech" onClick={onClickSpeech} />}
-						<InputActionButton buttonIsDisabled={buttonIsDisabled || isDisabled} />
+						<InputActionButton buttonIsDisabled={finalDisabled} fetching={isFetching} />
 					</div>
 				</div>
 			</Form>

@@ -1,14 +1,16 @@
-import * as React from 'react';
-import { Markdown } from '@aimpact/chat-sdk/widgets/markdown';
+import { Message as MessageModel } from '@aimpact/chat-sdk/core';
 import { useStore } from '@aimpact/chat-sdk/shared/hooks';
+import { Markdown } from '@aimpact/chat-sdk/widgets/markdown';
+import * as React from 'react';
+
 export /*bundle*/ function Message({
 	message,
 	setUpdateScroll,
 	texts
 }: {
-	message: any;
-	setUpdateScroll: any;
-	texts: any;
+	message: MessageModel;
+	setUpdateScroll: (now: number) => void;
+	texts: Record<string, any>;
 }) {
 	useStore(message, ['streaming', 'change', 'transcribing.changed', 'metadata.started']);
 
