@@ -56,7 +56,6 @@ export function RealtimePanel({ isVisible }: { isVisible: boolean }) {
 					exit={{ opacity: 0, y: 20 }}
 					transition={{ duration: 0.5, ease: 'easeOut' }}
 				>
-					{/* Your content here */}
 					<Image className="app-logo" src="/assets/rvd/logo.png" />
 					<RealtimeStatus />
 

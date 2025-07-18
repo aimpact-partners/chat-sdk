@@ -13,7 +13,7 @@ export const ErrorsRenderer: React.FC<ErrorsRendererProps> = ({ message }) => {
 	const { texts } = useChatMessagesContext();
 
 	if (!message.error) return null;
-	const error = message.error;
+
 	return (
 		<>
 			<Alert type="error">{texts.errors.default}</Alert>

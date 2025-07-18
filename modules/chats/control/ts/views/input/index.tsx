@@ -20,8 +20,6 @@ export /*bundle*/ const AgentsChatInput = ({
 	const isFetching = fetching || isWaiting;
 	const isDisabled = store.disabled || disabled;
 
-	// Additional check for empty text
-	const isTextEmpty = ['', undefined, null].includes(text.replaceAll('\n', '')) || !text.trim().length;
 	const finalDisabled = isDisabled;
 
 	const contextValue = {

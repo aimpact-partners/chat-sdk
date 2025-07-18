@@ -5,8 +5,7 @@ import * as React from 'react';
 
 export /*bundle*/ function Message({
 	message,
-	setUpdateScroll,
-	texts
+	setUpdateScroll
 }: {
 	message: MessageModel;
 	setUpdateScroll: (now: number) => void;

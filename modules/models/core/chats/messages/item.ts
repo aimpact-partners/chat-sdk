@@ -18,6 +18,8 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Parti
 	//#endregion
 	#chat: Chat;
 	declare content: string;
+	declare metaDataStarted: boolean;
+	declare streaming: boolean;
 	declare messages: Messages;
 	localFields = ['audio'];
 	declare audio: Blob;

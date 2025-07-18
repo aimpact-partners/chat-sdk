@@ -21,6 +21,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	declare system: string;
 	declare parent: string;
 	declare category: any;
+	declare streaming: boolean;
+
 	declare usage: IChatUsage;
 	declare children: any;
 	declare user: any;
@@ -161,7 +163,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const promise = new PendingPromise<Message>();
 			const item = new Message({ chatId: this.id, role: 'user', content });
 			this.#currentMessage = item;
-			const onFinish = async response => {
+			const onFinish = async (response?: any) => {
 				this.trigger('response.finished');
 				await this.#response.set({ streaming: false });
 				this.#response = undefined;
@@ -175,13 +177,16 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const onError = e => {
 				this.#errors.push(e);
 				this.#response.set({ error: e });
-				console.error(`onError`, e);
 			};
 			await this.#api
 				.bearer(token)
-				.stream(uri, { ...item.getProperties() })
+				.stream(uri, { ...item.getProperties(), error: { metadata: true } })
 				.then(onFinish)
-				.catch(onError);
+				.catch(onError)
+				.finally(() => {
+					console.log(20, 'ejecutamos');
+					onFinish();
+				});
 
 			return promise;
 		} catch (e) {
@@ -205,16 +210,17 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				transcribing: true
 			});
 			this.#currentMessage = item;
-			const onFinish = async response => {
-				await this.#response.set({ streaming: false, transcribing: false });
-				this.trigger('response.finished');
-				// this.#response = undefined;
-				promise.resolve(item);
+			const onFinish = async (response?: any) => {
+				if (response) {
+					await this.#response.set({ streaming: false, transcribing: false });
+					this.trigger('response.finished');
+				}
 
+				promise.resolve(item);
 				// this.#offEvents();
 			};
 			const onError = e => {
-				console.error(e);
+				// console.error(e);
 			};
 			this.messages.add(item);
 			this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
@@ -225,7 +231,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			};
 
 			this.#api.bearer(token).stream(uri, specs).then(onFinish).catch(onError);
-			globalThis.setTimeout(() => onFinish({}), 3000); // TODO: remove this
+
 			return promise;
 		} catch (e) {
 			throw new Error(e);
