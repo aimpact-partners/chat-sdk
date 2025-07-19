@@ -10,6 +10,9 @@
 		"errors": {
 			"default": "Ha ocurrido un error, por favor intente nuevamente"
 		},
+		"actions": {
+			"retry": "Reintentar"
+		},
 		"message": {
 			"transcribing": "Transcribiendo..."
 		}
@@ -24,6 +27,9 @@
 		},
 		"errors": {
 			"default": "An error has occurred, please try again"
+		},
+		"actions": {
+			"retry": "Retry"
 		},
 		"message": {
 			"transcribing": "Transcribing..."
@@ -54,6 +60,9 @@
 		},
 		"errors": {
 			"default": "Ein Fehler ist aufgetreten, bitte versuchen Sie es erneut"
+		},
+		"actions": {
+			"retry": "Wiederholen"
 		},
 		"message": {
 			"transcribing": "Transkribieren..."

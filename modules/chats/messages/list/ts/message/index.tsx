@@ -8,13 +8,12 @@ import { SystemActions } from './system-actions';
 import { ErrorsRenderer } from './errors-renderer';
 
 export function MessageItemContainer({ message, setUpdateScroll }) {
-	// const { fetching } = useMessage(message);
-	const { showAvatar, texts } = useChatMessagesContext();
+	const { showAvatar, texts, chat } = useChatMessagesContext();
 	const cls = `message__container message__container--${message.role}${showAvatar ? `has-avatar` : ''}`;
 	const messageTokens = message.role === 'assistant' ? message.usage?.totalTokens : null;
 	const ACTIONS = ['transcription', 'fetching-tool-data', 'kb-processed-response', 'function', 'kb-response'];
 	const [, playableContent, actions] = parseText(message.id, message.content, ACTIONS);
-
+	
 	return (
 		<div className={cls} data-id={message.id}>
 			{showAvatar && <ProfileIcon role={message.role} />}

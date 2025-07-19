@@ -1,0 +1,21 @@
+.message__container .message__error {
+	.alert.alert--error {
+		gap: 0.5rem;
+		flex-grow: 1;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		.error__actions {
+			align-items: center;
+			width: 100%;
+
+			.pui-button {
+				.button-label {
+					display: flex;
+					gap: 0.25rem;
+					align-items: center;
+				}
+			}
+		}
+	}
+}

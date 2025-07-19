@@ -98,6 +98,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 
 			this.trigger('metadata.started');
 		});
+
 		this.#api.on('action.received', data => {
 			if (data) {
 				try {
@@ -158,41 +159,91 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	async sendMessage(content: string): Promise<Message> {
 		try {
 			this.fetching = true;
-			const token = await sessionWrapper.user.firebaseToken;
-			const uri = `/chats/${this.id}/messages`;
-			const promise = new PendingPromise<Message>();
 			const item = new Message({ chatId: this.id, role: 'user', content });
 			this.#currentMessage = item;
-			const onFinish = async (response?: any) => {
-				this.trigger('response.finished');
+			this.messages.add(item);
+
+			// Create response message
+			this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
+			this.messages.add(this.#response);
+
+			// Execute the API call
+			await this.#executeMessageCall(item);
+
+			return item;
+		} catch (e) {
+			throw e;
+		} finally {
+			this.fetching = false;
+		}
+	}
+
+	async retry(id) {
+		try {
+			// Get the message by index
+			const message = this.#messages.get(id);
+			console.log(1, 'we are retrying', message);
+			if (!message) {
+				throw new Error(`Message with id ${id} not found`);
+			}
+
+			// Clear any previous error
+			message.set({ error: undefined });
+
+			// Set as current message
+			this.#currentMessage = message;
+
+			// Create response message if it doesn't exist
+			console.log(0.2, this.#response);
+			if (!this.#response) {
+				this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
+				this.messages.add(this.#response);
+			} else {
+				// Reset response message
+				this.#response.set({ streaming: true, error: undefined });
+			}
+
+			// Execute the API call
+			await this.#executeMessageCall(message);
+		} catch (e) {
+			console.error(`Error in retry method:`, e);
+			throw e;
+		}
+	}
+
+	async #executeMessageCall(item: Message): Promise<void> {
+		const token = await sessionWrapper.user.firebaseToken;
+		const uri = `/chats/${this.id}/messages`;
+		const promise = new PendingPromise<void>();
+
+		const onFinish = async (response?: any) => {
+			this.trigger('response.finished');
+			if (this.#response) {
 				await this.#response.set({ streaming: false });
 				this.#response = undefined;
-				promise.resolve(item);
-				// this.#offEvents();
-			};
+			}
+			promise.resolve();
+		};
 
-			this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
-			this.messages.add(item);
-			this.messages.add(this.#response);
-			const onError = e => {
-				this.#errors.push(e);
+		const onError = (e: any) => {
+			this.#errors.push(e);
+			if (this.#response) {
 				this.#response.set({ error: e });
-			};
+			}
+			promise.reject(e);
+		};
+
+		try {
 			await this.#api
 				.bearer(token)
 				.stream(uri, { ...item.getProperties(), error: { metadata: true } })
 				.then(onFinish)
-				.catch(onError)
-				.finally(() => {
-					console.log(20, 'ejecutamos');
-					onFinish();
-				});
+				.catch(onError);
 
 			return promise;
 		} catch (e) {
-			console.error(`capturamos error en el modelo`, e);
-		} finally {
-			this.fetching = false;
+			onError(e);
+			throw e;
 		}
 	}
 
@@ -219,15 +270,21 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				promise.resolve(item);
 				// this.#offEvents();
 			};
-			const onError = e => {
-				// console.error(e);
+
+			const onError = (e: any) => {
+				this.#errors.push(e);
+				if (this.#response) {
+					this.#response.set({ error: e });
+				}
+				promise.reject(e);
 			};
 			this.messages.add(item);
 			this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
 			const specs = {
 				...item.getProperties(),
 				audio: new File([item.audio], 'audio.mp4', { type: 'audio/mp4' }),
-				multipart: true
+				multipart: true,
+				error: { metadata: true }
 			};
 
 			this.#api.bearer(token).stream(uri, specs).then(onFinish).catch(onError);
