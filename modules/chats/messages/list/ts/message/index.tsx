@@ -23,10 +23,7 @@ export function MessageItemContainer({ message, setUpdateScroll }) {
 				{!message.error && (
 					<Message message={message} setUpdateScroll={setUpdateScroll} texts={texts.message} />
 				)}
-				<section className="message__actions">
-					<span className="message__datetime">{formatHour(message.timestamp)}</span>
-					<MessageActions message={message} text={playableContent} messageTokens={messageTokens} />
-				</section>
+				<MessageActions message={message} text={playableContent} messageTokens={messageTokens} />
 				<ErrorsRenderer message={message} />
 			</section>
 		</div>

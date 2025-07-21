@@ -3,6 +3,7 @@ import { IconButton } from 'pragmate-ui/icons';
 import { toast } from 'pragmate-ui/toast';
 import React from 'react';
 import { useChatMessagesContext } from '../../context';
+import { formatHour } from '../format-hour';
 
 export function MessageActions({ text, message, messageTokens, play = true }) {
 	const { player, setCurrentMessage } = useChatMessagesContext();
@@ -31,12 +32,15 @@ export function MessageActions({ text, message, messageTokens, play = true }) {
 	if (message.streaming) return null;
 
 	return (
-		<div>
-			<div className="audio__actions">
-				<IconButton onClick={copyMessage} icon="copy" />
-				{play && <IconButton onClick={onClick} data-listen="api" icon={icon} />}
+		<section className="message__actions">
+			<span className="message__datetime">{formatHour(message.timestamp)}</span>
+			<div>
+				<div className="audio__actions">
+					<IconButton onClick={copyMessage} icon="copy" />
+					{play && <IconButton onClick={onClick} data-listen="api" icon={icon} />}
+				</div>
+				{messageTokens && <div className="tokens overline">{messageTokens} TOKENS</div>}
 			</div>
-			{messageTokens && <div className="tokens overline">{messageTokens} TOKENS</div>}
-		</div>
+		</section>
 	);
 }
