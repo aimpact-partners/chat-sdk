@@ -6,6 +6,7 @@ import { MessageActions } from './actions';
 import { ProfileIcon } from './components/profile-icon';
 import { SystemActions } from './system-actions';
 import { ErrorsRenderer } from './errors-renderer';
+import { formatHour } from './format-hour';
 
 export function MessageItemContainer({ message, setUpdateScroll }) {
 	const { showAvatar, texts, chat } = useChatMessagesContext();
@@ -13,7 +14,7 @@ export function MessageItemContainer({ message, setUpdateScroll }) {
 	const messageTokens = message.role === 'assistant' ? message.usage?.totalTokens : null;
 	const ACTIONS = ['transcription', 'fetching-tool-data', 'kb-processed-response', 'function', 'kb-response'];
 	const [, playableContent, actions] = parseText(message.id, message.content, ACTIONS);
-	
+
 	return (
 		<div className={cls} data-id={message.id}>
 			{showAvatar && <ProfileIcon role={message.role} />}
@@ -23,6 +24,7 @@ export function MessageItemContainer({ message, setUpdateScroll }) {
 					<Message message={message} setUpdateScroll={setUpdateScroll} texts={texts.message} />
 				)}
 				<section className="message__actions">
+					<span className="message__datetime">{formatHour(message.timestamp)}</span>
 					<MessageActions message={message} text={playableContent} messageTokens={messageTokens} />
 				</section>
 				<ErrorsRenderer message={message} />

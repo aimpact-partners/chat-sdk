@@ -2,6 +2,7 @@ import { Message as MessageModel } from '@aimpact/chat-sdk/core';
 import { useStore } from '@aimpact/chat-sdk/shared/hooks';
 import { Markdown } from '@aimpact/chat-sdk/widgets/markdown';
 import * as React from 'react';
+import * as dayjs from 'dayjs';
 
 export /*bundle*/ function Message({
 	message,

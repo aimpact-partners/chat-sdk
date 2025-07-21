@@ -11,6 +11,10 @@ $gradient-width: 2px;
 	box-sizing: border-box;
 	display: grid;
 
+	&--user {
+		max-width: 80%;
+	}
+
 	&.has-avatar {
 		grid-template-columns: auto 1fr;
 	}
@@ -45,9 +49,11 @@ $gradient-width: 2px;
 
 	.message__actions {
 		display: flex;
-
-		flex-flow: column wrap;
-		justify-content: flex-end;
+		gap: 1rem;
+		align-items: center;
+		.message__datetime {
+			font-size: 10px;
+		}
 	}
 
 	.audio__actions {
