@@ -283,8 +283,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			const specs = {
 				...item.getProperties(),
 				audio: new File([item.audio], 'audio.mp4', { type: 'audio/mp4' }),
-				multipart: true,
-				error: { metadata: true }
+				multipart: true
+				
 			};
 
 			this.#api.bearer(token).stream(uri, specs).then(onFinish).catch(onError);
