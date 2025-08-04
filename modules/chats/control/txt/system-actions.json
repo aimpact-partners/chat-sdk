@@ -42,5 +42,27 @@
 				"kb": "Abfrage der Wissensdatenbank über: "
 			}
 		}
+	},
+	"fr": {
+		"systemActions": {
+			"kb-response": "Données obtenues de la base de connaissances : ",
+			"fetching-tool-data": "Je vais interroger les documents de la classe",
+			"kb-processed-response": "Analyse du contenu terminée",
+			"transcription": "Obtention de la transcription",
+			"functions": {
+				"kb": "Interrogation de la base de connaissances sur : "
+			}
+		}
+	},
+	"pt": {
+		"systemActions": {
+			"kb-response": "Dados obtidos da base de conhecimento: ",
+			"fetching-tool-data": "Vou consultar os documentos da classe",
+			"kb-processed-response": "Análise sobre conteúdo finalizado",
+			"transcription": "Obtendo transcrição",
+			"functions": {
+				"kb": "Consultando a base de conhecimento sobre: "
+			}
+		}
 	}
 }

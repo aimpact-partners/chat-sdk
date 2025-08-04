@@ -4,9 +4,8 @@ import React from 'react';
 import { useChatMessagesContext } from '../context';
 import { MessageActions } from './actions';
 import { ProfileIcon } from './components/profile-icon';
-import { SystemActions } from './system-actions';
 import { ErrorsRenderer } from './errors-renderer';
-import { formatHour } from './format-hour';
+import { SystemActions } from './system-actions';
 
 export function MessageItemContainer({ message, setUpdateScroll }) {
 	const { showAvatar, texts, chat } = useChatMessagesContext();

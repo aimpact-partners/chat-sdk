@@ -58,5 +58,35 @@
 				"description": "Um die Sprachfunktion zu aktivieren, benötigen wir Zugriff auf Ihr Mikrofon. Bitte aktivieren Sie es in Ihren Browsereinstellungen und aktualisieren Sie die Seite."
 			}
 		}
+	},
+	"fr": {
+		"permissions": {
+			"intro": "Permissions d'accès",
+			"title": "Activation vocale",
+			"description": "Activez le microphone pour améliorer votre expérience en interagissant via des commandes vocales.",
+			"concedded": {
+				"title": "Prêt !",
+				"description": "Vous pouvez maintenant profiter de l'activation vocale."
+			},
+			"error": {
+				"title": "Nous n'avons pas accès au microphone",
+				"description": "Pour activer la fonction vocale, nous avons besoin d'accéder à votre microphone. Veuillez l'activer dans les paramètres de votre navigateur et actualiser la page."
+			}
+		}
+	},
+	"pt": {
+		"permissions": {
+			"intro": "Permissões de acesso",
+			"title": "Ativação por voz",
+			"description": "Ative o microfone para aprimorar sua experiência, interagindo por meio de comandos de voz.",
+			"concedded": {
+				"title": "Pronto!",
+				"description": "Agora você pode desfrutar da ativação por voz."
+			},
+			"error": {
+				"title": "Não temos acesso ao microfone",
+				"description": "Para ativar a função de voz, precisamos de acesso ao seu microfone. Por favor, habilite-o nas configurações do seu navegador e atualize a página."
+			}
+		}
 	}
 }

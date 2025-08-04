@@ -52,12 +52,14 @@
 	"deployment": {
 		"distributions": [
 			{
-				"name": "web",
+				"name": "web-development",
 				"environment": "development",
-				"platform": "web",
-				"ports": {
-					"bundles": 1530
-				}
+				"platform": "web"
+			},
+			{
+				"name": "web",
+				"environment": "local",
+				"platform": "web"
 			},
 			{
 				"name": "web-tsc",

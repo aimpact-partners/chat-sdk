@@ -60,8 +60,7 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Parti
 				'timestamp',
 				'streaming',
 				'transcribing',
-				'actions',
-				'error'
+				'actions'
 			]
 		});
 

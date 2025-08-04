@@ -1,0 +1,8 @@
+{
+	"modules": {
+		"chats/control": {
+			"languages": ["es", "en", "pr", "de", "fr", "pt"],
+			"files": ["texts.json", "system-actions.json", "permissions.json"]
+		}
+	}
+}

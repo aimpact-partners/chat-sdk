@@ -67,5 +67,41 @@
 		"message": {
 			"transcribing": "Transkribieren..."
 		}
+	},
+	"fr": {
+		"system": {
+			"success": "Système mis à jour avec succès"
+		},
+		"assistant": {
+			"title": "Mission de l'assistant",
+			"message": "La mission que l'agent aura pour interagir dans le chat"
+		},
+		"errors": {
+			"default": "Une erreur s'est produite, veuillez réessayer"
+		},
+		"actions": {
+			"retry": "Réessayer"
+		},
+		"message": {
+			"transcribing": "Transcription en cours..."
+		}
+	},
+	"pt": {
+		"system": {
+			"success": "Sistema atualizado com sucesso"
+		},
+		"assistant": {
+			"title": "Missão do Assistente",
+			"message": "A missão que o agente terá para interagir no chat"
+		},
+		"errors": {
+			"default": "Ocorreu um erro, por favor tente novamente"
+		},
+		"actions": {
+			"retry": "Tentar novamente"
+		},
+		"message": {
+			"transcribing": "Transcrevendo..."
+		}
 	}
 }

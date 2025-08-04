@@ -182,19 +182,19 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		try {
 			// Get the message by index
 			const message = this.#messages.get(id);
-			console.log(1, 'we are retrying', message);
+			// console.log(1, 'we are retrying', message);
 			if (!message) {
 				throw new Error(`Message with id ${id} not found`);
 			}
 
 			// Clear any previous error
-			message.set({ error: undefined });
+			// message.set({ error: undefined });
 
 			// Set as current message
 			this.#currentMessage = message;
 
 			// Create response message if it doesn't exist
-			console.log(0.2, this.#response);
+			// console.log(0.2, this.#response);
 			if (!this.#response) {
 				this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
 				this.messages.add(this.#response);
@@ -284,7 +284,6 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				...item.getProperties(),
 				audio: new File([item.audio], 'audio.mp4', { type: 'audio/mp4' }),
 				multipart: true
-				
 			};
 
 			this.#api.bearer(token).stream(uri, specs).then(onFinish).catch(onError);
