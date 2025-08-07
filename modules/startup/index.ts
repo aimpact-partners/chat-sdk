@@ -32,7 +32,7 @@ class SDKInitializer extends ReactiveModel<SDKInitializer> {
 		this.triggerEvent();
 	}
 
-	async initialize({ environment, userModel, api, project, localdb = true }: ISDKSettings) {
+	async initialize({ environment, userModel, api, project }: ISDKSettings) {
 		this.#environment = environment;
 		this.#userModel = userModel;
 		this.#api = api;
