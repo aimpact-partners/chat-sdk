@@ -1,0 +1,27 @@
+// Editor-specific CSS Variables
+:root {
+	// Editor shadows
+	--wiki-editor-shadow: 0 1px 3px 0 var(--shadow-color), 0 1px 2px -1px var(--shadow-color);
+	--wiki-editor-shadow-lg: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
+
+	// Editor code block colors
+	--wiki-editor-code-bg: var(--surface-variant);
+	--wiki-editor-code-text: var(--on-surface-variant);
+	--wiki-editor-code-block-bg: var(--surface);
+	--wiki-editor-code-block-text: var(--on-surface);
+
+	// Editor interaction states
+	--wiki-editor-hover-bg: var(--surface-variant);
+	--wiki-editor-focus-bg: rgba(0, 0, 0, 0.1);
+	--wiki-editor-primary-hover: rgba(0, 0, 0, 0.1);
+
+	// Editor toolbar specific
+	--wiki-editor-toolbar-border: var(--outline);
+	--wiki-editor-toolbar-bg: var(--surface);
+	--wiki-editor-toolbar-shadow: var(--wiki-editor-shadow);
+	--wiki-primary-hover: var(--primary);
+	// Editor dropdown specific
+	--wiki-editor-dropdown-bg: var(--background);
+	--wiki-editor-dropdown-border: var(--outline);
+	--wiki-editor-dropdown-shadow: var(--wiki-editor-shadow-lg);
+}

@@ -1,0 +1,13 @@
+{
+	"name": "editor",
+	"code": {
+		"scss": {
+			"path": "scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "ts",
+			"files": ["*"]
+		}
+	}
+}

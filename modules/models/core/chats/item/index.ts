@@ -6,10 +6,11 @@ import { Api } from '@beyond-js/http-suite/api';
 import { Message } from '../messages/item';
 import { Messages } from '../messages';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
-import { IChat, IChatUsage } from '../interfaces/chat';
+import { IChat, IChatUsage, ICreateChatOptions } from '../interfaces/chat';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';
 import { ChatProvider } from './provider';
 import { v4 as uuid } from 'uuid';
+import { languages } from '@beyond-js/kernel/core';
 
 export /*bundle*/ class Chat extends Item<IChat> {
 	declare id: string;
@@ -18,6 +19,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	declare language: any;
 	declare audioplay: boolean;
 	declare userId: string;
+	declare name: string;
 	declare system: string;
 	declare parent: string;
 	declare category: any;
@@ -50,7 +52,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		return this.#messages;
 	}
 
-	constructor({ id = undefined, ...specs } = {}) {
+	constructor({ id = undefined, server = undefined, ...specs } = {}) {
 		super({
 			id,
 			entity: 'Chat',
@@ -75,7 +77,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			provider: ChatProvider
 		});
 
-		this.#api = new Api(sdkConfig.api);
+		this.#api = new Api(server || sdkConfig.api);
 
 		globalThis.chat = this;
 		if (!id) this.id = uuid();
@@ -321,19 +323,90 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		};
 	}
 
-	async create() {
+	async create(options?: ICreateChatOptions) {
 		const response = await this.#api.post('/chats', {
 			id: this.id,
-			name: 'My chat',
-			projectId: '02d991dd-8d57-42f3-b155-8e7133482c19',
-			uid: sessionWrapper.user.id,
+			name: options?.name || this.name || 'My chat',
+			projectId: options?.projectId || '02d991dd-8d57-42f3-b155-8e7133482c19',
+			uid: options?.userId || this.userId || sessionWrapper.user.id,
+			system: options?.system || this.system || '',
+			parent: options?.parent || this.parent || '',
+			category: options?.category || this.category || 'general',
 			metadata: {
-				prompt: 'topic-q&a'
+				prompt: 'topic-q&a',
+				...options?.metadata,
+				...this.metadata
 			},
-			language: {
-				default: 'es'
-			}
+			language: options?.language ||
+				this.language || {
+					default: 'es'
+				}
 		});
 		this.set(response.data);
+	}
+
+	/**
+	 * Static factory method to create a new chat instance
+	 * Follows the Factory pattern for better object creation
+	 *
+	 * @param options - Configuration options for the chat
+	 * @returns Promise<Chat> - A new chat instance
+	 *
+	 * @example
+	 * ```typescript
+	 * // Create a basic chat
+	 * const chat = await Chat.create({
+	 *   name: 'My New Chat',
+	 *   language: { default: 'es' }
+	 * });
+	 *
+	 * // Create a chat with custom metadata
+	 * const chat = await Chat.create({
+	 *   name: 'Technical Discussion',
+	 *   system: 'You are a helpful technical assistant',
+	 *   metadata: { topic: 'programming', difficulty: 'advanced' }
+	 * });
+	 * ```
+	 */
+	static async create(options: ICreateChatOptions = {}): Promise<Chat> {
+		try {
+			// Validate required session
+			if (!sessionWrapper.user?.id) {
+				throw new Error('User session is required to create a chat');
+			}
+			if (!options.projectId) {
+				throw new Error('Project ID is required to create a chat');
+			}
+
+			/**
+			 * uid: user.uid,
+projectId: 'a1l34rn1-453a-4612-b6fd-59cb742111d0',
+name: '',
+language: { default: 'es' },
+metadata: {}
+			 */
+			// Set default values
+			const defaultOptions: ICreateChatOptions = {
+				name: 'New Chat',
+				userId: sessionWrapper.user.id,
+				language: { default: languages.default },
+				projectId: options.projectId,
+				metadata: {},
+				...options
+			};
+
+			// Create chat instance
+			const chat = new Chat({
+				id: uuid(),
+				...defaultOptions
+			});
+
+			// Create the chat on the server
+			await chat.create(defaultOptions);
+
+			return chat;
+		} catch (error) {
+			throw new Error(`Failed to create chat: ${error.message}`);
+		}
 	}
 }

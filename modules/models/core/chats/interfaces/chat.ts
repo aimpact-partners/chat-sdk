@@ -29,3 +29,18 @@ export /*bundle */ interface IChat {
 export interface IChats {
 	items: Chat[];
 }
+
+// New interface for chat creation options
+export interface ICreateChatOptions {
+	name?: string;
+	userId?: string;
+	language?: {
+		default: string;
+	};
+	knowledgeBoxId?: string;
+	projectId?: string;
+	system?: string;
+	parent?: string;
+	category?: string;
+	metadata?: Record<string, any>;
+}

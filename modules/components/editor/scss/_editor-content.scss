@@ -1,0 +1,120 @@
+// Editor Wrapper
+.wiki-editor__wrapper {
+	position: relative;
+	border: 1px solid var(--outline);
+	border-radius: 0.75rem;
+	overflow: hidden;
+	box-shadow: var(--wiki-shadow);
+}
+
+// Editor Content
+.wiki-editor__content {
+	margin-block: 1rem;
+	border-radius: var(--border-radius-xs);
+	padding: 2rem;
+	min-height: 500px;
+	font-size: 1rem;
+	border: 1px solid var(--outline);
+	line-height: 1.6;
+	color: var(--text-color);
+
+	&:focus {
+		outline: none;
+	}
+
+	// TipTap specific styles
+	.ProseMirror {
+		outline: none;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		margin: 1.5rem 0 1rem 0;
+		font-weight: 600;
+		line-height: 1.25;
+	}
+
+	h1 {
+		font-size: 2rem;
+	}
+	h2 {
+		font-size: 1.75rem;
+	}
+	h3 {
+		font-size: 1.5rem;
+	}
+
+	p {
+		margin: 1rem 0;
+	}
+
+	ul,
+	ol {
+		margin: 1rem 0;
+		padding-left: 2rem;
+	}
+
+	li {
+		margin: 0.5rem 0;
+	}
+
+	blockquote {
+		margin: 1.5rem 0;
+		padding: 1rem 1.5rem;
+		border-left: 4px solid var(--primary);
+		border-radius: 0.5rem;
+		font-style: italic;
+	}
+
+	code {
+		background: var(--wiki-code-bg);
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.25rem;
+		font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+		font-size: 0.875em;
+		color: var(--wiki-code-text);
+	}
+
+	pre {
+		background: var(--wiki-code-block-bg);
+		color: var(--wiki-code-block-text);
+		padding: 1rem;
+		border-radius: 0.5rem;
+		overflow-x: auto;
+		margin: 1.5rem 0;
+
+		code {
+			background: none;
+			padding: 0;
+			color: inherit;
+		}
+	}
+
+	hr {
+		margin: 2rem 0;
+		border: none;
+		border-top: 1px solid var(--outline);
+	}
+
+	.task-list-item {
+		list-style: none;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+
+		input[type='checkbox'] {
+			margin: 0;
+		}
+	}
+}
+
+// Responsive Design
+@media (max-width: 480px) {
+	.wiki-editor__content {
+		padding: 1rem;
+	}
+}
