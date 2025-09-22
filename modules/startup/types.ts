@@ -1,10 +1,11 @@
 // import type { User } from '@aimpact/chat-sdk/users';
-export type Environment = 'development' | 'testing' | 'quality' | 'production';
+export /*bundle*/ type Environment = 'development' | 'testing' | 'quality' | 'production';
 // export type UserConstructor = new (specs: any) => User;
 
-export interface ISDKSettings {
+export /*bundle*/ interface ISDKSettings {
 	environment: Environment;
 	localdb?: boolean;
+	pkg: string;
 	userModel: any;
 	api: string;
 	project?: string;

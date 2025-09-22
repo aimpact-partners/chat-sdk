@@ -5,6 +5,7 @@ import { PendingPromise } from '@beyond-js/kernel/core';
 import firebaseAuth from 'firebase/auth';
 import { UserProvider } from './provider';
 import { IChatUser } from './interface';
+
 export /*bundle*/ class User extends Item<IChatUser, UserProvider> {
 	#logged;
 
@@ -23,7 +24,7 @@ export /*bundle*/ class User extends Item<IChatUser, UserProvider> {
 
 	#token: string;
 	get token() {
-		return sdkConfig.project === 'rvd' ? this.#token : this.firebaseToken;
+		return this.firebaseToken;
 	}
 	set token(value) {
 		if (value === this.#token) return;

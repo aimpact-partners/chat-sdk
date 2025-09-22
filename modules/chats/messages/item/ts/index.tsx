@@ -53,5 +53,5 @@ export /*bundle*/ function Message({
 		);
 	};
 
-	return <div className="message__content">{renderContent()}</div>;
+	return <>{renderContent()}</>;
 }

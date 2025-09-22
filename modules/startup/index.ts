@@ -1,7 +1,5 @@
 import { ReactiveModel } from '@beyond-js/reactive/model';
-
-import { ISDKSettings } from './types';
-import { ENDPOINTS } from './endpoints';
+import { ISDKSettings, Environment } from './types';
 
 class SDKInitializer extends ReactiveModel<SDKInitializer> {
 	#api: string;
@@ -11,15 +9,17 @@ class SDKInitializer extends ReactiveModel<SDKInitializer> {
 		return this.#project;
 	}
 
-	#environment: 'development' | 'testing' | 'quality' | 'production';
+	#environment: Environment;
 	get environment() {
 		return this.#environment;
 	}
 
-	#endpoints = ENDPOINTS;
-
 	get api() {
 		return this.#api;
+	}
+	#pkg: string;
+	get pkg() {
+		return this.#pkg;
 	}
 
 	#userModel: any;
@@ -32,9 +32,10 @@ class SDKInitializer extends ReactiveModel<SDKInitializer> {
 		this.triggerEvent();
 	}
 
-	async initialize({ environment, userModel, api, project }: ISDKSettings) {
+	async initialize({ environment, userModel, pkg, api, project }: ISDKSettings) {
 		this.#environment = environment;
 		this.#userModel = userModel;
+		this.#pkg = pkg;
 		this.#api = api;
 		this.#project = project;
 		// const model = new this.#userModel();
