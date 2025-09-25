@@ -5,10 +5,6 @@
 		"ts": {
 			"files": "*",
 			"path": "/ts"
-		},
-		"scss": {
-			"path": "/scss",
-			"files": ["*"]
 		}
 	}
 }

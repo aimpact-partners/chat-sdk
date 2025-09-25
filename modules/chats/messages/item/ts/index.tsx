@@ -26,16 +26,13 @@ export /*bundle*/ function Message({
 		}
 
 		function highlightLastWord(str) {
-			if (!str || typeof str !== 'string') return '<span class="streaming-content">...</span>';
+			if (!str || typeof str !== 'string') return { base: '', lastWord: '...' };
 
-			const words = str.trim().split(/\s+/);
-			if (words.length === 0) return '<span class="streaming-content">...</span>';
-
-			const lastWord = words.pop();
-			const base = words.join(' ').trim();
-
-			return `${base ? base + ' ' : ''}<span class="streaming-content">${lastWord}...</span>`;
+			// Return the full content as base without any modification
+			return { base: str, lastWord: '...' };
 		}
+
+		const { base, lastWord } = highlightLastWord(message.content);
 
 		return (
 			<>
@@ -45,10 +42,12 @@ export /*bundle*/ function Message({
 							<div className="loader" />
 						</div>
 					) : (
-						<Markdown content={highlightLastWord(message.content)} />
+						<>
+							{base && <Markdown content={base} inline />}
+							<span className="streaming-content">{lastWord}</span>
+						</>
 					)}
 				</div>
-				{/* <div className="loader" /> */}
 			</>
 		);
 	};
