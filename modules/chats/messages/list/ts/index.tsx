@@ -1,21 +1,10 @@
 import React from 'react';
-import type { Chat, Messages as MessagesCollection, Message } from '@aimpact/chat-sdk/core';
+import type { Message } from '@aimpact/chat-sdk/core';
 
 import { MessageItemContainer } from './message';
 import { Empty } from 'pragmate-ui/empty';
 import { ChatMessagesContext } from './context';
-
-export interface IMessageListProps {
-	chat: Chat;
-	player: any;
-	showAvatar: boolean;
-	messages: MessagesCollection['items'];
-	texts: Record<string, any>;
-	current: Message;
-	setCurrentMessage: (message: Message) => void;
-	systemIcon: string;
-	setUpdateScroll: (scroll: number) => void;
-}
+import type { IMessageListProps } from './types/IMessageListProps';
 
 export /*bundle*/ function Messages(props: IMessageListProps) {
 	const { chat, player, showAvatar, messages, texts, current, systemIcon, setUpdateScroll } = props;

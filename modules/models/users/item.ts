@@ -23,7 +23,7 @@ export /*bundle*/ class User extends Item<IChatUser, UserProvider> {
 
 	#token: string;
 	get token() {
-		return sdkConfig.project === 'rvd' ? this.#token : this.firebaseToken;
+		return this.firebaseToken;
 	}
 	set token(value) {
 		if (value === this.#token) return;
