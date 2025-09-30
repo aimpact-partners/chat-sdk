@@ -1,0 +1,23 @@
+{
+	"name": "testing/slate-editor",
+	"widget": {
+		"is": "page",
+		"route": "/testing/slate-editor",
+		"layout": "platform-layout",
+		"element": {
+			"name": "slate-editor"
+		},
+		"scss": {
+			"path": "scss",
+			"files": ["*"]
+		},
+		"ts": {
+			"path": "ts",
+			"files": ["*"]
+		}
+	},
+	"txt": {
+		"path": "txt",
+		"files": ["*"]
+	}
+}

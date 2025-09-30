@@ -1,0 +1,121 @@
+@use 'variables';
+
+.slate-container {
+	padding: 2rem 0;
+}
+
+.slate-card {
+	background: white;
+	border-radius: 16px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+	border: 1px solid rgba(0, 0, 0, 0.05);
+	overflow: hidden;
+	transition: all 0.3s ease;
+
+	&:hover {
+		box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+		transform: translateY(-2px);
+	}
+}
+
+.slate-title {
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: variables.$text-primary;
+	margin: 0;
+	padding: 1.5rem 1.5rem 1rem;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.slate-content {
+	padding: 1.5rem;
+	min-height: 200px;
+}
+
+.slate-textarea {
+	width: 100%;
+	min-height: 200px;
+	padding: 1rem;
+	border: 2px solid rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+	font-size: 1rem;
+	line-height: 1.5;
+	resize: vertical;
+	transition: border-color 0.2s ease;
+	font-family: inherit;
+
+	&:focus {
+		outline: none;
+		border-color: variables.$primary-color;
+		box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+	}
+
+	&::placeholder {
+		color: variables.$text-muted;
+	}
+}
+
+.slate-display {
+	min-height: 200px;
+	padding: 1rem;
+	border: 2px solid rgba(0, 0, 0, 0.05);
+	border-radius: 8px;
+	font-size: 1rem;
+	line-height: 1.5;
+	color: variables.$text-primary;
+	background: #f8f9fa;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+.slate-actions {
+	padding: 1.5rem;
+	background: rgba(0, 0, 0, 0.02);
+	display: flex;
+	justify-content: flex-end;
+}
+
+.slate-button {
+	background: linear-gradient(135deg, #3498db, #5dade2);
+	border: none;
+	padding: 0.75rem 1.5rem;
+	border-radius: 8px;
+	font-weight: 600;
+	color: white;
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover {
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+	}
+
+	&:active {
+		transform: translateY(0);
+	}
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+	.slate-container {
+		padding: 1rem 0;
+	}
+
+	.slate-card {
+		margin: 0 1rem;
+	}
+
+	.slate-title {
+		font-size: 1.3rem;
+		padding: 1rem;
+	}
+
+	.slate-content {
+		padding: 1rem;
+	}
+
+	.slate-actions {
+		padding: 1rem;
+	}
+}

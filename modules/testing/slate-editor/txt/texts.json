@@ -1,0 +1,26 @@
+{
+	"es": {
+		"title": "Editor Slate",
+		"editorTitle": "Editor de Texto",
+		"placeholder": "Escribe tu contenido aquí...",
+		"emptyContent": "No hay contenido para mostrar",
+		"edit": "Editar",
+		"save": "Guardar"
+	},
+	"en": {
+		"title": "Slate Editor",
+		"editorTitle": "Text Editor",
+		"placeholder": "Write your content here...",
+		"emptyContent": "No content to display",
+		"edit": "Edit",
+		"save": "Save"
+	},
+	"de": {
+		"title": "Slate Editor",
+		"editorTitle": "Texteditor",
+		"placeholder": "Schreiben Sie Ihren Inhalt hier...",
+		"emptyContent": "Kein Inhalt anzuzeigen",
+		"edit": "Bearbeiten",
+		"save": "Speichern"
+	}
+}
