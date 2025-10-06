@@ -2,7 +2,7 @@
 .wiki-editor__text-style-selector {
 	position: relative;
 	display: inline-block;
-	z-index: 1001; // Higher than other elements
+	z-index: 101; // Higher than other elements
 	height: 2.5rem; // Match toolbar button height
 	display: flex;
 	align-items: center;

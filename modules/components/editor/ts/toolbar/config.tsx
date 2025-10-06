@@ -1,37 +1,21 @@
-import type { Editor } from '@tiptap/react';
-import type { ReactElement } from 'react';
-import * as React from 'react';
 import {
-	FontBoldIcon,
-	FontItalicIcon,
-	UnderlineIcon,
-	StrikethroughIcon,
-	TextIcon,
-	ListBulletIcon,
-	HamburgerMenuIcon,
 	CheckboxIcon,
-	QuoteIcon,
 	CodeIcon,
 	DividerHorizontalIcon,
-	EraserIcon
+	EraserIcon,
+	FontBoldIcon,
+	FontItalicIcon,
+	HamburgerMenuIcon,
+	ImageIcon,
+	ListBulletIcon,
+	QuoteIcon,
+	StrikethroughIcon,
+	TextIcon,
+	UnderlineIcon
 } from '@radix-ui/react-icons';
-
-export interface IButton {
-	id: string;
-	label: string;
-	title: string;
-	group: 'text' | 'style-selector' | 'lists' | 'blocks' | 'formatting';
-	// Optional properties for special cases
-	icon?: string | JSX.Element;
-	action?: (editor: Editor) => void;
-	isActive?: (editor: Editor) => boolean;
-	// For extensions that don't follow the standard pattern
-	extensionName?: string;
-	actionType?: 'toggle' | 'set' | 'custom';
-	// Special property for components that render their own UI
-	isComponent?: boolean;
-	component?: string;
-}
+import type { Editor } from '@tiptap/react';
+import * as React from 'react';
+import { IButton } from '../types/i-button';
 
 // Button configuration
 export const BUTTONS: IButton[] = [
@@ -150,6 +134,17 @@ export const BUTTONS: IButton[] = [
 		action: (editor: Editor) => {
 			// Toggle bold to test
 			editor.chain().focus().toggleBold().run();
+		}
+	},
+	{
+		id: 'image',
+		label: 'Image',
+		title: 'Image',
+		group: 'formatting',
+		icon: <ImageIcon width={16} height={16} />,
+		action: (editor: Editor) => {
+			console.log('image');
+			editor.chain().focus().setImage({ src: 'https://placehold.co/800x400' }).run();
 		}
 	}
 ];

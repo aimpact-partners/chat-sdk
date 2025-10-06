@@ -17,32 +17,13 @@ interface ExtendedMarkedOptions extends MarkedOptions {
 	highlight?: (code: string, lang: string) => string;
 }
 
-export /*bundle*/ function useMarked(content: string, inline: boolean = false) {
+export /*bundle*/ function useMarked(content: string) {
 	// const [output, setOutput] = React.useState<string>('');
 
 	function render(content) {
 		const options: ExtendedMarkedOptions = {
-			breaks: false, // Disable line breaks for Markdown
-			...(inline && {
-				// For inline rendering, disable paragraph wrapping
-				renderer: new marked.Renderer()
-			})
+			breaks: false // Disable line breaks for Markdown
 		};
-
-		// If inline mode, configure renderer to not wrap in paragraphs
-		if (inline) {
-			const renderer = new marked.Renderer();
-			renderer.paragraph = ({ tokens }: any) => {
-				// Render tokens without wrapping in <p> tags
-				return tokens
-					.map((token: any) => {
-						if (token.type === 'text') return token.raw;
-						return token.raw || '';
-					})
-					.join('');
-			};
-			options.renderer = renderer;
-		}
 
 		marked.setOptions(options);
 		marked.use(

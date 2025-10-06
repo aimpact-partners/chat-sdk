@@ -1,19 +1,19 @@
 {
-	"name": "testing/tiptap-editor",
+	"name": "tiptap",
 	"widget": {
+		"route": "/testing/tiptap",
 		"is": "page",
-		"route": "/testing/tiptap-editor",
-		"layout": "platform-layout",
-		"element": {
-			"name": "tiptap-editor"
-		},
+
 		"scss": {
-			"path": "scss",
+			"path": "/scss",
 			"files": ["*"]
 		},
 		"ts": {
-			"path": "ts",
+			"path": "/ts",
 			"files": ["*"]
+		},
+		"element": {
+			"name": "app-testing-tiptap"
 		}
 	}
 }

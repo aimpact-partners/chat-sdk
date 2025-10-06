@@ -2,6 +2,7 @@ import Blockquote from '@tiptap/extension-blockquote';
 import BulletList from '@tiptap/extension-bullet-list';
 import CodeBlock from '@tiptap/extension-code-block';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
+import Image from '@tiptap/extension-image';
 import ListItem from '@tiptap/extension-list-item';
 import OrderedList from '@tiptap/extension-ordered-list';
 import TaskItem from '@tiptap/extension-task-item';
@@ -39,6 +40,7 @@ export /*bundle*/ const WikiEditorUI = ({
 			Underline,
 			TaskList,
 			TaskItem,
+			Image,
 			CodeBlock,
 			Blockquote,
 			HorizontalRule

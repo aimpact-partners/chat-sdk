@@ -1,5 +1,5 @@
 import type { Editor } from '@tiptap/react';
-import type { IButton } from './config';
+import type { IButton } from '../types/i-button';
 
 /**
  * Generates button action based on standard pattern

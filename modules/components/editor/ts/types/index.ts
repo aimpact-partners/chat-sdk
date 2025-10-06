@@ -12,6 +12,10 @@ export interface IWikiEditorEvent {
 	};
 }
 
+export interface ILoaders {
+	image: any;
+}
+
 export interface IWikiEditorProps {
 	name?: string;
 	onChange?: (event: IWikiEditorEvent) => void;
@@ -21,6 +25,7 @@ export interface IWikiEditorProps {
 	showToolbar?: boolean;
 	outputFormat?: 'html' | 'markdown';
 	markdownOptions?: IMarkdownOptions;
+	loaders?: ILoaders;
 	markdownToHtmlOptions?: IMarkdownToHtmlOptions;
 }
 

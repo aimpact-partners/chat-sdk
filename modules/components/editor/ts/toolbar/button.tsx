@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import type { IButton } from './config';
+import type { IButton } from '../types/i-button';
 import { generateButtonAction, generateButtonIsActive, generateButtonIcon } from './actions';
 import { Button as PragmateButton } from 'pragmate-ui/components';
 

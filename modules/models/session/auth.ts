@@ -54,7 +54,6 @@ export class Auth extends ReactiveModel<Auth> {
 		}
 
 		if (!data?.uid) {
-			console.trace('INVALID_USER', 'No user id found in response', data);
 			throw new CustomError(1001, 'INVALID_USER');
 		}
 

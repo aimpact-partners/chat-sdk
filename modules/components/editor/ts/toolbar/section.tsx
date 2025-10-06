@@ -3,6 +3,7 @@ import type { Editor } from '@tiptap/react';
 import { Button } from './button';
 import { TextStyleSelector } from './text-style-selector';
 import { BUTTONS, GROUPS } from './config';
+import { ImageButton } from './image-button';
 
 interface ISectionProps {
 	editor: Editor;
@@ -17,6 +18,10 @@ export const Section = ({ editor, group }: ISectionProps): JSX.Element => {
 	return (
 		<div className="wiki-editor__toolbar-section">
 			{buttons.map(button => {
+				if (button.id === 'image') {
+					return <ImageButton key={button.id} editor={editor} specs={button} />;
+				}
+
 				// If it's a special component, render it directly
 				if (button.isComponent && button.component === 'TextStyleSelector') {
 					return <TextStyleSelector key={button.id} editor={editor} />;

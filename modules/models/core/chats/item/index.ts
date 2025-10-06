@@ -238,7 +238,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		try {
 			await this.#api
 				.bearer(token)
-				.stream(uri, { ...item.getProperties() })
+				.stream(uri, { ...item.getProperties(), error: true })
 				.then(onFinish)
 				.catch(onError);
 
