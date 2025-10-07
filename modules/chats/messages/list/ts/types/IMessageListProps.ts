@@ -10,4 +10,5 @@ export interface IMessageListProps {
 	setCurrentMessage: (message: Message) => void;
 	systemIcon: string;
 	setUpdateScroll: (scroll: number) => void;
+	error: any;
 }

@@ -161,6 +161,8 @@ export /*bundle*/ class Chat extends Item<IChat> {
 	async sendMessage(content: string): Promise<Message> {
 		try {
 			this.fetching = true;
+			this.#errors = [];
+			this.trigger('error');
 			const item = new Message({ chatId: this.id, role: 'user', content });
 			this.#currentMessage = item;
 			this.messages.add(item);
@@ -228,17 +230,19 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		};
 
 		const onError = (e: any) => {
-			this.#errors.push(e);
+			this.#errors.push(e.message);
 			if (this.#response) {
+				console.log('setting error', e, this.#response);
 				this.#response.set({ error: e });
 			}
-			promise.reject(e);
+			this.trigger('error');
+			promise.resolve(item);
 		};
 
 		try {
 			await this.#api
 				.bearer(token)
-				.stream(uri, { ...item.getProperties(), error: true })
+				.stream(uri, { ...item.getProperties() })
 				.then(onFinish)
 				.catch(onError);
 
@@ -278,12 +282,13 @@ export /*bundle*/ class Chat extends Item<IChat> {
 				if (this.#response) {
 					this.#response.set({ error: e });
 				}
-				promise.reject(e);
+				this.trigger('error');
+				promise.resolve(item);
 			};
 			this.messages.add(item);
 			this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
+			console.log(0.1, item.getProperties());
 			const specs = {
-				...item.getProperties(),
 				audio: new File([item.audio], 'audio.mp4', { type: 'audio/mp4' }),
 				multipart: true
 			};

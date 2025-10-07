@@ -56,6 +56,7 @@ export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Parti
 				'userId',
 				'role',
 				'content',
+				'error',
 				'usage',
 				'timestamp',
 				'streaming',

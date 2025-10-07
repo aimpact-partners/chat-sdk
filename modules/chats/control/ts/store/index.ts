@@ -217,17 +217,12 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	};
 
 	async sendMessage(content: string) {
-		try {
-			performance.mark('start');
-			this.#currentMessage = undefined;
+		performance.mark('start');
+		this.#currentMessage = undefined;
 
-			if (typeof content === 'string' && [undefined, '', null].includes(content)) return;
+		if (typeof content === 'string' && [undefined, '', null].includes(content)) return;
 
-			return this.#chat.sendMessage(content);
-		} catch (e) {
-			// return http.error(400, message);
-			console.error('capturamos error aca', e);
-		}
+		return this.#chat.sendMessage(content);
 	}
 
 	async sendAudio(content: Blob) {

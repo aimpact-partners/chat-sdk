@@ -5,11 +5,13 @@ import { MessageItemContainer } from './message';
 import { Empty } from 'pragmate-ui/empty';
 import { ChatMessagesContext } from './context';
 import type { IMessageListProps } from './types/IMessageListProps';
-
+import { Alert } from 'pragmate-ui/alert';
+import { useStore } from '@beyond-js/react-18-widgets/hooks';
 export /*bundle*/ function Messages(props: IMessageListProps) {
 	const { chat, player, showAvatar, messages, texts, current, systemIcon, setUpdateScroll } = props;
 	const [currentMessage, setCurrentMessage] = React.useState(current);
 	const totalMessages = messages.length;
+	const { errors } = chat;
 
 	// Show empty state if there are no messages
 	if (!totalMessages) return <Empty text={texts.empty} />;
