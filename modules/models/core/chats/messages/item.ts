@@ -7,7 +7,7 @@ import type { Chat } from '../item';
 import { sdkConfig } from '@aimpact/chat-sdk/startup';
 import type { Messages } from './';
 
-export /*bundle*/ class Message extends ReactiveModel<IMessage> implements Partial<IMessage> {
+export /*bundle*/ class Message extends ReactiveModel<IMessage> {
 	declare autoplay: boolean;
 	declare error: any;
 	declare id: string;

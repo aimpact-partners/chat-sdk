@@ -3,7 +3,7 @@ import { Voice } from '@aimpact/chat-sdk/voice';
 import React from 'react';
 interface IChatMessagesContext {
 	chat: Chat;
-	player: Voice;
+	player: any;
 	showAvatar: boolean;
 	messages: MessagesCollection['items'];
 	texts: Record<string, any>;

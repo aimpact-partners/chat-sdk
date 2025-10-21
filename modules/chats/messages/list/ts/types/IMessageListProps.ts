@@ -7,8 +7,7 @@ export interface IMessageListProps {
 	messages: MessagesCollection['items'];
 	texts: Record<string, any>;
 	current: Message;
-	setCurrentMessage: (message: Message) => void;
-	systemIcon: string;
+	systemIcon?: string;
 	setUpdateScroll: (scroll: number) => void;
-	error: any;
+	error?: any;
 }

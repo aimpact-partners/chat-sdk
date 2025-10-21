@@ -19,9 +19,9 @@ interface IChatContext {
 	systemIcon: string;
 	ready: boolean;
 	realtime: boolean;
-	skeleton: React.ElementType;
+	skeleton: React.ComponentType;
 	showAvatar: boolean;
-	empty: React.ElementType;
+	empty: React.ReactNode;
 }
 export /*bundle */ const ChatContext = React.createContext({} as Partial<IChatContext>);
-export /*bundle */ const useChatContext = () => React.useContext(ChatContext);
+export /*bundle */ const useChatContext = (): Partial<IChatContext> => React.useContext(ChatContext);

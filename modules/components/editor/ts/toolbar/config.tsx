@@ -120,22 +120,6 @@ export const BUTTONS: IButton[] = [
 		}
 	},
 
-	// Debug button to test active state
-	{
-		id: 'debug',
-		label: 'Debug',
-		title: 'Debug button to test active state',
-		group: 'formatting',
-		icon: <TextIcon width={16} height={16} />,
-		isActive: (editor: Editor) => {
-			// Test if bold is active
-			return editor.isActive('bold');
-		},
-		action: (editor: Editor) => {
-			// Toggle bold to test
-			editor.chain().focus().toggleBold().run();
-		}
-	},
 	{
 		id: 'image',
 		label: 'Image',

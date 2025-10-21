@@ -1,6 +1,7 @@
 // import { MessageProvider } from '@aimpact/chat-api/provider';
 import { ReactiveModel } from '@beyond-js/reactive/model';
 import { Message } from './item';
+import { IMessage } from '../interfaces/message';
 
 export /*bundle*/ class Messages extends ReactiveModel<Messages> {
 	item = Message;
@@ -59,7 +60,7 @@ export /*bundle*/ class Messages extends ReactiveModel<Messages> {
 	}
 
 	getData() {
-		return this.#items.map(item => item.getProperties());
+		return this.#items.map(item => item.getProperties() as IMessage);
 	}
 
 	has(id: string) {

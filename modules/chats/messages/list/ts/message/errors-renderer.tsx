@@ -23,6 +23,8 @@ export const ErrorsRenderer: React.FC<ErrorsRendererProps> = ({ message }) => {
 				<div>{texts.errors.default}</div>
 				<div className="error__actions">
 					<Button onClick={onRetry}>
+						{/* for some reason react-icons is not being recognized as a valid React component */}
+						{/* @ts-ignore */}
 						<BsArrowCounterclockwise />
 						{texts.actions.retry}
 					</Button>

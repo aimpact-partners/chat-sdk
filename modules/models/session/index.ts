@@ -7,13 +7,13 @@ interface ISession {
 	logged: boolean;
 }
 
-class SessionManager extends ReactiveModel<ISession> {
+export /*bundle*/ class SessionManager extends ReactiveModel<ISession> {
 	#id;
 	get id() {
 		return this.#id;
 	}
 
-	get user(): User {
+	get user(): any {
 		return this.#auth.user;
 	}
 

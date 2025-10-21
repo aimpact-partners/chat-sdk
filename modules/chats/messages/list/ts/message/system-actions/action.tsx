@@ -53,7 +53,7 @@ export function Action({ last = false, texts, data: { type, data } }: IProps) {
 	if (type === 'kb-processed-response') {
 		return (
 			<Container title={actionsTexts[type]}>
-				<div dangerouslySetInnerHTML={{ __html: mark(data.response) }} />
+				<div dangerouslySetInnerHTML={{ __html: mark(data.response)?.output as string }} />
 			</Container>
 		);
 	}

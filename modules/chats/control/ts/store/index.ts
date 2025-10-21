@@ -6,7 +6,7 @@ import { AudioManager } from './audio';
 import { sessionWrapper } from '@aimpact/chat-sdk/session';
 import { CurrentTexts } from '@beyond-js/kernel/texts';
 import { module } from 'beyond_context';
-import { IStore } from './types';
+import { IStore, IChatSpecs } from './types';
 import { RealtimeStore } from './realtime';
 
 export class StoreManager extends ReactiveModel<IStore> implements IStore {
@@ -103,7 +103,7 @@ export class StoreManager extends ReactiveModel<IStore> implements IStore {
 	}
 	#onListenChat: (data: any) => void;
 	#model: Chat;
-	constructor({ id, language, realtime = false, model, onListenChat }) {
+	constructor({ id, language, realtime = false, model, onListenChat }: IChatSpecs) {
 		super();
 
 		this.#texts.on('change', this.triggerEvent);

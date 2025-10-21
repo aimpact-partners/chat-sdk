@@ -57,14 +57,11 @@ export /*bundle*/ const WikiEditor = ({
 			<div className="wiki-editor">
 				{showToolbar && editor && (
 					<div className="wiki-editor__toolbar">
-						<Section editor={editor} group="text" />
-						<div className="wiki-editor__toolbar-divider" />
 						<Section editor={editor} group="style-selector" />
-						<div className="wiki-editor__toolbar-divider" />
+						<Section editor={editor} group="text" />
+
 						<Section editor={editor} group="lists" />
-						<div className="wiki-editor__toolbar-divider" />
 						<Section editor={editor} group="blocks" />
-						<div className="wiki-editor__toolbar-divider" />
 						<Section editor={editor} group="formatting" />
 					</div>
 				)}

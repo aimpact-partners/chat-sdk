@@ -1,9 +1,9 @@
 import React from 'react';
-import { useManager } from './use-manager';
-import { ChatContext } from './context';
 import { StoreManager } from '../store';
-import { IAgentsContainerProps } from './types';
+import { ChatContext } from './context';
 import { RealtimePanel } from './realtime/container';
+import { IAgentsContainerProps } from './types';
+import { useManager } from './use-manager';
 
 export /*bundle */ function AgentsChatContainer({
 	children,

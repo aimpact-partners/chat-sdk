@@ -16,7 +16,7 @@
 	display: flex;
 	gap: 0.25rem;
 	padding: 0.25rem;
-	border-right: 1px solid var(--outline);
+
 	align-items: center; // Ensure vertical alignment
 	height: 2.5rem; // Consistent height for all sections
 
@@ -24,10 +24,16 @@
 		border-right: none;
 	}
 }
-.pui-button.wiki-editor__button {
-	padding: 0.15rem 0.5rem;
+.wiki-editor__button {
+	padding: 0.5rem;
 	transition: all 0.2s ease;
-
+	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.25rem;
+	cursor: pointer;
+	background: var(--neutral-90);
 	&:hover {
 		background: var(--neutral-90);
 	}
@@ -55,15 +61,17 @@
 // Responsive Design
 @media (max-width: 768px) {
 	.wiki-editor__toolbar {
-		flex-direction: column;
-		gap: 0.75rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		flex-grow: 1;
+
 		align-items: stretch;
 	}
 
 	.wiki-editor__toolbar-section {
 		border-right: none;
-		border-bottom: 1px solid var(--outline);
-		padding-bottom: 0.75rem;
+		display: inline-flex;
 		height: auto; // Allow natural height on mobile
 
 		&:last-child {

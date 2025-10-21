@@ -54,7 +54,10 @@
 			{
 				"name": "web-development",
 				"environment": "development",
-				"platform": "web"
+				"platform": "web",
+				"ports": {
+					"bundles": 1536
+				}
 			},
 			{
 				"name": "web",

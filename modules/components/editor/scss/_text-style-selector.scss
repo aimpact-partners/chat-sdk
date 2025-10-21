@@ -45,7 +45,7 @@
 	top: 100%;
 	left: 0;
 	right: 0;
-	z-index: 1002; // Higher than the selector itself
+	z-index: 10; // Higher than the selector itself
 	margin-top: 0.25rem;
 	background: var(--background);
 	border: 1px solid var(--outline);

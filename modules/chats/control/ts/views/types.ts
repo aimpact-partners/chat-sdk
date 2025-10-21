@@ -7,7 +7,7 @@ export /*bundle*/ interface IAgentsContainerProps {
 	icon: string;
 	autoplay: boolean;
 	language: string;
-	empty: React.ComponentType;
+	empty: React.ReactNode;
 	skeleton: React.ComponentType;
 	player: any;
 	model: Chat;

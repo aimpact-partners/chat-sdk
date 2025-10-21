@@ -11,7 +11,7 @@ export /*bundle */ function Markdown({
 	children?: string;
 	inline?: boolean;
 }) {
-	const { output } = useMarked(content ?? children, inline);
+	const { output } = useMarked(content ?? children);
 	const attrs = { ...props };
 	if (output === '') return null;
 

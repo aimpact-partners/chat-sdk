@@ -52,7 +52,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 		return this.#messages;
 	}
 
-	constructor({ id = undefined, server = undefined, ...specs } = {}) {
+	constructor({ id = undefined, server = undefined, ...specs }: { id?: string; server?: string } = {}) {
 		super({
 			id,
 			entity: 'Chat',

@@ -20,10 +20,10 @@ export const TextStyleSelector = ({ editor }: ITextStyleSelectorProps): JSX.Elem
 			style: 'Normal text',
 			className: 'wiki-editor__style-normal',
 			shortcut: 'Ctrl+Alt+0',
-			command: (editor: any) => editor.chain().focus().setParagraph().run(),
+			command: (editor: any) => editor.chain().focus().setParagraph().run()
 		},
 		// Generate heading options dynamically
-		...Array.from({ length: 6 }, (_, i) => ({
+		...Array.from({ length: 4 }, (_, i) => ({
 			label: `Heading ${i + 1}`,
 			style: `Heading ${i + 1}`,
 			className: 'wiki-editor__style-heading',
@@ -33,8 +33,8 @@ export const TextStyleSelector = ({ editor }: ITextStyleSelectorProps): JSX.Elem
 					.chain()
 					.focus()
 					.toggleHeading({ level: i + 1 })
-					.run(),
-		})),
+					.run()
+		}))
 	];
 
 	React.useEffect(() => {
@@ -78,7 +78,7 @@ export const TextStyleSelector = ({ editor }: ITextStyleSelectorProps): JSX.Elem
 			event.stopPropagation();
 			setIsOpen(!isOpen);
 		},
-		[isOpen],
+		[isOpen]
 	);
 
 	const closeDropdown = React.useCallback((): void => {
@@ -86,21 +86,21 @@ export const TextStyleSelector = ({ editor }: ITextStyleSelectorProps): JSX.Elem
 	}, []);
 
 	return (
-		<div className='wiki-editor__text-style-selector' ref={dropdownRef}>
+		<div className="wiki-editor__text-style-selector" ref={dropdownRef}>
 			<button
-				className='wiki-editor__style-button'
+				className="wiki-editor__style-button"
 				onClick={toggleDropdown}
-				title='Estilos de texto'
-				type='button'
+				title="Estilos de texto"
+				type="button"
 			>
 				<span>{getCurrentStyle()}</span>
-				<svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
-					<polyline points='6,9 12,15 18,9'></polyline>
+				<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+					<polyline points="6,9 12,15 18,9"></polyline>
 				</svg>
 			</button>
 
 			{isOpen && (
-				<div className='wiki-editor__style-dropdown'>
+				<div className="wiki-editor__style-dropdown">
 					{styleOptions.map(option => (
 						<StyleOption key={option.style} option={option} editor={editor} onClose={closeDropdown} />
 					))}

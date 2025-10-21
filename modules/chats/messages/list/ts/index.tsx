@@ -1,12 +1,11 @@
-import React from 'react';
 import type { Message } from '@aimpact/chat-sdk/core';
+import React from 'react';
 
-import { MessageItemContainer } from './message';
 import { Empty } from 'pragmate-ui/empty';
 import { ChatMessagesContext } from './context';
+import { MessageItemContainer } from './message';
 import type { IMessageListProps } from './types/IMessageListProps';
-import { Alert } from 'pragmate-ui/alert';
-import { useStore } from '@beyond-js/react-18-widgets/hooks';
+
 export /*bundle*/ function Messages(props: IMessageListProps) {
 	const { chat, player, showAvatar, messages, texts, current, systemIcon, setUpdateScroll } = props;
 	const [currentMessage, setCurrentMessage] = React.useState(current);

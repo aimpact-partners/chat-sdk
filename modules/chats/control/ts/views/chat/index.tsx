@@ -44,13 +44,13 @@ export /*bundle*/ function Chat(): JSX.Element {
 			<section className="chat__content">
 				<Messages
 					chat={store.chat}
-					showAvatar={showAvatar}
-					setUpdateScroll={setUpdateScroll}
 					player={store.audioManager.player}
-					current={store.currentMessage}
-					systemIcon={systemIcon}
+					showAvatar={showAvatar}
 					messages={store?.messages ?? []}
 					texts={texts}
+					current={store.currentMessage}
+					systemIcon={systemIcon}
+					setUpdateScroll={setUpdateScroll}
 				/>
 
 				<div ref={separatorRef} className="separator" />

@@ -16,7 +16,7 @@ export const Section = ({ editor, group }: ISectionProps): JSX.Element => {
 	if (buttons.length === 0) return null;
 
 	return (
-		<div className="wiki-editor__toolbar-section">
+		<>
 			{buttons.map(button => {
 				if (button.id === 'image') {
 					return <ImageButton key={button.id} editor={editor} specs={button} />;
@@ -30,6 +30,6 @@ export const Section = ({ editor, group }: ISectionProps): JSX.Element => {
 				// Otherwise render as a regular button
 				return <Button key={button.id} button={button} editor={editor} />;
 			})}
-		</div>
+		</>
 	);
 };

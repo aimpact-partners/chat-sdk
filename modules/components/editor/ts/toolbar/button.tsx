@@ -2,7 +2,6 @@ import * as React from 'react';
 import clsx from 'clsx';
 import type { IButton } from '../types/i-button';
 import { generateButtonAction, generateButtonIsActive, generateButtonIcon } from './actions';
-import { Button as PragmateButton } from 'pragmate-ui/components';
 
 interface IButtonProps {
 	button: IButton;
@@ -52,8 +51,10 @@ export const Button = ({ button, editor }: IButtonProps): JSX.Element => {
 	const activeState = isActive(editor);
 
 	return (
-		<PragmateButton
-			onClick={() => {
+		<button
+			onClick={event => {
+				event.stopPropagation();
+				event.preventDefault();
 				action(editor);
 			}}
 			className={clsx('wiki-editor__button', {
@@ -62,6 +63,6 @@ export const Button = ({ button, editor }: IButtonProps): JSX.Element => {
 			title={button.title}
 		>
 			{icon}
-		</PragmateButton>
+		</button>
 	);
 };
