@@ -9,6 +9,7 @@ interface ModuleProviderContextValue {
 	onChange?: (event: any) => void;
 	initialContent?: string;
 	placeholder?: string;
+
 	className?: string;
 	showToolbar?: boolean;
 	outputFormat?: 'html' | 'markdown';
@@ -20,11 +21,12 @@ const ModuleProviderContext = React.createContext<ModuleProviderContextValue | n
 
 interface ModuleProviderProps {
 	children: React.ReactNode;
+	texts: Record<string, any>;
 	editor: Editor | null;
 	wikiEditorProps: IWikiEditorProps;
 }
 
-export const ModuleProvider = ({ children, editor, wikiEditorProps }: ModuleProviderProps) => {
+export const ModuleProvider = ({ children, editor, texts, wikiEditorProps }: ModuleProviderProps) => {
 	const contextValue: ModuleProviderContextValue = {
 		editor,
 		loaders: wikiEditorProps.loaders,

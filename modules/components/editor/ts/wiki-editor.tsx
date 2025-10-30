@@ -4,6 +4,7 @@ import { Section } from './toolbar';
 import type { IWikiEditorProps } from './types';
 import { useWikiEditor, useContentInitializer } from './hooks';
 import { ModuleProvider } from './provider';
+import { useTexts } from '@beyond-js/react-18-widgets/hooks';
 
 export /*bundle*/ const WikiEditor = ({
 	name,
@@ -17,6 +18,8 @@ export /*bundle*/ const WikiEditor = ({
 	loaders,
 	markdownToHtmlOptions
 }: IWikiEditorProps): JSX.Element => {
+	const [ready, texts] = useTexts('@aimpact/chat-sdk/editor');
+
 	const { editor, contentSet, setContentSet } = useWikiEditor({
 		name,
 		onChange,
@@ -37,12 +40,15 @@ export /*bundle*/ const WikiEditor = ({
 		outputFormat,
 		markdownToHtmlOptions
 	});
+	if (!ready) return null;
 
 	return (
 		<ModuleProvider
 			editor={editor}
+			texts={texts}
 			wikiEditorProps={{
 				name,
+
 				onChange,
 				initialContent,
 				placeholder,

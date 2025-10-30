@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import type { IButton } from '../types/i-button';
 import { generateButtonAction, generateButtonIsActive, generateButtonIcon } from './actions';
-
+import { IconButton } from 'pragmate-ui/icons';
 interface IButtonProps {
 	button: IButton;
 	editor: any; // TipTap Editor
@@ -51,7 +51,7 @@ export const Button = ({ button, editor }: IButtonProps): JSX.Element => {
 	const activeState = isActive(editor);
 
 	return (
-		<button
+		<IconButton
 			onClick={event => {
 				event.stopPropagation();
 				event.preventDefault();
@@ -63,6 +63,6 @@ export const Button = ({ button, editor }: IButtonProps): JSX.Element => {
 			title={button.title}
 		>
 			{icon}
-		</button>
+		</IconButton>
 	);
 };

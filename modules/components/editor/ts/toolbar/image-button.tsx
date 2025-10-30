@@ -3,6 +3,7 @@ import type { Editor } from '@tiptap/react';
 import { useModuleProvider } from '../provider';
 import type { IButton } from '../types/i-button';
 import { Button } from 'pragmate-ui/components';
+import { IconButton } from 'pragmate-ui/icons';
 import { ImageIcon } from '@radix-ui/react-icons';
 import clsx from 'clsx';
 
@@ -21,8 +22,8 @@ export const ImageButton: React.FC<ImageButtonProps> = ({ editor, specs }) => {
 	};
 
 	return (
-		<button type="button" onClick={onClick} className={clsx('wiki-editor__button', {})}>
-			<ImageIcon />
-		</button>
+		<IconButton onClick={onClick} title={specs.title} className={clsx('wiki-editor__button img-button', {})}>
+			{specs.icon}
+		</IconButton>
 	);
 };

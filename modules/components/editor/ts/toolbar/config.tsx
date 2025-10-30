@@ -127,7 +127,6 @@ export const BUTTONS: IButton[] = [
 		group: 'formatting',
 		icon: <ImageIcon width={16} height={16} />,
 		action: (editor: Editor) => {
-			console.log('image');
 			editor.chain().focus().setImage({ src: 'https://placehold.co/800x400' }).run();
 		}
 	}

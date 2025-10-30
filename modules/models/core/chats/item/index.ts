@@ -287,7 +287,7 @@ export /*bundle*/ class Chat extends Item<IChat> {
 			};
 			this.messages.add(item);
 			this.#response = new Message({ chatId: this.id, role: 'system', streaming: true });
-			console.log(0.1, item.getProperties());
+
 			const specs = {
 				audio: new File([item.audio], 'audio.mp4', { type: 'audio/mp4' }),
 				multipart: true

@@ -24,6 +24,7 @@ export class Auth extends ReactiveModel<Auth> {
 	constructor(session, settings) {
 		super();
 		this.#session = session;
+		console.log('settings', settings);
 		this.#provider = new FirebaseProvider(settings.firebase, {
 			onAuthStateChanged: this.onAuthStateChanged.bind(this)
 		});

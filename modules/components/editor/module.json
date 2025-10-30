@@ -9,5 +9,9 @@
 			"path": "ts",
 			"files": ["*"]
 		}
+	},
+	"txt": {
+		"path": "txt",
+		"files": ["*"]
 	}
 }
